@@ -59,7 +59,7 @@ deploy:
   # This is mine, get your own!
   #  Needed to access GH API.
   auth_token:
-    secure: EVYWM/RoiEUiEU2D9jdGl1FmgFNVfbV/KbXU9HV9P4N7oSPUgX5nGqscL5XKzvM4
+    secure: yc7IkqH7Sgpc9AaumTPtZXlpbPde5huW9CK9YoMqWYxIND1yrEzQeole585FKcWr
   # Refer to artifact by set name.
   artifact: reliefvalve
   # Do not create a draft.
