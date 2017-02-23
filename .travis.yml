@@ -66,11 +66,9 @@ deploy:
     # Only deploy from the given repo.
     repo: l3laze/ReliefValve
     # Deploy from any branch? True/False.
-    all_branches: true
+    all_branches: false
     # Deploy on tags? True/False.
     tags: true
-    # Custom condition required to deploy
-    condition: "$TRAVIS_TAG =~ ^v([[:digit:]])+.([[:digit:]])+.([[:digit:]])+$"
 
 # Setup build notifications
 notifications:
