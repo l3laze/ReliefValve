@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="Tom Shaver">
+	<title>ReliefValve</title>
+	<link rel="shortcut icon" type="image/x-icon" href="resources/favicon.ico" />
+  <link rel="stylesheet" href="resources/w3.css" />
+	<link rel="stylesheet" href="resources/badger.css" />
+	<link rel="stylesheet" href="resources/font-awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="reliefValve.css" />
+	<script src="renderer.js"></script>
+</head>
+<body>
+  <nav id="navMenu" class="w3-large">
+		<a href="javascript:void(0);" id="hamburger" onclick="toggleMenu()" class="w3-btn w3-border w3-left w3-white tablink">&#9776;</a>
+		<ul id="VMenu" class="w3-navbar w3-show w3-left-align w3-white w3-top">
+			<li>
+				<a href="javascript:void(0);" id="vmenuToggle" onclick="toggleMenu()" class="w3-closenav w3-border">&times;</a>
+			</li>
+			<li>
+				<a href="javascript:void(0);" id="VMain" class="tablink w3-border active" onclick="openView( event, 'mainView' )">Main</a>
+			</li>
+			<li>
+				<a href="javascript:void(0);" id="VSettings" class="tablink w3-border" onclick="openView( event, 'settingsView' )">Blacklist</a>
+			</li>
+			<li>
+				<a href="javascript:void(0);" id="VHelp" class="tablink w3-border" onclick="openView( event, 'helpView' )">Help</a>
+			</li>
+			<li>
+				<a href="javascript:void(0);" id="VAbout" class="tablink w3-border" onclick="openView( event, 'aboutView' )">About</a>
+			</li>
+			<li>
+				<a href="javascript:void(0);" class="tablink w3-border" id="VExit" onclick="app.quit()">Exit</a>
+			</li>
+			<li id="appIcon" class="w3-right w3-white w3-hide-small icon">
+				<img src="resources/32x32.png" alt="RV"/>
+			</li>
+		</ul>
+  </nav>
+
+  <div id="mainView" class="appView">
+    <div class="w3-row">
+      <div id="gameContainer" class="w3-half w3-container view-container">
+				<div class="w3-container centered">
+					<div class="centered">
+						<label class="w3-large w3-content centered bolded">Steam Apps</label>
+						<span id="numberTotal" class="w3-large w3-content w3-padding">0</span>
+					</div>
+					<input type="text" class="search-bar" id="searchGames" placeholder="Search"/>
+					<select id="gameList" size="20" multiple class="w3-white">
+					</select>
+				</div>
+				<div id="gameStatusContainer" class="w3-container centered status-container">
+					<span id="numberSelected" class="w3-tag w3-small w3-blue w3-padding">0</span>
+					<span id="numberReady" class="w3-tag w3-small w3-green w3-padding">0</span>
+					<span id="numberFixable" class="w3-tag w3-small w3-yellow w3-padding">0</span>
+					<span id="numberUseless" class="w3-tag w3-small w3-red w3-padding">0</span>
+				</div>
+			</div>
+      <div id="gameControlsContainer" class="w3-half w3-container centered view-container">
+				<div class="w3-container">
+					<label class="w3-large bolded">Steam Location</label><br />
+					<label id="installLocation">...</label>
+					<br />
+					<a href="javascript:void(0)" id="chooseSteam" class="w3-btn w3-white w3-ripple w3-border">Choose</a>
+					<hr class="splitter" />
+				</div>
+				<div class="w3-container">
+					<label class="w3-large w3- bolded">Steam App Settings</label>
+					<select id="autoUpdateBehaviorList" class="w3-white">
+						<option value="0">Always keep this game up to date.</option>
+						<option value="1">Only update this game when I launch it.</option>
+						<option value="2">High priority - auto-update this game before others.</option>
+					</select>
+				</div>
+				<div class="w3-row w3-container">
+					<input type="checkbox" id="cbOfflineFix" class="w3-check" />
+					<label for="cbOfflineFix">Offline fix</label>
+				</div>
+				<div class="w3-container">
+					<a href="javascript:void(0)" id="steamAppApply" class="w3-btn w3-white w3-ripple w3-border">Apply</a>
+					<br />
+					<a href="javascript:void(0);" id="blacklistAdd" class="w3-btn w3-ripple w3-white w3-border">Add to Blacklist</a>
+				</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settingsView" class="appView">
+		<div id="blacklistContainer" class="w3-half w3-container view-container">
+			<div class="w3-container centered">
+				<div class="centered">
+					<label class="w3-large w3-content centered bolded">Blacklist</label>
+					<span id="blacklistTotal" class="w3-large w3-content w3-padding">0</span>
+				</div>
+				<input type="text" class="search-bar" id="searchBlacklist" placeholder="Search"/>
+				<select id="blackList" size="20" multiple class="w3-white">
+				</select>
+			</div>
+			<div id="blacklistStatusContainer" class="w3-container centered status-container">
+				<span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding">0</span>
+				<span id="blacklistNumberExist" class="w3-tag w3-small w3-black w3-padding">0</span>
+			</div>
+		</div>
+		<div class="w3-half w3-container centered">
+			<div id="blacklistControlsContainer" class="w3-container view-container">
+				<label class="w3-large bolded">Blacklist Controls</label>
+				<br />
+				<a href="javascript:void(0);" id="blacklistRemove" class="w3-btn w3-ripple w3-white w3-border w3-round">Remove From Blacklist</a>
+				<br />
+				<a href="javascript:void(0);" id="blacklistReset" class="w3-btn w3-ripple w3-white w3-border w3-round">Reset Blacklist</a>
+			</div>
+		</div>
+  </div>
+
+  <div id="helpView" class="appView">
+		<div class="w3-container centered">
+			<ul id="helpText" class="w3-padding">
+				<li>
+					On the Main tab press the Choose button and pick a directory named
+						"Steam" with the structure below to load the data about currently
+						installed apps/games.
+						<div id="validDir">
+							<script><!--
+								if( process.platform === "darwin" || process.platform === "linux" )
+									document.write( "Steam/steamapps/libraryfolders.vdf" );
+								else
+									document.write( "Steam\\steamapps\\libraryfolders.vdf" );
+							--></script>
+						</div>
+				</li>
+				<hr class="splitter" />
+				<li>
+					Under the heading "Steam App Settings" is a combo-box with the same
+						options as the Steam client for auto-update behavior. The
+						checkbox below it will apply the "offline fix" described [badly]
+						<a href="#">here</a>. Press Apply to save your chosen settings.
+				</li>
+				<hr class="splitter" />
+				<li>
+					The blacklist is used to keep app/game data from being loaded.
+						</thead>
+				</li>
+			</ul>
+		</div>
+  </div>
+
+  <div id="aboutView" class="appView centered">
+		<div id="aboutHeader" class="w3-container w3-half">
+			<label class="w3-large">"<b>What</b> is it?"</label>
+			<br />
+			<span id="summaryText">A tool to help manage Steam - adding features by using some tricks which can be done manually.</span>
+		</div>
+		<hr id="aboutSeparator" />
+		<div  id="aboutFooter" class="w3-container w3-half">
+			<span id="credits">
+				Made with <span id="love">&hearts;</span> by l3l_aze
+			</span>
+			<hr class="aboutSplitter" />
+			<div id="thirdParty">
+				<b>This app is made possible by the following open-source software:</b>
+				<br />
+				<br />
+				<div class="w3-container" id="badger-container">
+					<div class="w3-container" id="badger-container">
+
+						<div class="badger-badge">
+							<span class="badger-name w3-left">Electron</span>
+							<span class="badger-credits">
+								<a href="http://electron.atom.io/" class="badger-home">homepage</a>
+								<a href="https://github.com/electron/electron/blob/master/LICENSE" class="badger-license">license</a>
+							</span>
+						</div>
+
+						<div class="badger-badge">
+							<span class="badger-name w3-left">electron-builder</span>
+							<span class="badger-credits">
+								<a href="https://github.com/electron-userland/electron-builder" class="badger-home">homepage</a>
+								<a href="https://github.com/electron-userland/electron-builder/blob/master/LICENSE" class="badger-license">license</a>
+							</span>
+						</div>
+
+	          <div class="badger-badge">
+	            <span class="badger-name w3-left">electron-config</span>
+	            <span class="badger-credits">
+	              <a href="https://github.com/sindresorhus/electron-config" class="badger-home">homepage</a>
+	              <a href="https://github.com/sindresorhus/electron-config/blob/master/license" class="badger-license">license</a>
+	            </span>
+	          </div>
+
+	          <div class="badger-badge">
+	            <span class="badger-name w3-left">electron-log</span>
+	            <span class="badger-credits">
+	              <a href="https://github.com/megahertz/electron-log" class="badger-home">homepage</a>
+	              <a href="https://github.com/megahertz/electron-log/blob/master/LICENSE" class="badger-license">license</a>
+	            </span>
+	          </div>
+
+	          <div class="badger-badge">
+	            <span class="badger-name w3-left">simple-vdf</span>
+	            <span class="badger-credits">
+	              <a href="https://github.com/rossengeorgiev/vdf-parser" class="badger-home">homepage</a>
+	              <a href="https://github.com/rossengeorgiev/vdf-parser/blob/master/LICENSE" class="badger-license">license</a>
+	            </span>
+	          </div>
+
+	          <div class="badger-badge">
+	            <span class="badger-name w3-left">W3.CSS</span>
+	            <span class="badger-credits">
+	              <a href="http://www.w3schools.com/w3css/" class="badger-home">homepage</a>
+	              <a href="http://www.w3schools.com/w3css/" class="badger-license">license</a>
+	            </span>
+	          </div>
+
+						<div class="badger-badge">
+							<span class="badger-name w3-left">Font Awesome</span>
+							<span class="badger-credits">
+								<a href="http://fontawesome.io/" class="badger-home">homepage</a>
+								<a href="http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;id=OFL" class="badger-license">license</a>
+							</span>
+						</div>
+
+						<div class="badger-badge">
+	            <span class="badger-name w3-left">Badger.CSS</span>
+	            <span class="badger-credits">
+	              <a href="https://github.com/l3laze/Badger" class="badger-home">homepage</a>
+	              <a href="https://github.com/l3laze/Badger" class="badger-license">license</a>
+	            </span>
+	          </div>
+
+	        </div>
+        </div>
+			</div>
+		</div>
+	</div>
+
+	<div id="debugView" class="w3-container appView">
+		<div class="w3-row">
+			<div class="w3-container w3-rest centered">
+				<textarea id="debug" class="w3-black w3-padding w3-margin"></textarea>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"><!--
+		window.addEventListener( "DOMContentLoaded", loadBlacklist );
+
+		window.addEventListener( "resize", handleResize );
+
+		document.getElementById( "gameList" ).addEventListener( "change", function( event ) {
+			changeSelection( event.target );
+		});
+
+		document.getElementById( "chooseSteam" ).addEventListener( "click", chooseInstall );
+
+		document.getElementById( "steamAppApply" ).addEventListener( "click", applySteamAppSettings );
+
+		document.getElementById( "blacklistAdd" ).addEventListener( "click", function( event ) {
+			addToBlacklist( document.getElementById( "gameList" ));
+		});
+
+		document.getElementById( "blacklistRemove" ).addEventListener( "click", removeFromBlacklist );
+
+		document.getElementById( "blacklistReset" ).addEventListener( "click", resetBlacklist );
+	--></script>
+</body>
+</html>

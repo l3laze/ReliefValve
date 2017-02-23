@@ -1,0 +1,71 @@
+# Build using 64-bit Windows.
+os: unstable
+platform: x64
+
+# Because of this:
+#   https://help.github.com/articles/dealing-with-line-endings/
+init:
+- git config --global core.autocrlf input
+
+install:
+# Install/switch to node 7 for x64.
+- ps: Install-Product node 7 x64
+# Update global npm install.
+- npm install npm -g
+# Install app dependencies.
+- npm i
+# Remove extraneous packages.
+- npm prune
+
+
+# Only build on tags.
+skip_non_tags: true
+
+# Download repo as a zip file.
+shallow_clone: true
+
+# Only clone the latest commit.
+clone_depth: 1
+
+
+# Cache some dirs for faster build.
+cache:
+  - node_modules
+  - app/node_modules
+
+
+# Quiet-ish build.
+build:
+  verbosity: minimal
+
+
+# The executable(s) expected.
+artifacts:
+  # Path to artifact
+- path: dist/*.exe
+  # Assign a unique name to it.
+  name: reliefvalve
+
+# ...
+build_script:
+- npm run dist-32_64
+
+# ...
+test: off
+
+# Deploy to GitHub Releases
+deploy:
+  provider: GitHub
+  # This is mine, get your own!
+  #  Needed to access GH API.
+  auth_token:
+    secure: EVYWM/RoiEUiEU2D9jdGl1FmgFNVfbV/KbXU9HV9P4N7oSPUgX5nGqscL5XKzvM4
+  # Refer to artifact by set name.
+  artifact: reliefvalve
+  # Do not create a draft.
+  draft: false
+  # Do not create a prerelease
+  prerelease: false
+  on:
+    # Only deploy from a tag.
+    appveyor_repo_tag: true

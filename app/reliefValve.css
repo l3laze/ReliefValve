@@ -1,0 +1,294 @@
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  animation: fadein 0.5s;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+body {
+  -webkit-touch-callout: none;
+  height: 100%;
+  width: 100%;
+  background: white;
+  color: black;
+}
+
+input, select, button, a, textarea, label[for] {
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+label[for], li {
+  cursor: pointer;
+}
+
+span, .status-container {
+  cursor: default;
+}
+
+select, input[type=text] {
+    width: 90%;
+}
+
+.active {
+    background: black;
+    color: white;
+}
+
+.border-right-black {
+    border-right: 1px solid black;
+}
+
+.border-right-white {
+    border-right: 1px solid white;
+}
+
+.border-left-black {
+    border-left: 1px solid black;
+}
+
+.border-left-white {
+    border-left: 1px solid white;
+}
+
+.centered {
+    text-align: center;
+}
+
+.search-bar {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.splitter {
+    margin: 0;
+    padding: 0;
+    background: black;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 5%;
+    width: 90%;
+    height: 1px;
+}
+
+.aboutSplitter {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  height: 1px;
+  width: 90%;
+}
+
+.status-container {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: -0.5em;
+}
+
+.view-container {
+    margin-top: 4px;
+}
+
+.controls-container {
+    margin-top: 4px;
+    line-height: 150%;
+}
+
+a.w3-btn {
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.bolded {
+    font-weight: bold;
+}
+
+.icon {
+    margin-top: 6px;
+    margin-left: 14px;
+}
+
+.taller {
+    position: relative;
+    top: -0.05em;
+    left: 0.5em;
+    font-size: x-large;
+}
+
+.headerBold {
+    font-weight: bolder;
+}
+
+.headerItalic {
+    font-style: italic;
+}
+
+.vertCenter {
+    vertical-align: middle;
+}
+
+#settingsView, #helpView, #aboutView, #debugView {
+    display: none;
+}
+
+#hamburger {
+    position: absolute;
+    top: -9px;
+    left: 0;
+}
+
+#navMenu {
+    margin-bottom: 48px;
+}
+
+#appIcon {
+    float: left;
+    margin: 0;
+    padding: 0;
+    padding-top: 6px;
+    padding-bottom: 5px;
+    padding-right: 16px;
+    -webkit-app-region: drag;
+    cursor: default;
+}
+
+#autoUpdateBehaviorList {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+#launchOption {
+    width: 5em;
+    vertical-align: sub;
+}
+
+#steamInstallations {
+    width: 10em;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    vertical-align: sub;
+}
+
+#settingsControlsContainer {
+    margin-bottom: 16px;
+}
+
+#appSettingsControlsContainer {
+    margin-top: 16px;
+}
+
+#linkSettings {
+    width: 5em;
+}
+
+#backgroundSettings {
+    width: 8em;
+}
+
+#textSettings {
+    width: 5.5em;
+    margin-right: 1em;
+}
+
+#helpText {
+  list-style-type: none;
+}
+
+#helpView {
+  margin-top: -16px;
+}
+
+#validDir {
+  margin-top: 4px;
+}
+
+#aboutView {
+  color: black;
+}
+
+#aboutView > div:nth-child(4) {
+    position: absolute;
+    bottom: 10px;
+    font-size: 12px;
+}
+
+#aboutHeader {
+  float: left;
+}
+
+#summaryText {
+    font-size: 0.8em;
+}
+
+#aboutSeparator {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    height: 1px;
+    width: 90%;
+}
+
+#aboutFooter {
+    font-size: 12px;
+}
+
+#aboutFooter > #thirdParty > span:first-child {
+    font-size: 10px;
+}
+
+#credits {
+  font-size: 14px;
+}
+
+#love {
+  font-size: 24px;
+  color:red;
+  vertical-align: -3px;
+}
+
+#licensing a {
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+#licensing {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+#bgImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+}
+
+@media only screen and (min-width: 601px) {
+    #aboutSeparator {
+        display: none;
+    }
+
+    #aboutFooter {
+        margin-top: 0;
+    }
+
+    #aboutView > div:nth-child(4) {
+        left: 20%;
+    }
+}

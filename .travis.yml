@@ -1,0 +1,79 @@
+# Set language as Node.js, and use
+#   the latest stable release of v7.
+language: node_js
+node_js: "7"
+
+
+# Run on Linux, Ubuntu 14.04.X LTS
+#   aka "Trusty Tahr".
+os: linux
+dist: trusty
+
+
+# Cache directories for faster builds.
+# Need to add more to this..
+cache:
+  directories:
+  - node_modules
+  - app/node_modules
+
+
+# Update the global npm install and
+#   then install the dependencies
+#   for ./app.
+install:
+- npm i npm -g
+- npm i
+
+
+# Use npm run to execute
+#   electron-builder to build the
+#   project for both 32 & 64-bit
+#   platforms of Linux or Windows.
+script:
+- npm run dist-32_64
+
+
+# Create a global variable for each
+#   of the 32 & 64-bit release packages
+#   and echo their paths.
+before_deploy:
+- export RELEASE_32=$(ls $TRAVIS_BUILD_DIR/dist/*ia32.AppImage)
+- export RELEASE_64=$(ls $TRAVIS_BUILD_DIR/dist/*x86_64.AppImage)
+- echo "Deploying $RELEASE_32 & $RELEASE_64 to GitHub releases."
+
+
+# Handle deploying the app to GitHub
+#   via GitHub "Releases".
+deploy:
+  provider: releases
+  # Needed to access GitHub API.
+  #   Unique to me; get your own!
+  api_key:
+    secure: sSkEmHzFeinFmpS7OFjJ0PSylJ4cce1C1zBVtGBFagonPOvMHgMrbjmN676cFVP6V99lm6A34gL4VDD79B8PlUyvXvOe4sBSakEhao54RGGglJwTaXOVJ8bL4KpUvr1dAFxbkGx5xIZ2xtdYFEYDVKW29mIQ9+fQLgodPaiP8JNuyE1J05XFO5sUaXi5FN2ghSBeiYZOLECsI1o8fY9L+l3B/skE2mkTWKlR53g0rUEYA2RUZLHIX5ulGJVGoOktnrGT0FToG+q+7BGUx8NOSBYAj4Llj45O0jXM8De8ExVhcS78NOmRuxcFLtIUpTdJei9ksKDRjgdhMcKrdKnJeAk2Qt8tDOE0Ui0n74rknn/GHmh0qQqc682Qc3SMMD6RFiWVhWXnh3UEzuGKNFc+dH4EXuYQ+m7T6PfQ5h26MaIUPue//ospR+bJYvCh3WfeiVdN/ljQhNqM5malcvlvwIYZshI+/wqBvByyn/1uZk9SnFT4X1BzxrJ9fSwXcI7WxirnaViwIwhL+4O9L2WJQ8fk36d0SQJEpF1ftILjw5js1FRNBAEkUfFuoa+lVio4lmsyMdXmJ/PNUnsG/D1th8X0/KYnVH8v+lB1j//x5PBZ6+6ZwEio7gSjc1Wr3VclAbyjpGzQ0fL2RfnbvPcKRX1aQhR8g3XnUIkVNlDULH4=
+  # Needed to upload multiple artifacts
+  #   (files), AFAIK.
+  file_glob: true
+  file:
+    - "$RELEASE_32"
+    - "$RELEASE_64"
+  # Don't let the system clean up, it
+  #   will delete the built files and
+  #   then the deploy will fail as
+  #   there will be no artifacts.
+  skip_cleanup: true
+  on:
+    # Only deploy from the given repo.
+    repo: l3laze/ReliefValve
+    # Deploy from any branch? True/False.
+    all_branches: true
+    # Deploy on tags? True/False.
+    tags: true
+    # Custom condition required to deploy
+    condition: "$TRAVIS_TAG =~ ^v([[:digit:]])+.([[:digit:]])+.([[:digit:]])+$"
+
+# Setup build notifications
+notifications:
+  # I was being harassed while setting
+  #   this all up..lol.
+  email: false

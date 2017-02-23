@@ -1,0 +1,14 @@
+{
+  "name": "ReliefValve",
+  "version": "v1.0.0",
+  "description": "Helps manage the Steam client application in offline mode.",
+  "main": "main.js",
+  "author": "l3l_aze <l3l_aze@yahoo.com>",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/l3laze/ReliefValve",
+  "dependencies": {
+    "electron-config": "^0.2.1",
+    "electron-log": "^1.3.0",
+    "simple-vdf": "^1.1.0"
+  }
+}
