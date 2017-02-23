@@ -3,7 +3,23 @@
   "build": {
     "appId": "tmshvr.reliefvalve",
     "mac": {
-      "category": "public.app-category.games"
+      "category": "public.app-category.games",
+      "target": [ "dmg" ]
+    },
+    "dmg": {
+      "icon": null,
+      "contents": [
+        {
+          "x": 120,
+          "y": 190
+        },
+        {
+          "x": 450,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "nsis": {
       "allowUserToChangeInstallDirectory": "true",
