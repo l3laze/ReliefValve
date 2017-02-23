@@ -50,11 +50,7 @@ deploy:
   # Needed to access GitHub API.
   #   Unique to me; get your own!
   api_key:
-<<<<<<< HEAD
     secure: "LFvx8sKdGeiKqsD037D3Yb5iL9yQCp6TGui9wLX8QB9uzCXijN73BuuWjjU/T3Mw7r9ZKQen+PQUzwoDO08GRFDCT/lsFx8EYYCqNDGp3wX6aiyNbiwch7/e29E5wFBk5mD0grtUllhenXRkSnSCAFfA+TNuVrk7ts0w4oQ9W+D17anC9PbjpfKgCJ8ud6sIJiy9PiHpJY6mu9EfXyF6/2WAU1KVk9KLLiiPlJOB9m5vb0W+f1BfV0V2KZ7QZpRdRKkCsbMYfbwIsEuBNttL+kgYx7hse1VhKMucuSrMpt7tLaGyg5PEMndTxkqagdaGNCCrQIBjjUMRjoZqhGO5qm1VXHNhQf9afToPzIStR3PUoJiNk2UZyw3m1nrDj0NnkGzubvavx40m0SkC9JtHdt8mRbUuhdcG8Odqcd51HNQA7cC7CQ2lSPFK9N/y7zIGYPGUNmo8ToYuSEwK3Xtmy5WmVNUzol1Pxj8Q/5SbvQes94p+Inv/bwRiiHqyCl1W+8vskM9oBuBMVq6Fgw5l8KAIR5K7LBLUJQPBcqOcFx6zVS8i4D3AQWS5D+vpKnfMB6iH+ABUVuOYOQjcnCY1e3gbkmu9XBJZTGIkOHbhBHzUkaqsDuWmvBk4Fe2eCUliUAO/BGkZu3QnCHkVkqKnfPhyScxkDHf+fRnxOE753jY="
-=======
-    secure: "IadISY9S/daZHqshxBHOsebGzL+Akdsy2/Vom4cxblxVYbGQYJODzBJN+XAlSLZJvIenTkLgfyw67ci8eAWdvY2Hqojt4jcYWiYnFWMxhwm0/LidpYs6owAgNButmuyaNfPA8VHD6cQhK19fCPXy6K+QlBVqZKaLzv52n7+RSgf5fB/bzQ7JZKFwizDH5b+1YiUevcelO8Yq8keFfMjzU2cE3WV6U1pXSYmFxGbliGGBc314YWpVQTVWSS+TTa28HtCCWB/AcRE97yaAkcvspfIy67RmN+I8khQtplfrzxwhf3xRuzq/wU7oS1OxZ5EgIv4crLYHbMXkR5la05h3QphmtAjDFMW6sph1TtKrrUPH1FEgSO7A0Dm4cU3ClOtoB4liT/iKkBmEWv/KPc6JdDTM+dubH5IgJL4tlJ2wnUqPD8IgVUjCfhf/lAgQEZD70JPn4JVEI/bnh3Wr8QrPXZ3XN3u9U5E21T18AlNvVa9Dvu8wS5kAQbxkf4hUjwXTlICoU0LYrcJm7iJwNDtHbleOT/J5+lgedShTy6J7p5Re0exipEv4gLs46iyI93OPd5F1jcHiFYVmQONNpEOOOkelmsfMP+SnDxKIBuFBITAcZJR6laPZgB1v/UuEDj1cT65SuAHD8J+983XOw/DDcBwWdSkRzxYBYpKmTHHEv1g="
->>>>>>> v1.0.0
   # Needed to upload multiple artifacts
   #   (files), AFAIK.
   file_glob: true
