@@ -1,6 +1,7 @@
 # Relief_Valve
 
-[![Build status](https://ci.appveyor.com/api/projects/status/u86r2vecm8s0djaw?svg=true)](https://ci.appveyor.com/project/l3laze/relief-valve)  [![Build Status](https://travis-ci.org/l3laze/Relief_Valve.svg?branch=master)](https://travis-ci.org/l3laze/Relief_Valve)
+[![Build status](https://ci.appveyor.com/api/projects/status/x6rj9gyaqm9o7bje?svg=true)](https://ci.appveyor.com/project/l3laze/reliefvalve) [![Build Status](https://travis-ci.org/l3laze/ReliefValve.svg?branch=master)](https://travis-ci.org/l3laze/ReliefValve)
+
 
 
 #What is it?
