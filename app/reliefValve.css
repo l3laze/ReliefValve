@@ -180,11 +180,6 @@ a.w3-btn {
     margin-bottom: 8px;
 }
 
-#launchOption {
-    width: 5em;
-    vertical-align: sub;
-}
-
 #steamInstallations {
     width: 10em;
     margin-top: 8px;
@@ -198,6 +193,10 @@ a.w3-btn {
 
 #appSettingsControlsContainer {
     margin-top: 16px;
+}
+
+div label[for="cbOfflineFix"] {
+  margin-top: 16px;
 }
 
 #linkSettings {

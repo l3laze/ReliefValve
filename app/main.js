@@ -64,7 +64,7 @@ function createWindow () {
 	// Open the DevTools.
 	//  mainWindow.webContents.openDevTools()
 
-  /* Code from
+  /* Code from or based on
    * https://github.com/electron/electron/issues/1344
    * Open external URL's in the OS-default browser.
    */
@@ -225,8 +225,9 @@ ipcMain.on( 'writeFile', function( event, file, data ) {
   event.returnValue = "undefined";
 })
 
-// Uncaught Exception handler...from https://www.loggly.com/blog/node-js-error-handling/
-
+/* Code from or based on
+ * https://www.loggly.com/blog/node-js-error-handling/
+ */
 process.on('uncaughtException', (err) => {
     logger.error('Whoops! There was an uncaught error', err);
     // do a graceful shutdown,

@@ -383,18 +383,6 @@ function applyRVSettings( list ) {
     }
   }
   el.classList.add( "w3-text-" + value );
-
-/*
-    btns = document.getElementsByClassName( "w3-btn" );
-    for( i = 0; i < btns.length; i++ ) {
-      for( j = 0; j < btns[ i ].classList.length; j++ ) {
-        if( btns[ i ].classList[ j ].indexOf( "w3-text") !== -1 ) {
-          btns[ i ].classList.remove( btns[ i ].classList[ j ]);
-        }
-        btns[ i ].classList.add( "w3-text-" + value );
-      }
-    }
-*/
 }
 
 
@@ -412,11 +400,7 @@ function validateColor( col ) {
   return false;
 }
 
-function validateGradient() {
-  return true;
-}
-
-/* Code from
+/* Code from or based on
  * http://stackoverflow.com/questions/979256/sorting-an-array-of-javascript-objects
  */
 function sortBy( field, reverse, primer ) {
