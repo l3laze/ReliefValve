@@ -30,7 +30,7 @@ logger.transports.file.streamConfig = { flags: "a" };
 function createWindow () {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
-		title: 'Asshat',
+		title: "ReliefValve",
 		frame: false,
 		show: false,
 		width: 800,
