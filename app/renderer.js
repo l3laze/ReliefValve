@@ -292,6 +292,130 @@ function resetBlacklist() {
   }
 }
 
+function changeBGSelection( list ) {
+  var i,
+      val = list.options[ list.selectedIndex ].text,
+      bgs = [
+        "Solid",
+        "Image"
+      ];
+  for( i = 0; i < bgs.length; i++ ) {
+    if( bgs[ i ] !== val ) {
+      document.getElementById( "bgSettings" + bgs[ i ] + "Container" ).classList.add( "w3-hide" );
+    }
+  }
+  if( val !== "Default" ) {
+    document.getElementById( "bgSettings" + val + "Container" ).classList.remove( "w3-hide" );
+  }
+}
+
+function chooseBGImage() {
+  var pic = ipc.sendSync( "getFile" ),
+      sp = pic.toLowerCase().split( path.sep ),
+      extensions = [
+        ".jpg", ".jpeg", ".bmp", ".gif", ".png", ".svg"
+      ],
+      el,
+      valid = false;
+  if( pic === "undefined" ) return logger.info( "No image was selected for the background." );
+  valid = extensions.indexOf(
+    sp[ sp.length - 1 ].substring(
+      sp[ sp.length - 1 ].indexOf( ".", -1 )
+    )
+  );
+  if( valid !== -1 ) {
+    logger.info( "User selected background image: " + pic + " with extension: " + extensions[ valid ]);
+    el = document.getElementById( "bgImage" );
+    el[ "data-location" ] = pic;
+    document.getElementById( "bgSettingsImageCurrent" ).innerHTML =
+      pic.substring( pic.lastIndexOf( "/" ) + 1 );
+    logger.info( el[ "data-location" ] + "\n" + document.getElementById( "bgSettingsImageCurrent" ).innerHTML );
+  }
+}
+
+function applyRVSettings( list ) {
+  var bg = list.options[ list.selectedIndex ].text,
+      value, i, j, el, btns;
+
+  if( bg === "Solid" ) {
+    el = document.getElementById( "bgSettingsSolid" );
+    value = el.options[ el.selectedIndex ].value;
+    logger.info( "Solid background color selected: " + value );
+    if( validateColor( value )) {
+      document.getElementById( "theBody" ).style = "background: " + value;
+    }
+    else {
+      alert( "The color value you entered for the background color is invalid." );
+    }
+    el = document.getElementById( "bgImage" );
+    el.style[ "background" ] = "";
+  }
+  else if( bg === "Image" ) {
+    el = document.getElementById( "bgImage" );
+    value = el[ "data-location" ];
+    logger.info( "value = " + value );
+    if( value !== "..." ) {
+      logger.info( "Setting background image to " + value );
+      el.style[ "background-image" ] = "url( " + value + " )";
+    }
+  }
+  else if( bg === "Default" ) {
+    document.getElementById( "theBody" ).style[ "background" ] = "";
+    document.getElementById( "bgImage" ).style[ "background" ] = "";
+  }
+
+  el = document.getElementById( "textSettingsColor" );
+  value = el.options[ el.selectedIndex ].value;
+  logger.info( "Setting text color to " + value + "..." );
+
+  el = document.getElementById( "theBody" );
+  for( i = 0; i < el.classList.length; i++ ) {
+    if( el.classList[ i ].indexOf( "w3-text" ) !== -1 ) {
+      el.classList.remove( el.classList[ i ]);
+    }
+  }
+  el.classList.add( "w3-text-" + value );
+
+  el = document.getElementById( "aboutView" );
+  for( i = 0; i < el.classList.length; i++ ) {
+    if( el.classList[ i ].indexOf( "w3-text" ) !== -1 ) {
+      el.classList.remove( el.classList[ i ]);
+    }
+  }
+  el.classList.add( "w3-text-" + value );
+
+/*
+    btns = document.getElementsByClassName( "w3-btn" );
+    for( i = 0; i < btns.length; i++ ) {
+      for( j = 0; j < btns[ i ].classList.length; j++ ) {
+        if( btns[ i ].classList[ j ].indexOf( "w3-text") !== -1 ) {
+          btns[ i ].classList.remove( btns[ i ].classList[ j ]);
+        }
+        btns[ i ].classList.add( "w3-text-" + value );
+      }
+    }
+*/
+}
+
+
+function validateColor( col ) {
+  if([
+    "red", "pink", "purple", "deep-purple", "indigo",
+    "blue", "light-blue", "cyan", "aqua", "teal", "green",
+    "light-green", "lime", "sand", "khaki", "yellow", "white",
+    "amber", "orange", "deep-orange", "blue-grey", "brown",
+    "light-grey", "grey", "dark-grey", "black", "palered",
+    "paleyellow", "palegreen", "paleblue", "transparent"
+  ].includes( col )) {
+    return true;
+  }
+  return false;
+}
+
+function validateGradient() {
+  return true;
+}
+
 /* Code from
  * http://stackoverflow.com/questions/979256/sorting-an-array-of-javascript-objects
  */

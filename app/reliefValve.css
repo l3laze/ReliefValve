@@ -11,6 +11,16 @@
   box-sizing: border-box;
 }
 
+#bgImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+}
+
 html {
   animation: fadein 0.5s;
   -webkit-user-select: none;
@@ -19,10 +29,10 @@ html {
 
 body {
   -webkit-touch-callout: none;
-  height: 100%;
-  width: 100%;
   background: white;
   color: black;
+  width: 100%;
+  height: 100%;
 }
 
 input, select, button, a, textarea, label[for] {
@@ -140,7 +150,7 @@ a.w3-btn {
     vertical-align: middle;
 }
 
-#settingsView, #helpView, #aboutView, #debugView {
+#blacklistView, #settingsView, #helpView, #aboutView, #debugView {
     display: none;
 }
 
@@ -194,13 +204,40 @@ a.w3-btn {
     width: 5em;
 }
 
-#backgroundSettings {
-    width: 8em;
+#bgSettingsList {
+  width: 6em;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
-#textSettings {
-    width: 5.5em;
-    margin-right: 1em;
+#bgSettingsSolidContainer {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+#bgSettingsGradientContainer {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+#bgSettingsGradient {
+  width: 100%;
+  resize: none;
+}
+
+#bgSettingsImageContainer {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+#textSettingsColor {
+  width: 5em;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+#bgSettingsSolid {
+    width: 5em;
 }
 
 #helpText {
