@@ -62,7 +62,7 @@ function createWindow () {
 	})
 
 	// Open the DevTools.
-	mainWindow.webContents.openDevTools()
+	//  mainWindow.webContents.openDevTools()
 
 	/* Code from
 	 * https://github.com/electron/electron/issues/1344
