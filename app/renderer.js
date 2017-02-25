@@ -17,20 +17,19 @@ const eol = require('os').EOL;
 var apps,
     hasUpdate = false,
     blacklist,
+    settings,
     defaultSizeG = null,
     defaultSizeB = null,
     logger = require('electron-log'),
     logPath = path.join( app.getPath( "userData" ), "log.txt" ),
     timer;
 
-
 logger.transports.file.level = 'info';
 logger.transports.file.file = logPath;
 logger.transports.file.size = 5 * 1024 * 1024; // 5MB.
 logger.transports.file.streamConfig = { flags: "a" };
 
-logger.info( "---------------- Begin New ----------------" + eol + eol );
-logger.info( logPath );
+logger.info( "---------------- Begin New ----------------" );
 
 function openView( evt, viewName ) {
   var i, x, tablinks;
@@ -40,7 +39,7 @@ function openView( evt, viewName ) {
   }
   tablinks = document.getElementsByClassName( "tablink" );
   for( i = 0; i < tablinks.length; i++ ) {
-    tablinks[ i ].className = tablinks[ i ].className.replace( " active", "" );
+    tablinks[ i ].classList.remove( "active" );
   }
   evt.currentTarget.className += " active";
 
@@ -53,9 +52,32 @@ function openView( evt, viewName ) {
 }
 
 function toggleMenu() {
-  var x = document.getElementById( "VMenu" );
-    x.classList.toggle( "w3-show" );
-    x.classList.toggle( "w3-hide" );
+  var x, items = [
+    document.getElementById( "VMainContainer" ),
+    document.getElementById( "VSettingsContainer" ),
+    document.getElementById( "VHelpContainer" ),
+    document.getElementById( "VAboutContainer" ),
+    document.getElementById( "VExitContainer" )
+  ],
+  m = document.getElementById( "menuToggle" ),
+  state = m[ "data-state" ];
+  for( x = 0; x < items.length; x++ ) {
+    if( ! state ) {
+      items[ x ].classList.add( "w3-hide" );
+    }
+    else {
+      items[ x ].classList.remove( "w3-hide" );
+    }
+  }
+
+  if( state ) {
+    m.innerHTML = "&times;";
+  }
+  else {
+    m.innerHTML = "&#9776;";
+  }
+
+  m[ "data-state" ] = ( !state );
 }
 
 function handleResize() {
@@ -90,7 +112,6 @@ function chooseInstall() {
     logger.info( "The selected Steam installation is invalid." );
   }
   else {
-    logger.info( "Steam directory selected." );
     document.getElementById( "installLocation" ).innerHTML = folder;
     loadSteamApps( folder );
   }
@@ -108,7 +129,6 @@ function applySteamAppSettings() {
       selected.push( i );
     }
   }
-  logger.info( selected );
 
   for( i = 0; i < selected.length; i++ ) {
     var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
@@ -123,7 +143,10 @@ function applySteamAppSettings() {
 }
 
 function loadSteamApps( loc ) {
-  if( loc === "..." ) return logger.info( "Choose a Steam install location first." );
+  if( loc === "..." ) {
+    alert( "Choose a Steam install location first." );
+    return logger.info( "Choose a Steam install location first." );
+  }
   var libloc = path.join( loc, "steamapps", "libraryfolders.vdf" ),
       file = vdf.parse( ipc.sendSync( "readFile", libloc )).LibraryFolders,
       libs = [],
@@ -142,10 +165,12 @@ function loadSteamApps( loc ) {
     for( y = 0; y < l.length; y++ ) {
       if( path.parse( l[ y ]).ext === ".acf" ) {
         loading = vdf.parse( ipc.sendSync( "readFile", path.join( libs[ x ], l [ y ]))).AppState;
-        if( Object.keys( blacklist ).includes( loading.appid ) === false )
-          apps.push({ "appid": loading.appid, "name": loading.name, "state": loading.StateFlags, "aub": loading.AutoUpdateBehavior, "path": path.join( libs[ x ], l[ y ])});
-        else
+        if( Object.keys( blacklist ).includes( loading.appid )) {
           logger.info( "Skipped loading blacklisted app \"" + loading.name + "\" (" + loading.appid + ")"  );
+        }
+        else {
+          apps.push({ "appid": loading.appid, "name": loading.name, "state": loading.StateFlags, "aub": loading.AutoUpdateBehavior, "path": path.join( libs[ x ], l[ y ])});
+        }
       }
     }
   }
@@ -193,16 +218,68 @@ function changeSelection( list ) {
   document.getElementById( "numberUseless" ).innerHTML = useless;
 }
 
+function loadSettings() {
+  var el, value;
+  if( config.has( "settings" ) === false ) {
+    logger.info( "There is no \"settings\" in config." );
+    settings = {
+      "bg": "0",
+      "bgValue": "...",
+      "text": "0",
+      "autoLoad": false,
+      "autoLoadValue": "..."
+    };
+    config.set( "settings", settings );
+  }
+  else {
+    settings = config.get( "settings" );
+  }
+
+  logger.info( settings );
+
+  value = parseInt( settings.bg );
+  document.getElementById( "bgSettingsList" ).selectedIndex = value;
+  if( value === 1 ) {
+    document.getElementById( "bgSettingsSolid" ).selectedIndex = parseInt( settings.bgValue );
+  }
+  else if( value === 2 ) {
+    if( ipc.sendSync( "fileExists", settings.bgValue )) {
+      document.getElementById( "bgImage" )[ "data-location" ] = settings.bgValue;
+      document.getElementById( "bgSettingsImageCurrent" ).innerHTML = settings.bgValue.substring( settings.bgValue.lastIndexOf( "/" ) + 1 );
+    }
+    else {
+      logger.info( "The background image that was set is not in the saved location; removing it from settings & using the default background value instead." );
+      alert( "The background image that was set is not in the saved location; removing it from settings & using the default background instead." );
+      settings.bg = "0";
+      settings.bgValue = "...";
+    }
+  }
+
+  document.getElementById( "textSettingsColor" ).selectedIndex = parseInt( settings.text );
+
+  el = document.getElementById( "autoLoad" );
+  el.checked = settings.autoLoad;
+  el[ "data-location" ] = settings.autoLoadValue;
+  if( settings.autoLoadValue !== "..." && settings.autoLoad ) {
+    loadBlacklist();
+    loadSteamApps( settings.autoLoadValue );
+    document.getElementById( "installLocation" ).innerHTML = settings.autoLoadValue;
+  }
+
+  el = document.getElementById( "bgSettingsList" );
+  changeBGSelection( el );
+  applyRVSettings( el );
+}
+
 function loadBlacklist() {
   var i, sel, opt, blacklistKeys;
   if( config.has( "blacklist" ) === false ) {
-    logger.info( "There is no blacklist in config." );
+    logger.info( "There is no \"blacklist\" in config." );
     blacklist = {};
     blacklist[ "250820" ] = "SteamVR"; // Blacklist SteamVR
     config.set( "blacklist", blacklist );
   }
   else {
-    logger.info( "Loading blacklist from config (" + config.path + ")." );
     blacklist = config.get( "blacklist" );
   }
 
@@ -233,11 +310,9 @@ function addToBlacklist( list ) {
     val = list[ i ].value.split( "|" );
     if( list[ i ].selected ) {
       if( val[ 0 ] in blacklist ) {
-        logger.info( "Ignoring; already-blacklisted: " + val[ 1 ]);
         alert( "\"" + val[ 1 ] + "\" is already on the blacklist; ignoring it." );
       }
       else {
-        logger.info( "Adding \"" + val[ 1 ] + "\" to the blacklist." );
         selected[ val[ 0 ]] = val[ 1 ];
       }
     }
@@ -264,7 +339,6 @@ function removeFromBlacklist() {
     if( sel[ i ].selected ) {
       if( val === "250820" ) { // Keep SteamVR on the blacklist.
         alert( "SteamVR cannot be removed from the blacklist." );
-        logger.info( "Ignoring SteamVR; it must be kept on the blacklist." );
       }
       else {
         selected.push( i );
@@ -274,7 +348,6 @@ function removeFromBlacklist() {
 
   for( i = selected.length - 1; i >= 0; i-- ) {
     val = sel[ selected[ i ]].value;
-    logger.info( "Removing: " + blacklist[ val ] + " from blacklist." );
     delete blacklist[ val ];
     sel.remove( selected[ i ]);
   }
@@ -292,7 +365,121 @@ function resetBlacklist() {
   }
 }
 
-/* Code from
+function changeBGSelection( list ) {
+  var i,
+      val = list.options[ list.selectedIndex ].text,
+      bgs = [
+        "Solid",
+        "Image"
+      ];
+  for( i = 0; i < bgs.length; i++ ) {
+    if( bgs[ i ] !== val ) {
+      document.getElementById( "bgSettings" + bgs[ i ] + "Container" ).classList.add( "w3-hide" );
+    }
+  }
+  if( val !== "Default" ) {
+    document.getElementById( "bgSettings" + val + "Container" ).classList.remove( "w3-hide" );
+  }
+}
+
+function chooseBGImage() {
+  var pic = ipc.sendSync( "getFile" ),
+      sp = pic.toLowerCase().split( path.sep ),
+      extensions = [
+        ".jpg", ".jpeg", ".bmp", ".gif", ".png", ".svg"
+      ],
+      el,
+      valid = false;
+  if( pic !== "undefined" ) {
+    valid = extensions.indexOf(
+      sp[ sp.length - 1 ].substring(
+        sp[ sp.length - 1 ].indexOf( ".", -1 )
+      )
+    );
+    if( valid !== -1 ) {
+      el = document.getElementById( "bgImage" );
+      el[ "data-location" ] = pic;
+      document.getElementById( "bgSettingsImageCurrent" ).innerHTML = pic.substring( pic.lastIndexOf( "/" ) + 1 );
+    }
+  }
+}
+
+function applyRVSettings( list ) {
+  var bg = list.options[ list.selectedIndex ].text,
+      value, i, j, el;
+
+  settings.bg = list.selectedIndex;
+
+  if( bg === "Solid" ) {
+    el = document.getElementById( "bgSettingsSolid" );
+    value = el.options[ el.selectedIndex ].value;
+    if( validateColor( value )) {
+      document.getElementById( "theBody" ).style = "background: " + value;
+      settings.bgValue = el.selectedIndex;
+    }
+    else {
+      alert( "The color value you entered for the background color is invalid." );
+    }
+    el = document.getElementById( "bgImage" );
+    el.style[ "background" ] = "";
+  }
+  else if( bg === "Image" ) {
+    el = document.getElementById( "bgImage" );
+    value = el[ "data-location" ];
+    if( value !== "..." ) {
+      settings.bgValue = value;
+      el.style[ "background-image" ] = "url( " + value + " )";
+    }
+  }
+  else if( bg === "Default" ) {
+    settings.bgValue = "";
+    document.getElementById( "theBody" ).style[ "background" ] = "";
+    document.getElementById( "bgImage" ).style[ "background" ] = "";
+  }
+
+  el = document.getElementById( "textSettingsColor" );
+  value = el.options[ el.selectedIndex ].value;
+
+  settings.text = el.selectedIndex;
+
+  el = document.getElementById( "theBody" );
+  for( i = 0; i < el.classList.length; i++ ) {
+    if( el.classList[ i ].indexOf( "w3-text" ) !== -1 ) {
+      el.classList.remove( el.classList[ i ]);
+    }
+  }
+  el.classList.add( "w3-text-" + value );
+
+  el = document.getElementById( "aboutView" );
+  for( i = 0; i < el.classList.length; i++ ) {
+    if( el.classList[ i ].indexOf( "w3-text" ) !== -1 ) {
+      el.classList.remove( el.classList[ i ]);
+    }
+  }
+  el.classList.add( "w3-text-" + value );
+
+  el = document.getElementById( "autoLoad" );
+  settings.autoLoad = el.checked;
+  settings.autoLoadValue = document.getElementById( "installLocation" ).innerHTML;
+
+  config.set( "settings", settings );
+}
+
+function validateColor( col ) {
+  if([
+    "red", "pink", "purple", "deep-purple", "indigo",
+    "blue", "light-blue", "cyan", "aqua", "teal", "green",
+    "light-green", "lime", "sand", "khaki", "yellow", "white",
+    "amber", "orange", "deep-orange", "blue-grey", "brown",
+    "light-grey", "grey", "dark-grey", "black", "palered",
+    "paleyellow", "palegreen", "paleblue", "transparent"
+  ].includes( col )) {
+    return true;
+  }
+  return false;
+}
+
+/* Code from or based on
  * http://stackoverflow.com/questions/979256/sorting-an-array-of-javascript-objects
  */
 function sortBy( field, reverse, primer ) {
@@ -312,4 +499,4 @@ process.on('uncaughtException', (err) => {
     // do a graceful shutdown,
     // close the database connection etc.
     process.exit( 1 );
-});
+})
