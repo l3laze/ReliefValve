@@ -15,29 +15,26 @@
   <script src="renderer.js"></script>
 </head>
 <body id="theBody">
+
   <nav id="navMenu" class="w3-large">
-    <a href="javascript:void(0);" id="hamburger" onclick="toggleMenu()" class="w3-btn w3-border w3-left w3-white tablink">&#9776;</a>
-    <ul id="VMenu" class="w3-navbar w3-show w3-left-align w3-white w3-top">
-      <li>
-        <a href="javascript:void(0);" id="vmenuToggle" onclick="toggleMenu()" class="w3-closenav w3-border">&times;</a>
+    <ul id="VMenu" class="w3-navbar w3-show w3-left-align w3-transparent w3-top">
+      <li id="menuToggleContainer">
+        <a href="javascript:void(0);" id="menuToggle" class="tablink w3-border w3-white w3-hover-white w3-hover-text-black" onclick="toggleMenu()" data-state="true">&times;</a>
       </li>
-      <li>
-        <a href="javascript:void(0);" id="VMain" class="tablink w3-border active" onclick="openView( event, 'mainView' )">Main</a>
+      <li id="VMainContainer">
+        <a href="javascript:void(0);" id="VMain" class="active tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'mainView' )">Main</a>
       </li>
-      <li>
-        <a href="javascript:void(0);" id="VSettings" class="tablink w3-border" onclick="openView( event, 'settingsView' )">Settings</a>
+      <li id="VSettingsContainer">
+        <a href="javascript:void(0);" id="VSettings" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'settingsView' )">Settings</a>
       </li>
-      <li>
-        <a href="javascript:void(0);" id="VHelp" class="tablink w3-border" onclick="openView( event, 'helpView' )">Help</a>
+      <li id="VHelpContainer">
+        <a href="javascript:void(0);" id="VHelp" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'helpView' )">Help</a>
       </li>
-      <li>
-        <a href="javascript:void(0);" id="VAbout" class="tablink w3-border" onclick="openView( event, 'aboutView' )">About</a>
+      <li id="VAboutContainer">
+        <a href="javascript:void(0);" id="VAbout" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'aboutView' )">About</a>
       </li>
-      <li>
-        <a href="javascript:void(0);" class="tablink w3-border" id="VExit" onclick="app.quit()">Exit</a>
-      </li>
-      <li id="appIcon" class="w3-right w3-white w3-hide-small icon">
-        <img src="resources/32x32.png" alt="RV"/>
+      <li id="VExitContainer">
+        <a href="javascript:void(0);" id="VExit" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="app.quit()">Exit</a>
       </li>
     </ul>
   </nav>
@@ -47,17 +44,17 @@
       <div class="w3-container centered">
         <div class="centered">
           <label class="w3-large w3-content centered bolded">Steam Apps</label>
-          <span id="numberTotal" class="w3-large w3-content w3-padding">0</span>
+          <span id="numberTotal" class="w3-large w3-content w3-padding" title="Total number of apps loaded.">0</span>
         </div>
-        <input type="text" class="search-bar" id="searchGames" placeholder="Search"/>
+        <input type="text" class="search-bar" id="searchGames" placeholder="Search" />
         <select id="gameList" size="20" multiple class="w3-white">
         </select>
       </div>
       <div id="gameStatusContainer" class="w3-container centered status-container">
-        <span id="numberSelected" class="w3-tag w3-small w3-blue w3-padding">0</span>
-        <span id="numberReady" class="w3-tag w3-small w3-green w3-padding">0</span>
-        <span id="numberFixable" class="w3-tag w3-small w3-yellow w3-padding">0</span>
-        <span id="numberUseless" class="w3-tag w3-small w3-red w3-padding">0</span>
+        <span id="numberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Number of apps selected.">0</span>
+        <span id="numberReady" class="w3-tag w3-small w3-green w3-padding" title="Number of apps that are useable.">0</span>
+        <span id="numberFixable" class="w3-tag w3-small w3-yellow w3-padding" title="Number of apps that can be fixed for offline use.">0</span>
+        <span id="numberUseless" class="w3-tag w3-small w3-red w3-padding" title="Number of apps considered useless.">0</span>
       </div>
     </div>
     <div id="gameControlsContainer" class="w3-half w3-container centered view-container">
@@ -66,6 +63,11 @@
         <label id="installLocation">...</label>
         <br />
         <a href="javascript:void(0)" id="chooseSteam" class="w3-btn w3-white w3-ripple w3-border">Choose</a>
+        <br />
+        <div id="autoLoadContainer">
+          <input type="checkbox" id="autoLoad" class="w3-check" data-location="" />
+          <label for="autoLoad">Auto-load User</label>
+        </div>
         <hr class="splitter" />
       </div>
       <div class="w3-container">
@@ -93,15 +95,14 @@
       <div class="w3-container centered">
         <div class="centered">
           <label class="w3-large w3-content centered bolded">Blacklist</label>
-          <span id="blacklistTotal" class="w3-large w3-content w3-padding">0</span>
+          <span id="blacklistTotal" class="w3-large w3-content w3-padding" title="Total number of apps on the blacklist.">0</span>
         </div>
         <input type="text" class="search-bar" id="searchBlacklist" placeholder="Search"/>
         <select id="blackList" size="20" multiple class="w3-white">
         </select>
       </div>
       <div id="blacklistStatusContainer" class="w3-container centered status-container">
-        <span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding">0</span>
-        <span id="blacklistNumberExist" class="w3-tag w3-small w3-black w3-padding">0</span>
+        <span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Total number of apps selected.">0</span>
       </div>
     </div>
     <div class="w3-half w3-container centered">
@@ -114,7 +115,7 @@
       </div>
       <hr class="splitter"/>
       <div id="settingsControlsContainer" class="w3-container view-container">
-        <div id="bgSettings" class="w3-container">
+        <div id="bgSettingsContainer" class="w3-container">
           <label class="w3-large bolded">Settings Controls</label>
           <br />
           <label>Background</label>
@@ -132,7 +133,6 @@
               <option value="indigo">Indigo</option>
               <option value="blue">Blue</option>
               <option value="cyan">Cyan</option>
-              <option value="aqua">Aqua</option>
               <option value="teal">Teal</option>
               <option value="green">Green</option>
               <option value="lime">Lime</option>
@@ -140,7 +140,6 @@
               <option value="khaki">Khaki</option>
               <option value="yellow">Yellow</option>
               <option value="white">White</option>
-              <option value="amber">Amber</option>
               <option value="orange">Orange</option>
               <option value="brown">Brown</option>
               <option value="grey">Grey</option>
@@ -314,10 +313,10 @@
     </div>
   </div>
 
+  <div id="bgImage" data-location=""></div>
 
-  <div id="bgImage"></div>
   <script type="text/javascript"><!--
-    window.addEventListener( "DOMContentLoaded", loadBlacklist );
+    window.addEventListener( "DOMContentLoaded", loadSettings );
 
     window.addEventListener( "resize", handleResize );
 

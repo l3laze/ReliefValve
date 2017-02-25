@@ -12,13 +12,13 @@
 }
 
 #bgImage {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-position: center;
 }
 
 html {
@@ -49,49 +49,55 @@ span, .status-container {
 }
 
 select, input[type=text] {
-    width: 90%;
+  width: 90%;
+}
+
+.tablink {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .active {
-    background: black;
-    color: white;
+  background: black;
+  color: white;
 }
 
 .border-right-black {
-    border-right: 1px solid black;
+  border-right: 1px solid black;
 }
 
 .border-right-white {
-    border-right: 1px solid white;
+  border-right: 1px solid white;
 }
 
 .border-left-black {
-    border-left: 1px solid black;
+  border-left: 1px solid black;
 }
 
 .border-left-white {
-    border-left: 1px solid white;
+  border-left: 1px solid white;
 }
 
 .centered {
-    text-align: center;
+  text-align: center;
 }
 
 .search-bar {
-    padding: 0;
-    margin: 0;
-    width: 100%;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
 .splitter {
-    margin: 0;
-    padding: 0;
-    background: black;
-    margin-top: 16px;
-    margin-bottom: 16px;
-    margin-left: 5%;
-    width: 90%;
-    height: 1px;
+  margin: 0;
+  padding: 0;
+  background: black;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  margin-left: 5%;
+  width: 90%;
+  height: 1px;
 }
 
 .aboutSplitter {
@@ -103,104 +109,111 @@ select, input[type=text] {
 }
 
 .status-container {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    margin-left: -0.5em;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: -0.5em;
 }
 
 .view-container {
-    margin-top: 4px;
+  margin-top: 4px;
 }
 
 .controls-container {
-    margin-top: 4px;
-    line-height: 150%;
+  margin-top: 4px;
+  line-height: 150%;
 }
 
 a.w3-btn {
-    margin-top: 8px;
-    margin-bottom: 4px;
+  margin-top: 8px;
+  margin-bottom: 4px;
 }
 
 .bolded {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .icon {
-    margin-top: 6px;
-    margin-left: 14px;
+  margin-top: 6px;
+  margin-left: 14px;
 }
 
 .taller {
-    position: relative;
-    top: -0.05em;
-    left: 0.5em;
-    font-size: x-large;
+  position: relative;
+  top: -0.05em;
+  left: 0.5em;
+  font-size: x-large;
 }
 
 .headerBold {
-    font-weight: bolder;
+  font-weight: bolder;
 }
 
 .headerItalic {
-    font-style: italic;
+  font-style: italic;
 }
 
 .vertCenter {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 #blacklistView, #settingsView, #helpView, #aboutView, #debugView {
-    display: none;
+  display: none;
 }
 
+
+
 #hamburger {
-    position: absolute;
-    top: -9px;
-    left: 0;
+  position: absolute;
+  top: -8px;
+  left: 1px;
+}
+
+#VMenu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 #navMenu {
-    margin-bottom: 48px;
-}
-
-#appIcon {
-    float: left;
-    margin: 0;
-    padding: 0;
-    padding-top: 6px;
-    padding-bottom: 5px;
-    padding-right: 16px;
-    -webkit-app-region: drag;
-    cursor: default;
+  margin-bottom: 48px;
 }
 
 #autoUpdateBehaviorList {
-    margin-top: 8px;
-    margin-bottom: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 #steamInstallations {
-    width: 10em;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    vertical-align: sub;
+  width: 10em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  vertical-align: sub;
 }
 
 #settingsControlsContainer {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 #appSettingsControlsContainer {
-    margin-top: 16px;
-}
-
-div label[for="cbOfflineFix"] {
   margin-top: 16px;
 }
 
+#autoLoadContainer {
+  padding-top: 8px;
+}
+
+label[for="autoLoad"] {
+  margin-left: 4px;
+  vertical-align: text-top;
+}
+
+label[for="cbOfflineFix"] {
+  margin-top: 16px;
+  vertical-align: text-top;
+}
+
 #linkSettings {
-    width: 5em;
+  width: 5em;
 }
 
 #bgSettingsList {
@@ -236,7 +249,7 @@ div label[for="cbOfflineFix"] {
 }
 
 #bgSettingsSolid {
-    width: 5em;
+  width: 5em;
 }
 
 #helpText {
@@ -256,9 +269,9 @@ div label[for="cbOfflineFix"] {
 }
 
 #aboutView > div:nth-child(4) {
-    position: absolute;
-    bottom: 10px;
-    font-size: 12px;
+  position: absolute;
+  bottom: 10px;
+  font-size: 12px;
 }
 
 #aboutHeader {
@@ -266,23 +279,23 @@ div label[for="cbOfflineFix"] {
 }
 
 #summaryText {
-    font-size: 0.8em;
+  font-size: 0.8em;
 }
 
 #aboutSeparator {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    height: 1px;
-    width: 90%;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  height: 1px;
+  width: 90%;
 }
 
 #aboutFooter {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 #aboutFooter > #thirdParty > span:first-child {
-    font-size: 10px;
+  font-size: 10px;
 }
 
 #credits {
@@ -296,35 +309,35 @@ div label[for="cbOfflineFix"] {
 }
 
 #licensing a {
-    font-size: 12px;
-    vertical-align: middle;
+  font-size: 12px;
+  vertical-align: middle;
 }
 
 #licensing {
-    display: inline-block;
-    margin-top: 10px;
+  display: inline-block;
+  margin-top: 10px;
 }
 
 #bgImage {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-position: center;
 }
 
 @media only screen and (min-width: 601px) {
-    #aboutSeparator {
-        display: none;
-    }
+  #aboutSeparator {
+    display: none;
+  }
 
-    #aboutFooter {
-        margin-top: 0;
-    }
+  #aboutFooter {
+    margin-top: 0;
+  }
 
-    #aboutView > div:nth-child(4) {
-        left: 20%;
-    }
+  #aboutView > div:nth-child(4) {
+    left: 20%;
+  }
 }
