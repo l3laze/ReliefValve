@@ -4,7 +4,9 @@
     "appId": "tmshvr.reliefvalve",
     "mac": {
       "category": "public.app-category.games",
-      "target": [ "dmg" ]
+      "target": [
+        "dmg"
+      ]
     },
     "dmg": {
       "icon": null,
@@ -47,5 +49,8 @@
   "devDependencies": {
     "electron": "^1.4.15",
     "electron-builder": "^13.6.0"
+  },
+  "dependencies": {
+    "winreg": "^1.2.3"
   }
 }

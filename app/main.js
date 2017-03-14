@@ -34,9 +34,9 @@ function createWindow () {
 		frame: false,
 		show: false,
 		width: 800,
-		height: 600,
+		height: 620,
 		"minWidth": 400,
-		"minHeight": 540
+		"minHeight": 620
 	})
 
   // and load the index.html of the app.
@@ -64,7 +64,7 @@ function createWindow () {
 	// Open the DevTools.
 	//  mainWindow.webContents.openDevTools()
 
-  /* Code from or based on
+  /* Code from or based on [pravdomil's comment]:
    * https://github.com/electron/electron/issues/1344
    * Open external URL's in the OS-default browser.
    */
@@ -123,6 +123,7 @@ app.on('activate', function () {
 ipcMain.on( 'fileExists', function( event, file ) {
   if( file === undefined ) {
     logger.info( "Path is not defined." );
+    event.returnValue = "undefined";
   }
   else {
     event.returnValue = fs.existsSync( file );
@@ -221,7 +222,7 @@ ipcMain.on( 'readFile', function( event, file ) {
 })
 
 ipcMain.on( 'writeFile', function( event, file, data ) {
-  var data = fs.writeFileSync( file, data );
+  var ret = fs.writeFileSync( file, data );
   event.returnValue = "undefined";
 })
 

@@ -11,6 +11,14 @@
   box-sizing: border-box;
 }
 
+select[disabled] {
+  border: 2px solid gold;
+}
+
+input[type="checkbox" disabled] {
+  color: red;
+}
+
 #bgImage {
   position: fixed;
   top: 0;
@@ -23,32 +31,32 @@
 
 html {
   animation: fadein 0.5s;
+  -webkit-touch-callout: none;
   -webkit-user-select: none;
   -webkit-app-region: drag;
 }
 
 body {
   -webkit-touch-callout: none;
+  -webkit-user-select: none;
   background: white;
   color: black;
   width: 100%;
   height: 100%;
 }
 
-input, select, button, a, textarea, label[for] {
+input, select, button, a, textarea, #navMenu label[for] {
   cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
   -webkit-app-region: no-drag;
-}
-
-label[for], li {
-  cursor: pointer;
 }
 
 span, .status-container {
   cursor: default;
 }
 
-select, input[type=text] {
+select, input[type=search] {
   width: 90%;
 }
 
@@ -156,11 +164,94 @@ a.w3-btn {
   vertical-align: middle;
 }
 
-#blacklistView, #settingsView, #helpView, #aboutView, #debugView {
+#blacklistView, #clientView, #settingsView, #helpView, #aboutView, #debugView {
   display: none;
 }
 
+#forceDownload {
+  margin-top: 0;
+  margin-bottom: 8px;
+  padding-left: 2px;
+  width: 210px;
+  text-align: left;
+}
 
+#clearForce, #addForce {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+#lastCleanTime, #lastRunLabel {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+#launchOptions {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+#launchBtn {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+#launchOptionsListLeft, #launchOptionsListRight {
+  width: 100%;
+  list-style-type: none;
+  line-height: 2em;
+  margin-top: -1em;
+}
+
+#launchOptionsListLeft label, #launchOptionsListRight label {
+  cursor: pointer;
+}
+
+#lo_arg_daisy_wheel {
+  margin-left: 8px;
+  width: 70px;
+}
+
+#lo_arg_bitness {
+  margin-left: 8px;
+  width: 45px
+}
+
+#lo_arg_platform {
+  margin-left: 8px;
+  width: 98px;
+}
+
+#skinList {
+  width: 115px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+#modalHeader {
+  margin-left: 2em;
+}
+
+#closeModal {
+  margin-top: 4px;
+  margin-right: -12px;
+  width: 48px;
+  height: 42px;
+  font-size: 2em;
+}
+
+#resetLaunchOptions, #saveLaunchOptions {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+#launchBtn {
+  margin-top: 4px;
+}
+
+#bpmModeList {
+  width: auto;
+}
 
 #hamburger {
   position: absolute;
@@ -202,12 +293,18 @@ a.w3-btn {
   padding-top: 8px;
 }
 
+#autoLoad {
+  margin-bottom: 16px;
+}
+
 label[for="autoLoad"] {
+  cursor: pointer;
   margin-left: 4px;
   vertical-align: text-top;
 }
 
 label[for="cbOfflineFix"] {
+  cursor: pointer;
   margin-top: 16px;
   vertical-align: text-top;
 }
@@ -250,14 +347,6 @@ label[for="cbOfflineFix"] {
 
 #bgSettingsSolid {
   width: 5em;
-}
-
-#helpText {
-  list-style-type: none;
-}
-
-#helpView {
-  margin-top: -16px;
 }
 
 #validDir {
@@ -339,5 +428,17 @@ label[for="cbOfflineFix"] {
 
   #aboutView > div:nth-child(4) {
     left: 20%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  #launchOptionsContainer {
+      padding-top: 50px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #launchOptionsListRight {
+    margin-top: -32px;
   }
 }

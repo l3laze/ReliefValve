@@ -15,9 +15,8 @@
   <script src="renderer.js"></script>
 </head>
 <body id="theBody">
-
   <nav id="navMenu" class="w3-large">
-    <ul id="VMenu" class="w3-navbar w3-show w3-left-align w3-transparent w3-top">
+    <ul id="VMenu" class="w3-navbar w3-white w3-show w3-left-align w3-top">
       <li id="menuToggleContainer">
         <a href="javascript:void(0);" id="menuToggle" class="tablink w3-border w3-white w3-hover-white w3-hover-text-black" onclick="toggleMenu()" data-state="true">&times;</a>
       </li>
@@ -26,6 +25,9 @@
       </li>
       <li id="VSettingsContainer">
         <a href="javascript:void(0);" id="VSettings" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'settingsView' )">Settings</a>
+      </li>
+      <li id="VClientContainer">
+        <a href="javascript:void(0);" id="VClient" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'clientView' )">Client</a>
       </li>
       <li id="VHelpContainer">
         <a href="javascript:void(0);" id="VHelp" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'helpView' )">Help</a>
@@ -46,8 +48,8 @@
           <label class="w3-large w3-content centered bolded">Steam Apps</label>
           <span id="numberTotal" class="w3-large w3-content w3-padding" title="Total number of apps loaded.">0</span>
         </div>
-        <input type="text" class="search-bar" id="searchGames" placeholder="Search" />
-        <select id="gameList" size="20" multiple class="w3-white">
+        <input type="search" class="search-bar" id="searchGames" placeholder="Search" />
+        <select id="gameList" multiple class="w3-white">
         </select>
       </div>
       <div id="gameStatusContainer" class="w3-container centered status-container">
@@ -56,67 +58,66 @@
         <span id="numberFixable" class="w3-tag w3-small w3-yellow w3-padding" title="Number of apps that can be fixed for offline use.">0</span>
         <span id="numberUseless" class="w3-tag w3-small w3-red w3-padding" title="Number of apps considered useless.">0</span>
       </div>
-    </div>
-    <div id="gameControlsContainer" class="w3-half w3-container centered view-container">
       <div class="w3-container">
-        <label class="w3-large bolded">Steam Location</label><br />
-        <label id="installLocation">...</label>
-        <br />
-        <a href="javascript:void(0)" id="chooseSteam" class="w3-btn w3-white w3-ripple w3-border">Choose</a>
-        <br />
-        <div id="autoLoadContainer">
-          <input type="checkbox" id="autoLoad" class="w3-check" data-location="" />
-          <label for="autoLoad">Auto-load User</label>
-        </div>
-        <hr class="splitter" />
+        <hr class="splitter w3-hide-small" />
       </div>
-      <div class="w3-container">
-        <label class="w3-large bolded">Steam App Settings</label>
+      <div class="w3-container centered">
+        <label class="w3-large bolded">Steam App Controls</label>
         <select id="autoUpdateBehaviorList" class="w3-white">
           <option value="0">Always keep this game up to date.</option>
           <option value="1">Only update this game when I launch it.</option>
           <option value="2">High priority - auto-update this game before others.</option>
         </select>
       </div>
-      <div class="w3-row w3-container">
+      <div class="w3-row w3-container centered">
         <input type="checkbox" id="cbOfflineFix" class="w3-check" />
         <label for="cbOfflineFix">Offline fix</label>
       </div>
-      <div class="w3-container">
+      <div class="w3-container centered">
         <a href="javascript:void(0)" id="steamAppApply" class="w3-btn w3-white w3-ripple w3-border">Apply</a>
-        <br />
         <a href="javascript:void(0);" id="blacklistAdd" class="w3-btn w3-ripple w3-white w3-border">Add to Blacklist</a>
       </div>
     </div>
-  </div>
-
-  <div id="settingsView" class="appView">
-    <div id="blacklistContainer" class="w3-half w3-container view-container">
+    <div id="blacklistContainer" class="w3-half w3-container centered view-container">
       <div class="w3-container centered">
         <div class="centered">
           <label class="w3-large w3-content centered bolded">Blacklist</label>
           <span id="blacklistTotal" class="w3-large w3-content w3-padding" title="Total number of apps on the blacklist.">0</span>
         </div>
-        <input type="text" class="search-bar" id="searchBlacklist" placeholder="Search"/>
-        <select id="blackList" size="20" multiple class="w3-white">
+        <input type="search" class="search-bar" id="searchBlacklist" placeholder="Search"/>
+        <select id="blackList" multiple class="w3-white">
         </select>
       </div>
       <div id="blacklistStatusContainer" class="w3-container centered status-container">
-        <span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Total number of apps selected.">0</span>
+        <span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Total number of blacklisted apps selected.">0</span>
       </div>
-    </div>
-    <div class="w3-half w3-container centered">
       <div id="blacklistControlsContainer" class="w3-container view-container">
+        <hr class="splitter w3-hide-small" />
         <label class="w3-large bolded">Blacklist Controls</label>
         <br />
-        <a href="javascript:void(0);" id="blacklistRemove" class="w3-btn w3-ripple w3-white w3-border w3-round">Remove From Blacklist</a>
-        <br />
+        <a href="javascript:void(0);" id="blacklistRemove" class="w3-btn w3-ripple w3-white w3-border w3-round">Remove Selected</a>
         <a href="javascript:void(0);" id="blacklistReset" class="w3-btn w3-ripple w3-white w3-border w3-round">Reset Blacklist</a>
       </div>
-      <hr class="splitter"/>
+    </div>
+  </div>
+
+  <div id="settingsView" class="appView">
+    <div class="w3-half centered">
+      <label class="w3-large bolded">Steam Location</label><br />
+      <label id="installLocation">...</label>
+      <br />
+      <a href="javascript:void(0)" id="chooseSteam" class="w3-btn w3-white w3-ripple w3-border">Choose</a>
+      <br />
+      <div id="autoLoadContainer">
+        <input type="checkbox" id="autoLoad" class="w3-check" data-location="" />
+        <label for="autoLoad">Auto-load User</label>
+        <br />
+        <button id="applyUserSettings" class="w3-btn w3-white w3-ripple w3-border">Apply</button>
+      </div>
       <div id="settingsControlsContainer" class="w3-container view-container">
         <div id="bgSettingsContainer" class="w3-container">
-          <label class="w3-large bolded">Settings Controls</label>
+          <hr class="splitter" />
+          <label class="w3-large bolded">ReliefValve Settings</label>
           <br />
           <label>Background</label>
           <select id="bgSettingsList" class="w3-white">
@@ -190,29 +191,137 @@
     </div>
   </div>
 
-  <div id="helpView" class="w3-container appView">
-    <div id="helpText" class="w3-container w3-margin w3-padding view-container centered">
-      <p>On the Main tab press the Choose button and pick a directory named
-        "Steam" with the structure below to load the data about currently
-        installed apps/games.
-        <script><!--
-          if( process.platform === "darwin" || process.platform === "linux" )
-            document.write( "Steam/steamapps/libraryfolders.vdf" );
-          else
-            document.write( "Steam\\steamapps\\libraryfolders.vdf" );
-        --></script>
+  <div id="clientView" class="appView">
+    <div id="forceDownloadContainer" class="w3-half w3-container view-container">
+      <div id="forceContainer" class="w3-container centered">
+        <label class="w3-large w3-content centered bolded">Force Start Download</label>
+        <br />
+        <input type="text" id="forceDownload" class="search-bar centered" placeholder="Steam appid or Store URL" title="Enter the Steam store page URL or Steam appid of the app you want to force download." />
+        <br />
+        <label id="forceGameName">Game Name</label>
+        <br />
+        <a href="javascript:void(0)" id="clearForce" class="w3-btn w3-white w3-ripple w3-border">Clear</a>
+        <a href="javascript:void(0)" id="addForce" class="w3-btn w3-white w3-ripple w3-border">Add</a>
+      </div>
+      <div class="w3-container centered">
+        <hr class="splitter" />
+        <label class="w3-large w3-content centered bolded">Client Options</label>
+        <br />
+        <button id="launchOptions" onclick="toggleLaunchOptions()" class="w3-btn w3-white w3-ripple w3-border">Launch Options</button>
+        <div id="launchOptionsContainer" class="w3-modal">
+          <div class="w3-modal-content">
+            <header class="w3-container w3-black">
+              <span id="closeModal" onclick="document.getElementById( 'launchOptionsContainer' ).style.display='none'" class="w3-right w3-closebtn w3-hover-white">&times;</span>
+              <h4 id="modalHeader" class="bolded">Launch Options</h4>
+            </header>
+            <br />
+            <div class="w3-row">
+              <div class="w3-left w3-half">
+                <ul id="launchOptionsListLeft" class="w3-left w3-container w3-padding">
+                  <li>
+                    <input type="checkbox" id="lo_clearbeta" class="w3-check">
+                    <label for="lo_clearbeta" title="Opt out of Beta without having to go into the client settings.">Clear Beta</label>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="lo_console" class="w3-check">
+                    <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging.">Enable Console</label>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="lo_developer" class="w3-check">
+                    <label for="lo_developer" title="Enable VGUI editor (F6) and VGUI zoo (F7); for use with skin development.">Developer Mode</label>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="lo_silent" class="w3-check">
+                    <label for="lo_silent" title="Start Steam in silent mode - will keep the window from showing once it connects.">Silent Start</label>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="lo_tcp" class="w3-check">
+                    <label for="lo_tcp" title="Use TCP mode to connect to Steam servers.">TCP Mode</label>
+                  </li>
+                </ul>
+              </div>
+              <div class="w3-right w3-half">
+                <ul id="launchOptionsListRight" class="w3-right w3-container w3-padding">
+                  <li>
+                    <input type="checkbox" id="lo_no_bpm" class="w3-check" onclick="toggleNoBPM( this, this.checked )">
+                    <label for="lo_no_bpm" title="Don't start in Big Picture Mode.">No Big Picture Mode</label>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="lo_bpm" class="w3-check" onclick="toggleBPM( this, this.checked )">
+                    <label for="lo_bpm" title="Start Steam in Big Picture Mode.">Big Picture Mode</label>
+                  </li>
+                  <li>
+                    <select id="bpmModeList" class="w3-white" disabled title="Big Picture Mode resolution settings.">
+                      <option title="Use the default Big Picture Mode resolution (1080p).">Default</option>
+                      <option title="Run Big Picture Mode in 480p rather than 1080p.">480p</option>
+                      <option title="Run Big Picture Mode in 720p rather than 1080p.">720p</option>
+                      <option title="Use the default Big Picture Mode resolution (1080p).">Full Desktop</option>
+                    </select>
+                  </li>
+                  <li>
+                    <input type="checkbox" class="w3-white" id="lo_bpm_windowed"/>
+                    <label for="lo_bpm_windowed" title="Run Big Picture Mode in windowed mode rather than fullscreen borderless window.">Windowed</label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <footer class="w3-container w3-black">
+              <button id="resetLaunchOptions" class="w3-btn w3-white w3-ripple w3-border bolded" title="Reset settings to default.">Reset</button>
+              <button id="saveLaunchOptions" class="w3-btn w3-white w3-ripple w3-border bolded" title="Save settings as default.">Save</button>
+            </footer>
+          </div>
+        </div>
+        <br />
+        <button id="launchBtn" class="w3-btn w3-white w3-ripple w3-border" title="Launch the Steam client.">Launch</button>
+        <hr class="splitter" />
+        <div class="w3-container centered">
+          <label for="skinList" class="w3-large w3-content centered bolded">Steam Skin</label>
+          <br />
+          <select id="skinList" class="w3-white">
+            <option>&lt;Default&gt;</option>
+            <option>&lt;Random&gt;</option>
+          </select>
+          <br />
+          <button id="applySkinSetting" class="w3-btn w3-white w3-ripple w3-border">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="helpView" class="appView">
+    <div class="w3-half w3-container">
+      <p>
+        Go to "Settings" and press "Choose", then select
+          your Steam installation folder (where Steam
+          stores it's client data).
+          <hr class="splitter" />
       </p>
-      <hr class="splitter" />
       <p>
-        Under the heading "Steam App Settings" is a combo-box with the same
-          options as the Steam client for auto-update behavior. The
-          checkbox below it will apply the "offline fix" described [badly]
-          <a href="#">here</a>. Press Apply to save your chosen settings.
+        Once you add a valid Steam installation the
+          apps you've installed via Steam will be
+          loaded into the "Steam Apps" list. Below
+          the list are controls for the apps auto-update
+          behavior and to apply an <a href="javascript:void(0);">"offline fix"</a>.
       </p>
-      <hr class="splitter" />
       <p>
-        The blacklist is used to keep app/game data from being loaded.
+        <hr class="splitter" />
+        Next to the Steam Apps list is the Blacklist
+          - apps which will NOT be loaded. If you add
+          an app to the blacklist it will be ignored
+          for every Steam installation that is loaded
+          until it is removed again.
+      </p>
+
+        <hr class="splitter w3-hide-medium w3-hide-large" />
+    </div>
+    <div class="w3-half w3-container">
       <p>
+        On the Client tab you can "force start" a
+        download for an app that's not compatible with
+        your system. There are also controls to launch
+        the Steam client with options straight from RV,
+        or change/randomize your Steam skin.
+      </p>
     </div>
   </div>
 
@@ -220,7 +329,7 @@
     <div id="aboutHeader" class="w3-container w3-half">
       <label class="w3-large">"<b>What</b> is it?"</label>
       <br />
-      <span id="summaryText">A tool to help manage Steam - adding features by using some tricks which can be done manually.</span>
+      <span id="summaryText">A tool to help manage Steam - adding features by using some tricks which can be done manually, or are well-hidden options within the Steam client.</span>
     </div>
     <hr id="aboutSeparator" />
     <div  id="aboutFooter" class="w3-container w3-half">
@@ -299,6 +408,22 @@
               </span>
             </div>
 
+            <div class="badger-badge">
+              <span class="badger-name w3-left">node-winreg</span>
+              <span class="badger-credits">
+                <a href="http://fresc81.github.io/node-winreg/index.html" class="badger-home">homepage</a>
+                <a href="https://github.com/fresc81/node-winreg#license" class="badger-license">license</a>
+              </span>
+            </div>
+
+            <div class="badger-badge">
+              <span class="badger-name w3-left">jQuery (v3.1.1)</span>
+              <span class="badger-credits">
+                <a href="http://jquery.com/" class="badger-home">homepage</a>
+                <a href="https://js.foundation/pdf/ip-policy.pdf" class="badger-license">license</a>
+              </span>
+            </div>
+
           </div>
         </div>
       </div>
@@ -315,10 +440,27 @@
 
   <div id="bgImage" data-location=""></div>
 
+  <div id="scrapingDiv" style="display:none"></div>
+
+  <a id="launchLink" href="javascript:void(0);" style="display:none">Super-secret hidden link</a>
+  <!-- Insert this line above script imports -->
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+  <!-- normal script imports etc  -->
+  <script src="resources/jquery-3.1.1.min.js"></script>
+  <!-- Insert this line after script imports -->
+  <script>if (window.module) module = window.module;</script>
+
   <script type="text/javascript"><!--
     window.addEventListener( "DOMContentLoaded", loadSettings );
 
     window.addEventListener( "resize", handleResize );
+
+    window.addEventListener( "click", function() {
+      var modal = document.getElementById( "launchOptionsContainer" );
+      if( event.target === modal )
+        toggleLaunchOptions();
+    });
 
     document.getElementById( "gameList" ).addEventListener( "change", function( event ) {
       changeSelection( event.target );
@@ -345,6 +487,33 @@
     document.getElementById( "applyAppSettings" ).addEventListener( "click", function() {
       applyRVSettings( document.getElementById( "bgSettingsList" ));
     });
+
+    document.getElementById( "clearForce" ).addEventListener( "click", function() {
+      var fd = document.getElementById( "forceDownload" );
+      fd.value = "";
+      fd.focus();
+    });
+
+    document.getElementById( "addForce" ).addEventListener( "click", function() {
+      addForcedDownload( document.getElementById( "forceDownload" ).value );
+    });
+
+    document.getElementById( "resetLaunchOptions" ).addEventListener( "click", resetLaunchOpts );
+
+    document.getElementById( "saveLaunchOptions" ).addEventListener( "click", saveLaunchOpts );
+
+    document.getElementById( "launchBtn" ).addEventListener( "click", launchSteamApp );
+
+    document.getElementById( "applySkinSetting" ).addEventListener( "click", function() {
+      var sl = document.getElementById( "skinList" );
+      applySkinSetting( sl.options[ sl.selectedIndex ].text, sl.options );
+    });
+
+    document.getElementById( "applyUserSettings" ).addEventListener( "click", function() {
+      applyUserSettings( document.getElementById( "autoLoad" ).checked, document.getElementById( "installLocation" ).innerHTML );
+    });
+
+    window.setTimeout( "handleResize()", 100 );
   --></script>
 </body>
 </html>
