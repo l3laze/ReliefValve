@@ -56,25 +56,45 @@ function openView( evt, viewName ) {
 }
 
 function toggleMenu() {
-  var x, items = [
-    document.getElementById( "VMainContainer" ),
-    document.getElementById( "VSettingsContainer" ),
-    document.getElementById( "VClientContainer" ),
-    document.getElementById( "VHelpContainer" ),
-    document.getElementById( "VAboutContainer" ),
-    document.getElementById( "VExitContainer" )
-  ],
+  var x, items = $( "#VMenu li a " ),
   m = document.getElementById( "menuToggle" ),
   state = m[ "data-state" ];
   for( x = 0; x < items.length; x++ ) {
-    if( ! state ) {
-      items[ x ].classList.add( "w3-hide" );
-    }
-    else {
-      items[ x ].classList.remove( "w3-hide" );
-    }
+    if( items[ x ] !== m )
+      if( ! state ) {
+        items[ x ].classList.add( "w3-hide" );
+      }
+      else {
+        items[ x ].classList.remove( "w3-hide" );
+      }
   }
 
+  if( state ) {
+    m.innerHTML = "&times;";
+  }
+  else {
+    m.innerHTML = "&#9776;";
+  }
+
+  m[ "data-state" ] = ( !state );
+}
+
+function toggleTestMenu() {
+  var x,
+      items = $( "#testMenu button" ),
+      m = document.getElementById( "testMenuToggle" ),
+      state = m[ "data-state" ];
+
+  if( state === undefined ) {
+    m[ "data-state" ] = true;
+    state = true;
+  }
+
+  items.toArray().forEach( function( i ) {
+    if( i.id !== "testMenuToggle" ) {
+      i.style.display = ( state === false ? "none" : "" );
+    }
+  });
   if( state ) {
     m.innerHTML = "&times;";
   }
@@ -110,7 +130,7 @@ function handleResize() {
     gList.size = 4;
     bList.size = 3;
   }
-  else if( window.innerWidth > 601 ) {
+  else if( window.innerWidth > 600 ) {
     gList.size = defaultSizeG;
     bList.size = defaultSizeB;
   }
@@ -141,35 +161,52 @@ function loadSteamApps( loc ) {
     alert( "Choose a Steam install location first." );
     return logger.info( "Choose a Steam install location first." );
   }
-  var libloc = path.join( loc, "steamapps", "libraryfolders.vdf" ),
-      file = vdf.parse( ipc.sendSync( "readFile", libloc )).LibraryFolders,
-      libs = [],
-      loading = [], l, x, y, sel, opt;
-  apps = [];
-  libs.push( path.join( loc, "steamapps" ));
-  l = Object.keys( file );
-  for( var x = 0; x < l.length; x++ ) {
-    if( l[ x ] !== "TimeNextStatsReport" && l[ x ] !== "ContentStatsID" ) {
-      libs.push( file[ l[ x ]]);
-    }
+  else if( ipc.sendSync( "fileExists", loc ) === false ) {
+    alert( "Tried to load a Steam folder that doesn't exist: " + loc );
+    return logger.warn( "Tried to load a Steam install that doesn't exist." );
   }
-
-  for( x = 0; x < libs.length; x++ ) {
-    l = ipc.sendSync( "getFileList", libs[ x ]);
-    for( y = 0; y < l.length; y++ ) {
-      if( path.parse( l[ y ]).ext === ".acf" ) {
-        loading = vdf.parse( ipc.sendSync( "readFile", path.join( libs[ x ], l [ y ]))).AppState;
-        if( Object.keys( blacklist ).includes( loading.appid )) {
-          logger.info( "Skipped loading blacklisted app \"" + loading.name + "\" (" + loading.appid + ")"  );
-        }
-        else {
-          apps.push({ "appid": loading.appid, "name": loading.name, "state": loading.StateFlags, "aub": loading.AutoUpdateBehavior, "path": path.join( libs[ x ], l[ y ])});
+  else {
+    var libloc = path.join( loc, "steamapps", "libraryfolders.vdf" );
+    if( ipc.sendSync( "fileExists", libloc ) === true ) {
+        var file = vdf.parse( ipc.sendSync( "readFile", libloc )).LibraryFolders,
+        libs = [],
+        loading = [], l, x, y, sel, opt;
+      apps = [];
+      libs.push( path.join( loc, "steamapps" ));
+      l = Object.keys( file );
+      for( var x = 0; x < l.length; x++ ) {
+        if( l[ x ] !== "TimeNextStatsReport" && l[ x ] !== "ContentStatsID" ) {
+          if( ipc.sendSync( "fileExists", file[ l[ x ]]))
+            libs.push( file[ l[ x ]]);
+          else {
+            return alert( "Steam Library Folder \"" + file[ l[ x ]] + "\" does not exist." );
+          }
         }
       }
+
+      for( x = 0; x < libs.length; x++ ) {
+        l = ipc.sendSync( "getFileList", libs[ x ]);
+        for( y = 0; y < l.length; y++ ) {
+          if( path.parse( l[ y ]).ext === ".acf" ) {
+            loading = vdf.parse( ipc.sendSync( "readFile", path.join( libs[ x ], l [ y ]))).AppState;
+            if( Object.keys( blacklist ).includes( loading.appid ) === false ) {
+              apps.push({ "appid": loading.appid, "name": loading.name, "state": loading.StateFlags, "aub": loading.AutoUpdateBehavior, "path": path.join( libs[ x ], l[ y ])});
+            }
+          }
+        }
+      }
+
+      sortAppList();
+
+      document.getElementById( "numberTotal" ).innerHTML = apps.length;
+      document.getElementById( "blacklistTotal" ).innerHTML = Object.keys( blacklist ).length;
     }
   }
+}
 
-  sel = document.getElementById( "gameList" );
+function sortAppList() {
+  var sel = document.getElementById( "gameList" ),
+      opt;
   sel.length = 0;
 
   // Case-insensitive, descending order, A-Z.
@@ -181,15 +218,12 @@ function loadSteamApps( loc ) {
     return 0;
   });
 
-  for( x = 0; x < apps.length; x++ ) {
+  for( var x = 0; x < apps.length; x++ ) {
     opt = document.createElement( "option" );
     opt.appendChild( document.createTextNode( apps[ x ].name ));
     opt.value = apps[ x ].appid + "|" + apps[ x ].name + "|" + apps[ x ].state + "|" + apps[ x ].aub + "|" + apps[ x ].path;
     sel.appendChild( opt );
   }
-
-  document.getElementById( "numberTotal" ).innerHTML = apps.length;
-  document.getElementById( "blacklistTotal" ).innerHTML = Object.keys( blacklist ).length;
 }
 
 function changeSelection( list ) {
@@ -239,7 +273,7 @@ function loadSettings() {
   }
   else {
     settings = config.get( "settings" );
-    if( settings.hasOwnProperty( "launchOptions") === false ) {
+    if( settings.hasOwnProperty( "launchOptions" ) === false ) {
       settings.launchoptions = {
         clearbeta: false,
         console: false,
@@ -254,7 +288,7 @@ function loadSettings() {
     value = parseInt( settings.bg );
     document.getElementById( "bgSettingsList" ).selectedIndex = value;
     if( value === 1 ) {
-      document.getElementById( "bgSettingsSolid" ).selectedIndex = parseInt( settings.bgValue );
+      document.getElementById( "bgSettingsSolid" ).value = settings.bgValue;
     }
     else if( value === 2 ) {
       if( ipc.sendSync( "fileExists", settings.bgValue )) {
@@ -268,7 +302,7 @@ function loadSettings() {
         settings.bgValue = "...";
       }
     }
-    document.getElementById( "textSettingsColor" ).selectedIndex = parseInt( settings.text );
+    document.getElementById( "textSettingsColor" ).value = settings.text;
     el = document.getElementById( "autoLoad" );
     el.checked = settings.autoLoad;
     el[ "data-location" ] = settings.autoLoadValue;
@@ -284,7 +318,7 @@ function loadSettings() {
 
     el = document.getElementById( "bgSettingsList" );
     changeBGSelection( el );
-    applyRVSettings( el );
+    applyRVSettings( el, false );
   }
 
   initFiltering();
@@ -324,18 +358,20 @@ function loadBlacklist() {
 }
 
 function addToBlacklist( list ) {
-  var selected = [], i, val, sel, keys, opt;
+  var selected = [], i, val, sel, keys, opt, ignoring = [];
   for( i = 0; i < list.length; i++ ) {
     val = list[ i ].value.split( "|" );
     if( list[ i ].selected ) {
       if( val[ 0 ] in blacklist ) {
-        alert( "\"" + val[ 1 ] + "\" is already on the blacklist; ignoring it." );
+        ignoring.push( val[ 1 ]);
       }
       else {
         selected[ val[ 0 ]] = val[ 1 ];
       }
     }
   }
+
+  alert( "The following apps are already on the blacklist, and will not be added again." );
 
   sel = document.getElementById( "blackList" );
 
@@ -418,52 +454,80 @@ function chooseBGImage() {
     if( valid !== -1 ) {
       el = document.getElementById( "bgImage" );
       el[ "data-location" ] = pic;
-      document.getElementById( "bgSettingsImageCurrent" ).innerHTML = pic.substring( pic.lastIndexOf( "/" ) + 1 );
+      document.getElementById( "bgSettingsImageCurrent" ).innerText = pic.substring( pic.lastIndexOf( "/" ) + 1 );
     }
   }
 }
 
-function validateColor( col ) {
-  if([
-    "red", "pink", "purple", "deep-purple", "indigo",
-    "blue", "light-blue", "cyan", "aqua", "teal", "green",
-    "light-green", "lime", "sand", "khaki", "yellow", "white",
-    "amber", "orange", "deep-orange", "blue-grey", "brown",
-    "light-grey", "grey", "dark-grey", "black", "palered",
-    "paleyellow", "palegreen", "paleblue", "transparent"
-  ].includes( col )) {
-    return true;
+function addForcedDownload( app ) {
+  var ow, fing, temp;
+  app = parseInt( app );
+  if( isNaN( app )) {
+    alert( "Enter a valid appid for an app to force download first." );
+  } else {
+    temp = getAppInfo( app );
+    fing = temp[ 0 ];
+    ow = temp[ 1 ];
+    if( fing.AppState.installdir !== undefined ) {
+      document.getElementById( "forceGameName" ).innerText = fing.AppState.installdir;
+      ipc.sendSync( "writeFile", path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" ), vdf.stringify( fing, true ));
+      console.log( "Created appmanifest for " + name + " ("+ app + ")." );
+      var sel = document.getElementById( "gameList" ), opt;
+      opt = document.createElement( "option" );
+      opt.appendChild( document.createTextNode( name ));
+      opt.value = fing.AppID + "|" + fing.name + "|" + fing.state + "|" + fing.aub + "|" + path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" );
+      sel.appendChild( opt );
+      sortAppList();
+    }
+    else {
+      alert( "Failed to get info from Steam. Please try again. If the issue continues submit a bug report through GitHub, reddit, or Steam." );
+      console.log( "Failed to scrape app name for appid: " + app );
+    }
   }
-  return false;
 }
 
-function addForcedDownload( app ) {
-  app = parseInt( app );
-  if( isNaN( app ) === false ) {
-    var forcing = {
-      AppState: {
-        AppID: app,
-        Universe: "1",
-        installdir: scrapeAppName( app ),
-        StateFlags: "1026"
-      }
-    };
-    ipc.sendSync( "writeFile", path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" ), vdf.stringify( forcing, true ));
-    console.log( "Created appmanifest for " + app + "." );
+function getAppInfo( appid ) {
+  var name, overwrite;
+
+  appid = parseInt( appid );
+  if( isNaN( appid )) {
+    alert( "Enter a valid appid first." );
   }
   else {
-    alert( "Enter a valid appid for an app to force download first." );
+    name = scrapeAppName( appid )
+
+    if( ipc.sendSync( "fileExists", path.join( steamPath, "steamapps", "appmanifest_" + appid + ".acf" )) === true ) {
+      if( confirm( "The appmanifest for that game already exists! Would you like to overwrite it?" ))
+        overwrite = true;
+    }
+
+    if( overwrite === undefined || overwrite === true ) {
+      var forcing = {
+        AppState: {
+          AppID: appid,
+          Universe: "1",
+          installdir: name,
+          StateFlags: "1026",
+          name: name,
+          AutoUpdateBehavior: "1"
+        }
+      };
+    }
+    return [ forcing, overwrite ];
   }
+  return undefined;
 }
 
 function scrapeAppName( appid ) {
   var name;
+
   $.ajax({
     url: "http://store.steampowered.com/api/appdetails/?appids=" + appid,
     dataType: 'text',
     async: false,
     success: function( info ) {
-      name = JSON.parse( info )[ appid ].data.name;
+      var n = JSON.parse( info )[ appid ].data.name;
+      name = n;
     }
   });
   return name;
@@ -500,18 +564,36 @@ function resetLaunchOpts() {
   document.getElementById( "bpmModeList" ).selectedIndex = settings.launchoptions.bpmMode;
 
   toggleNoBPM( lnb, settings.launchoptions.nobpm );
-
-  console.log( "Launch options have been reset to default." );
 }
 
 function saveLaunchOpts() {
+  settings = config.get( "settings" );
   if( settings === undefined ) {
-    console.log( "Settings is undefined @ saveLaunchOpts..." );
-    settings = {};
+    logger.warn( "Settings is undefined @ saveLaunchOpts..." );
+    settings = {
+      bg: "0",
+      bgValue: "...",
+      text: "0",
+      autoLoad: false,
+      autoLoadValue: "...",
+      launchoptions: {
+        clearbeta: false,
+        console: false,
+        developer: false,
+        silent: false,
+        tcp: false,
+        nobpm: false,
+        bpm: false,
+        bpmMode: 0,
+        bpmWindowed: false
+      }
+    };
   }
-  if( settings[ "launchOptions" ] === undefined ) {
+
+  if( settings.hasOwnProperty( "launchOptions" ) === false ) {
     settings[ "launchoptions" ] = {};
   }
+
   var lnb = document.getElementById( "lo_no_bpm" ),
       lb = document.getElementById( "lo_bpm" );
   settings.launchoptions.clearbeta = document.getElementById( "lo_clearbeta" ).checked;
@@ -520,11 +602,20 @@ function saveLaunchOpts() {
   settings.launchoptions.silent = document.getElementById( "lo_silent" ).checked;
   settings.launchoptions.tcp = document.getElementById( "lo_tcp" ).checked;
   settings.launchoptions.nobpm = lnb.checked;
-  settings.launchoptions.bpm = lb.checked;
-  settings.launchoptions.bpmMode = document.getElementById( "bpmModeList" ).selectedIndex;
-  settings.launchoptions.bpmWindowed = document.getElementById( "lo_bpm_windowed" ).checked;
-  applyRVSettings( document.getElementById( "bgSettingsList" ));
+  if( lnb.checked === false ) {
+    settings.launchoptions.bpm = lb.checked;
+    settings.launchoptions.bpmMode = document.getElementById( "bpmModeList" ).selectedIndex;
+    settings.launchoptions.bpmWindowed = document.getElementById( "lo_bpm_windowed" ).checked;
+  }
+  else {
+    settings.launchoptions.bpm = false;
+    settings.launchoptions.bpmMode = 0;
+    settings.launchoptions.bpmWindowed = false;
+  }
+
+  config.set( "settings", settings)
   console.log( "Launch options have been saved." );
+  toggleLaunchOptions();
 }
 
 function launchSteamApp() {
@@ -558,22 +649,12 @@ function launchSteamApp() {
     if( opts.bpmWindowed ) args.push( "-windowed" );
   }
 
-  if( process.platform !== "darwin" ) {
-    var ll = document.getElementById( "launchLink" );
-    if( args.length > 0 ) {
-      args.forEach( function( item ) {
-        ll.href = "steam:" + item;
-        ll.click();
-      });
-    }
-  }
-  else {
-    if( args.length > 0 ) {
-      console.log( "open -a Steam.app --args " + args.join( " " ));
-    }
-    else {
-      console.log( "open -a Steam.app" );
-    }
+  var ll = document.getElementById( "launchLink" );
+  if( args.length > 0 ) {
+    args.forEach( function( item ) {
+      ll.href = "steam:" + item;
+      ll.click();
+    });
   }
 }
 /*  Replacement, if needed...
@@ -594,12 +675,12 @@ function loadSteamSkins() {
   var skins, skinPath, sel, opt;
 
   if( platform === "darwin" )
-    skinPath = path.join( steamPath, "Steam.AppBundle/Steam.app/Contents/MacOS/skins" );
+    skinPath = path.join( steamPath, "Steam.AppBundle/Steam/Contents/MacOS/skins" );
   else
     skinPath = path.join( steamPath, "skins" );
 
   if( ipc.sendSync( "fileExists", skinPath ) === false )
-    alert( "Your Steam installation does not have a skins folder!" );
+    alert( "Couldn't find the skins folder of your Steam installation." );
   else {
     skins = ipc.sendSync( "getFileList", skinPath );
     var tmpSkins = [];
@@ -615,8 +696,6 @@ function loadSteamSkins() {
       sel.appendChild( opt );
     });
   }
-
-  console.log( skins );
 }
 
 function applySteamAppSettings() {
@@ -632,14 +711,20 @@ function applySteamAppSettings() {
 
   for( i = 0; i < selected.length; i++ ) {
     var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
-    var data = vdf.parse( ipc.sendSync( "readFile", file ));
-    if( settings.fix && data.AppState.StateFlags === "6" )
-      data.AppState.StateFlags = "4";
-    if( data.AppState.AutoUpdateBehavior !== settings.aub )
-      data.AppState.AutoUpdateBehavior = settings.aub;
-    ipc.sendSync( "writeFile", file, vdf.stringify( data ));
-    list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
+    if( ipc.sendSync( "fileExists", file ) === false ) {
+      alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
+    }
+    else {
+      var data = vdf.parse( ipc.sendSync( "readFile", file ));
+      if( settings.fix && data.AppState.StateFlags === "6" )
+        data.AppState.StateFlags = "4";
+      if( data.AppState.AutoUpdateBehavior !== settings.aub )
+        data.AppState.AutoUpdateBehavior = settings.aub;
+      ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
+      list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
+    }
   }
+  list.selectedIndex = undefined;
 }
 
 function applySkinSetting( toWhat, list ) {
@@ -654,10 +739,14 @@ function applySkinSetting( toWhat, list ) {
     toWhat = list[ rand ].text;
   }
   if( toWhat !== "<Default>" && process.platform === "darwin" || process.platform === "linux" ) {
-    var regvdf = vdf.parse( ipc.sendSync( "readFile", path.join( steamPath, "registry.vdf" )));
-    regvdf.Registry.HKCU.Software.Valve.Steam.SkinV4 = toWhat;
-    ipc.sendSync( "writeFile", path.join( steamPath, "registry.vdf" ), vdf.stringify( regvdf, true ));
-    console.log( "Changed Steam skin." );
+    if( ipc.sendSync( "fileExists", path.join( steamPath, "registry.vdf" ))) {
+      var regvdf = vdf.parse( ipc.sendSync( "readFile", path.join( steamPath, "registry.vdf" )));
+      regvdf.Registry.HKCU.Software.Valve.Steam.SkinV4 = toWhat;
+      ipc.sendSync( "writeFile", path.join( steamPath, "registry.vdf" ), vdf.stringify( regvdf, true ));
+    }
+    else {
+      alert( "Couldn't find the file " + path.join( steamPath, "registry.vdf" ));
+    }
   }
   else if( toWhat !== "<Default>" && process.platform === "win32" ) {
     reg = new Registry({
@@ -667,9 +756,8 @@ function applySkinSetting( toWhat, list ) {
     reg.set( "SkinV4", Registry.REG_SZ, toWhat, function( entry ) {
       if( entry !== toWhat ) {
         console.log( "Failed to set Steam skin!" );
-        alert( "Failed to set Steam skin!" );
+        alert( "Failed to change Steam skin!" );
       }
-      else console.log( "Changed Steam skin." );
     });
   }
 }
@@ -687,7 +775,7 @@ function toggleNoBPM( el, state ) {
   bml.disabled = el.checked;
 }
 
-function applyRVSettings( list ) {
+function applyRVSettings( list, doSave ) {
   var bg = list.options[ list.selectedIndex ].text,
       value, i, j, el;
 
@@ -695,14 +783,9 @@ function applyRVSettings( list ) {
 
   if( bg === "Solid" ) {
     el = document.getElementById( "bgSettingsSolid" );
-    value = el.options[ el.selectedIndex ].value;
-    if( validateColor( value )) {
-      document.getElementById( "theBody" ).style = "background: " + value;
-      settings.bgValue = el.selectedIndex;
-    }
-    else {
-      alert( "The color value you entered for the background color is invalid." );
-    }
+    value = el.value;
+    document.getElementById( "theBody" ).style = "background: " + value;
+    settings.bgValue = value;
     el = document.getElementById( "bgImage" );
     el.style[ "background" ] = "";
   }
@@ -721,28 +804,18 @@ function applyRVSettings( list ) {
   }
 
   el = document.getElementById( "textSettingsColor" );
-  value = el.options[ el.selectedIndex ].value;
+  value = el.value;
 
-  settings.text = el.selectedIndex;
+  settings.text = value;
 
   el = document.getElementById( "theBody" );
-  for( i = 0; i < el.classList.length; i++ ) {
-    if( el.classList[ i ].indexOf( "w3-text" ) !== -1 ) {
-      el.classList.remove( el.classList[ i ]);
-    }
-  }
-  el.classList.add( "w3-text-" + value );
+  el.style.color = value;
 
   el = document.getElementById( "aboutView" );
-  for( i = 0; i < el.classList.length; i++ ) {
-    if( el.classList[ i ].indexOf( "w3-text" ) !== -1 ) {
-      el.classList.remove( el.classList[ i ]);
-    }
-  }
-  el.classList.add( "w3-text-" + value );
+  el.style.color = value;
 
-  config.set( "settings", settings );
-  console.log( "Saved RV settings." );
+  if( doSave )
+    config.set( "settings", settings );
 }
 
 function applyUserSettings( auto, loc ) {
@@ -750,6 +823,27 @@ function applyUserSettings( auto, loc ) {
   settings.autoLoadValue = loc;
   config.set( "settings", settings );
   console.log( "Saved user settings." );
+}
+
+function modalTabbing( event ) {
+  var firstInput = $( "#closeModal" );
+  var lastInput = $( "#saveLaunchOptions" );
+
+  /*redirect last tab to first input*/
+  lastInput.on('keydown', function (e) {
+     if ((e.which === 9 && !e.shiftKey)) {
+         e.preventDefault();
+         firstInput.focus();
+     }
+  });
+
+  /*redirect first shift+tab to last input*/
+  firstInput.on('keydown', function (e) {
+      if ((e.which === 9 && e.shiftKey)) {
+          e.preventDefault();
+          lastInput.focus();
+      }
+  });
 }
 
 /* Code from or based on

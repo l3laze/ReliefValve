@@ -20,7 +20,7 @@ input[type="checkbox" disabled] {
 }
 
 #bgImage {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: -1;
@@ -30,13 +30,14 @@ input[type="checkbox" disabled] {
 }
 
 html {
-  animation: fadein 0.5s;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -webkit-app-region: drag;
+  transform: translate3d(0);
 }
 
 body {
+  animation: fadein 0.5s;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   background: white;
@@ -45,10 +46,14 @@ body {
   height: 100%;
 }
 
-input, select, button, a, textarea, #navMenu label[for] {
+input, select, button, a, textarea {
   cursor: pointer;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
+  -webkit-app-region: no-drag;
+}
+
+.no-app-drag {
   -webkit-app-region: no-drag;
 }
 
@@ -58,6 +63,16 @@ span, .status-container {
 
 select, input[type=search] {
   width: 90%;
+}
+
+a:focus, button:focus {
+  outline: #00BFFF solid 2px;
+}
+
+#closeModal:focus {
+  background: white;
+  text: black;
+  outline: #00BFFF solid 2px;
 }
 
 .tablink {
@@ -166,6 +181,12 @@ a.w3-btn {
 
 #blacklistView, #clientView, #settingsView, #helpView, #aboutView, #debugView {
   display: none;
+}
+
+#helpView {
+  margin-left: 15px;
+  margin-right: 15px;
+  text-align: center;
 }
 
 #forceDownload {
@@ -371,7 +392,7 @@ label[for="cbOfflineFix"] {
   font-size: 0.8em;
 }
 
-#aboutSeparator {
+.aboutSeparator {
   display: inline-block;
   margin: 0;
   padding: 0;
@@ -405,16 +426,6 @@ label[for="cbOfflineFix"] {
 #licensing {
   display: inline-block;
   margin-top: 10px;
-}
-
-#bgImage {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  background-position: center;
 }
 
 @media only screen and (min-width: 601px) {
