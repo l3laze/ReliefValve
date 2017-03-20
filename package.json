@@ -38,6 +38,7 @@
     "start": "electron ./app --enable-logging",
     "dev": "NODE_ENV='development' npm run start",
     "pack": "build --dir -lmw",
+    "dist": "build",
     "dist:mac": "build -m",
     "dist:win": "build -w --ia32 --x64",
     "dist:linux": "build -l --ia32 --x64",
@@ -47,10 +48,7 @@
     "dist-32_64": "build --ia32 --x64"
   },
   "devDependencies": {
-    "electron": "^1.4.15",
+    "electron": "^1.6.2",
     "electron-builder": "^13.6.0"
-  },
-  "dependencies": {
-    "winreg": "^1.2.3"
   }
 }

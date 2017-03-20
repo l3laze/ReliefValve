@@ -45,7 +45,7 @@ function openView( evt, viewName ) {
   for( i = 0; i < tablinks.length; i++ ) {
     tablinks[ i ].classList.remove( "active" );
   }
-  evt.currentTarget.className += " active";
+  evt.currentTarget.classList.add( "active" );
 
   document.getElementById( viewName ).style.display = "block";
 
@@ -69,32 +69,6 @@ function toggleMenu() {
       }
   }
 
-  if( state ) {
-    m.innerHTML = "&times;";
-  }
-  else {
-    m.innerHTML = "&#9776;";
-  }
-
-  m[ "data-state" ] = ( !state );
-}
-
-function toggleTestMenu() {
-  var x,
-      items = $( "#testMenu button" ),
-      m = document.getElementById( "testMenuToggle" ),
-      state = m[ "data-state" ];
-
-  if( state === undefined ) {
-    m[ "data-state" ] = true;
-    state = true;
-  }
-
-  items.toArray().forEach( function( i ) {
-    if( i.id !== "testMenuToggle" ) {
-      i.style.display = ( state === false ? "none" : "" );
-    }
-  });
   if( state ) {
     m.innerHTML = "&times;";
   }
@@ -258,7 +232,7 @@ function loadSettings() {
       text: "0",
       autoLoad: false,
       autoLoadValue: "...",
-      launchoptions: {
+      launchOptions: {
         clearbeta: false,
         console: false,
         developer: false,
@@ -272,9 +246,10 @@ function loadSettings() {
     config.set( "settings", settings );
   }
   else {
+    logger.info( "Loading settings from config." );
     settings = config.get( "settings" );
-    if( settings.hasOwnProperty( "launchOptions" ) === false ) {
-      settings.launchoptions = {
+    if( ! ( settings.hasOwnProperty( "launchOptions"))) {
+      settings.launchOptions = {
         clearbeta: false,
         console: false,
         developer: false,
@@ -284,6 +259,7 @@ function loadSettings() {
         bpm: false,
         bpmMode: 0
       };
+      logger.info( "Upgraded settings to v1.2 (add launchOptions)." );
     }
     value = parseInt( settings.bg );
     document.getElementById( "bgSettingsList" ).selectedIndex = value;
@@ -410,6 +386,9 @@ function removeFromBlacklist() {
   config.set( "blacklist", blacklist );
   loadBlacklist();
   loadSteamApps( document.getElementById( "installLocation" ).innerHTML );
+  sel.selectedIndex = 0;
+  sel.options[ 0 ].selected = false;
+  sel.focus();
 }
 
 function resetBlacklist() {
@@ -462,9 +441,13 @@ function chooseBGImage() {
 function addForcedDownload( app ) {
   var ow, fing, temp;
   app = parseInt( app );
-  if( isNaN( app )) {
+  if( steamPath === undefined ) {
+    alert( "Set a valid Steam install path first!" );
+  }
+  else if( isNaN( app )) {
     alert( "Enter a valid appid for an app to force download first." );
-  } else {
+  }
+  else {
     temp = getAppInfo( app );
     fing = temp[ 0 ];
     ow = temp[ 1 ];
@@ -472,11 +455,7 @@ function addForcedDownload( app ) {
       document.getElementById( "forceGameName" ).innerText = fing.AppState.installdir;
       ipc.sendSync( "writeFile", path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" ), vdf.stringify( fing, true ));
       console.log( "Created appmanifest for " + name + " ("+ app + ")." );
-      var sel = document.getElementById( "gameList" ), opt;
-      opt = document.createElement( "option" );
-      opt.appendChild( document.createTextNode( name ));
-      opt.value = fing.AppID + "|" + fing.name + "|" + fing.state + "|" + fing.aub + "|" + path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" );
-      sel.appendChild( opt );
+      apps.push({ "appid": fing.AppState.AppID, "name": fing.AppState.name, "state": fing.AppState.StateFlags, "aub": fing.AppState.AutoUpdateBehavior, "path": path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" )});
       sortAppList();
     }
     else {
@@ -538,8 +517,8 @@ function resetLaunchOpts() {
     console.log( "Settings is undefined @ resetLaunchOpts..." );
     settings = {};
   }
-  if( settings[ "launchoptions" ] === undefined )
-    settings[ "launchoptions" ] = {
+  if( settings[ "launchOptions" ] === undefined )
+    settings[ "launchOptions" ] = {
       clearbeta: false,
       console: false,
       developer: false,
@@ -554,16 +533,16 @@ function resetLaunchOpts() {
   var lnb = document.getElementById( "lo_no_bpm" ),
       lb = document.getElementById( "lo_bpm" );
 
-  document.getElementById( "lo_clearbeta" ).checked = settings.launchoptions.clearbeta;
-  document.getElementById( "lo_console" ).checked = settings.launchoptions.console;
-  document.getElementById( "lo_developer" ).checked = settings.launchoptions.developer;
-  document.getElementById( "lo_silent" ).checked = settings.launchoptions.silent;
-  document.getElementById( "lo_tcp" ).checked = settings.launchoptions.tcp;
-  lnb.checked = settings.launchoptions.nobpm;
-  lb.checked = settings.launchoptions.bpm;
-  document.getElementById( "bpmModeList" ).selectedIndex = settings.launchoptions.bpmMode;
+  document.getElementById( "lo_clearbeta" ).checked = settings.launchOptions.clearbeta;
+  document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
+  document.getElementById( "lo_developer" ).checked = settings.launchOptions.developer;
+  document.getElementById( "lo_silent" ).checked = settings.launchOptions.silent;
+  document.getElementById( "lo_tcp" ).checked = settings.launchOptions.tcp;
+  lnb.checked = settings.launchOptions.nobpm;
+  lb.checked = settings.launchOptions.bpm;
+  document.getElementById( "bpmModeList" ).selectedIndex = settings.launchOptions.bpmMode;
 
-  toggleNoBPM( lnb, settings.launchoptions.nobpm );
+  toggleNoBPM( lnb, settings.launchOptions.nobpm );
 }
 
 function saveLaunchOpts() {
@@ -576,7 +555,7 @@ function saveLaunchOpts() {
       text: "0",
       autoLoad: false,
       autoLoadValue: "...",
-      launchoptions: {
+      launchOptions: {
         clearbeta: false,
         console: false,
         developer: false,
@@ -591,26 +570,26 @@ function saveLaunchOpts() {
   }
 
   if( settings.hasOwnProperty( "launchOptions" ) === false ) {
-    settings[ "launchoptions" ] = {};
+    settings[ "launchOptions" ] = {};
   }
 
   var lnb = document.getElementById( "lo_no_bpm" ),
       lb = document.getElementById( "lo_bpm" );
-  settings.launchoptions.clearbeta = document.getElementById( "lo_clearbeta" ).checked;
-  settings.launchoptions.console = document.getElementById( "lo_console" ).checked;
-  settings.launchoptions.developer = document.getElementById( "lo_developer" ).checked;
-  settings.launchoptions.silent = document.getElementById( "lo_silent" ).checked;
-  settings.launchoptions.tcp = document.getElementById( "lo_tcp" ).checked;
-  settings.launchoptions.nobpm = lnb.checked;
+  settings.launchOptions.clearbeta = document.getElementById( "lo_clearbeta" ).checked;
+  settings.launchOptions.console = document.getElementById( "lo_console" ).checked;
+  settings.launchOptions.developer = document.getElementById( "lo_developer" ).checked;
+  settings.launchOptions.silent = document.getElementById( "lo_silent" ).checked;
+  settings.launchOptions.tcp = document.getElementById( "lo_tcp" ).checked;
+  settings.launchOptions.nobpm = lnb.checked;
   if( lnb.checked === false ) {
-    settings.launchoptions.bpm = lb.checked;
-    settings.launchoptions.bpmMode = document.getElementById( "bpmModeList" ).selectedIndex;
-    settings.launchoptions.bpmWindowed = document.getElementById( "lo_bpm_windowed" ).checked;
+    settings.launchOptions.bpm = lb.checked;
+    settings.launchOptions.bpmMode = document.getElementById( "bpmModeList" ).selectedIndex;
+    settings.launchOptions.bpmWindowed = document.getElementById( "lo_bpm_windowed" ).checked;
   }
   else {
-    settings.launchoptions.bpm = false;
-    settings.launchoptions.bpmMode = 0;
-    settings.launchoptions.bpmWindowed = false;
+    settings.launchOptions.bpm = false;
+    settings.launchOptions.bpmMode = 0;
+    settings.launchOptions.bpmWindowed = false;
   }
 
   config.set( "settings", settings)
@@ -724,11 +703,16 @@ function applySteamAppSettings() {
       list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
     }
   }
-  list.selectedIndex = undefined;
+  list.selectedIndex = 0;
+  list.options[ 0 ].selected = false;
+  list.focus();
 }
 
 function applySkinSetting( toWhat, list ) {
   var rand;
+  if( steamPath === undefined ) {
+    return alert( "Set a valid Steam path first!" );
+  }
   if( toWhat === "<Random>" ) {
     /* Based on code from:
      *   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -846,6 +830,44 @@ function modalTabbing( event ) {
   });
 }
 
+function openAboutTab( event, which ) {
+  var tabs = document.querySelectorAll( "#aboutView #aboutHeader > div" ),
+      el = "explain" + event.currentTarget.id.substring( 0, 1 ).toUpperCase() + event.currentTarget.id.substring( 1 ),
+      what = document.getElementById( el ),
+      isActive = false;
+
+  isActive = ( what.classList.contains( "w3-hide" ) && ! what.classList.contains( "active" ));
+  tabs.forEach( function( t ) {
+    if( t.classList.contains( "w3-hide" ) === false )
+      t.classList.add( "w3-hide" );
+    if( t.classList.contains( "active" ) === true )
+      t.classList.remove( "active" );
+  });
+
+  if( isActive ) {
+    document.getElementById( el ).classList.remove( "w3-hide" );
+    event.currentTarget.classList.add( "active" );
+  }
+  else {
+    event.currentTarget.blur();
+  }
+}
+
+function changeHowTab( event ) {
+  var el = event.currentTarget,
+      made = document.getElementById( "builtWith" ),
+      run = document.getElementById( "poweredBy" );
+
+  if( el.id === "howItsRun" ) {
+    made.classList.remove( "w3-hide" );
+    run.classList.add( "w3-hide" );
+  }
+  else {
+    made.classList.add( "w3-hide" );
+    run.classList.remove( "w3-hide" );
+  }
+}
+
 /* Code from or based on
  * http://stackoverflow.com/questions/979256/sorting-an-array-of-javascript-objects
  */
@@ -867,7 +889,7 @@ process.on('uncaughtException', (err) => {
 })
 
 function initFiltering() {
-  /* Code from or based on
+  /* Code based on
    *   http://www.lessanvaezi.com/filter-select-list-options/
    */
    $.fn.filterByText = function(textbox, selectSingleMatch) {
@@ -891,19 +913,19 @@ function initFiltering() {
              );
            }
          });
-         if (selectSingleMatch === true &&
-             $(select).children().length === 1) {
-           $(select).children().get(0).selected = true;
-         }
+         if( textbox[ 0 ].id === "searchGames" )
+           $( "#numberTotal" ).text( $(select).children().length );
+         else if( textbox[ 0 ].id === "searchBlacklist" )
+           $( "#blacklistTotal" ).text( $( select ).children().length );
        });
      });
    };
 
    $(function() {
-     $('#gameList').filterByText($('#searchGames'), false );
+     $('#gameList').filterByText($('#searchGames'));
    });
 
    $(function() {
-    $('#blackList').filterByText($('#searchBlacklist'), false );
+    $('#blackList').filterByText($('#searchBlacklist'));
   });
 }

@@ -378,54 +378,14 @@ label[for="cbOfflineFix"] {
   color: black;
 }
 
-#aboutView > div:nth-child(4) {
-  position: absolute;
-  bottom: 10px;
-  font-size: 12px;
-}
-
-#aboutHeader {
-  float: left;
-}
-
-#summaryText {
-  font-size: 0.8em;
-}
-
-.aboutSeparator {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  height: 1px;
-  width: 90%;
-}
-
-#aboutFooter {
-  font-size: 12px;
-}
-
-#aboutFooter > #thirdParty > span:first-child {
-  font-size: 10px;
-}
-
-#credits {
-  font-size: 14px;
+#howItsRun, #howItsMade {
+  cursor: pointer;
 }
 
 #love {
   font-size: 24px;
   color:red;
   vertical-align: -3px;
-}
-
-#licensing a {
-  font-size: 12px;
-  vertical-align: middle;
-}
-
-#licensing {
-  display: inline-block;
-  margin-top: 10px;
 }
 
 @media only screen and (min-width: 601px) {
