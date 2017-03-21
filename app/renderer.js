@@ -850,6 +850,7 @@ function openAboutTab( event, which ) {
   }
   else {
     event.currentTarget.blur();
+    document.getElementById( "explainTheDefault" ).classList.remove( "w3-hide" );
   }
 }
 

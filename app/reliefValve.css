@@ -146,11 +146,6 @@ a:focus, button:focus {
   line-height: 150%;
 }
 
-a.w3-btn {
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-
 .bolded {
   font-weight: bold;
 }
@@ -386,6 +381,15 @@ label[for="cbOfflineFix"] {
   font-size: 24px;
   color:red;
   vertical-align: -3px;
+}
+
+#featureList li {
+  margin-bottom: 4px;
+  list-style: upper-roman;
+}
+
+#aboutFooter {
+  
 }
 
 @media only screen and (min-width: 601px) {

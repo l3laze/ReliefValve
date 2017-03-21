@@ -277,38 +277,37 @@
   </div>
 
   <div id="aboutView" class="appView centered">
-    <button id="theWhat" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"What?"</button>
-    <button id="theHow" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"How?!"</button>
-    <button id="theWarning" class="w3-btn w3-border w3-hover-white w3-hover-text-black">Disclaimer!</button>
+    <div class="w3-container">
+      <button id="theWhat" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">"What?"</button>
+      <button id="theHow" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">"How?!"</button>
+      <button id="theWarning" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">Warning!</button>
+    </div>
     <br />
     <div id="aboutHeader" class="w3-container w3-padding">
+      <div id="explainTheDefault" class="w3-container">
+        <span>ReliefValve is distributed under the <a href="">MIT License</a></span>
+      </div>
       <div id="explainTheWhat" class="w3-container w3-hide">
-          <span>A tool to help manage Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
+          <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
           <br />
-          <br />
-          <span>ReliefValve can:</span>
-          <ul>
+          <ul id="featureList">
             <li>
-              Manage auto-update settings for your currently installed apps.
+              Manage auto-update settings for apps you've installed via the Steam client.
             </li>
             <li>
-              Apply an offline fix to make apps which have an update available playable in offline mode.
+              Apply an offline fix to make some games playable in offline mode.
             </li>
             <li>
               Help force start a download for a game that's not compatible with your system.
             </li>
             <li>
-              Change your Steam skin, including to a random one.
-            </li>
-            <li>
-
+              Change the selected Steam skin to one you have installed; can also change to a random skin.
             </li>
           </ul>
       </div>
       <div id="explainTheHow" class="w3-container w3-hide">
         <div id="poweredBy" class="w3-container">
           This app is <b id="howItsRun">powered by&gt;</b> the following:
-          <br />
           <br />
           <div class="w3-container badger-container">
 
@@ -389,7 +388,6 @@
         <div id="builtWith" class="w3-container w3-hide">
           This app is <b id="howItsMade">&lt; built with/on</b> the following:
           <br />
-          <br />
           <div class="w3-container badger-container">
 
             <div class="badger-badge">
@@ -421,16 +419,24 @@
             </div>
 
             <div class="badger-badge">
-              <span class="badger-name w3-left">Appveyor</span>
+              <span class="badger-name w3-left">Appveyor (Windows)</span>
               <span class="badger-credits">
                 <a href="https://www.appveyor.com/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
               </span>
             </div>
 
             <div class="badger-badge">
-              <span class="badger-name w3-left">Travis-CI</span>
+              <span class="badger-name w3-left">Travis-CI (Linux)</span>
               <span class="badger-credits">
                 <a href="https://travis-ci.org/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
+              </span>
+            </div>
+
+            <div class="badger-badge">
+              <span class="badger-name w3-left">electron-builder</span>
+              <span class="badger-credits">
+                <a href="https://github.com/electron-userland/electron-builder" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
+                <a href="https://github.com/electron-userland/electron-builder/blob/master/LICENSE" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
               </span>
             </div>
 
@@ -439,18 +445,11 @@
       </div>
       <div id="explainTheWarning" class="w3-container w3-hide">
           <span>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</span>
-          <br />
-          <br />
-          <span>
-            ReliefValve is distributed under the <a href="">MIT License</a>
-          </span>
       </div>
     </div>
-    <div id="aboutFooter" class="w3-container w3-bottom centered">
-      <span>&copy; 2017 Thomas Shaver (l3l_aze)</span>
-      <br />
+    <footer id="aboutFooter" class="w3-container w3-bottom centered">
       <span>Made with <span id="love">&hearts;</span> by l3l_aze</span>
-    </div>
+    </footer>
   </div>
 
   <div id="bgImage" data-location=""></div>
