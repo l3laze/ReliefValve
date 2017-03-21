@@ -1,71 +1,92 @@
-# Relief_Valve
-
-[![Build status](https://ci.appveyor.com/api/projects/status/x6rj9gyaqm9o7bje?svg=true)](https://ci.appveyor.com/project/l3laze/reliefvalve) [![Build Status](https://travis-ci.org/l3laze/ReliefValve.svg?branch=master)](https://travis-ci.org/l3laze/ReliefValve)
 
 
+<img src="https://cloud.githubusercontent.com/assets/18404758/24127483/f846e6f0-0da2-11e7-9d27-ddcdafe026ff.png" width="60" align="center" alt="ReliefValve icon" href="ReliefValve" />ReliefValve
+===========
 
-#What is it?
+[![Travis-CI Build Status](https://travis-ci.org/l3laze/testingelectron.svg?branch=master)](https://travis-ci.org/l3laze/testingelectron) [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/sqaop6q2o30cp0wo?svg=true)](https://ci.appveyor.com/project/l3laze/testingelectron)
 
+Table of contents
+=================
 
-  A tool to help manage the Steam client.
+  * [ReliefValve](#reliefvalve)
+  * [Table of contents](#table-of-contents)
+  * [Installation](#installation)
+  * [Usage](#usage)
+    * [Setup](#usage-setup)
+    * [Main](#usage-main)
+    * [Client](#usage-client)
+    * [Settings](#usage-settings)
+  * [Unsigned](#unsigned)
+  * [Changelog](#changelog)
+  * [Contact](#contact)
 
+What is it?
+===========
 
-#What does it do?
+> A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.
 
+   * Manage auto-update settings for the apps you've installed via the Steam client
 
-  Currently it supports managing auto-update behavior for apps installed via
-    Steam and can apply an "offline fix" to make apps which have an update
-    available able to be used in offline mode.
+   * Apply an offline fix to make apps which have an update available playable in offline mode.
 
+   * Help "force start" a download for a game that's not compatible with your system.
 
-  *Note* - It's also possible to use the Steam client's Developer Console to [skip updates] (https://www.reddit.com/r/Steam/comments/5j2eh0/psa_delayskip_updates_for_appsgames_installed_via/?st=izhl9m7o&sh=ff361709).
-      Just found this out a few months ago, but I already had all this code working
-      by then so I decided to leave it in as a feature.
+   * Change your Steam skin, including to a random one.
 
+Installation
+============
 
-#Offline Fix Usage
+Usage
+=====
 
+  ### Setup
 
-  1) Start Steam in offline mode, and then close it.
-  2) Use ReliefValve to apply the "offline fix" to the app(s) you want to use.
-  3) Start Steam again (make sure it's in offline mode).
+  ### Main
 
+  ### Client
 
-  *Note* - If you still have internet access you may need to turn it off
-    completely on your PC or block Steam from accessing it by using a firewall
-    so that it doesn't ruin the offline fix for you.
+  ### Settings
 
+![screenshot](https://cloud.githubusercontent.com/assets/18404758/24128526/792a0a2a-0daa-11e7-9afd-62e9e8b92c6f.jpg)
 
-#Offline Fix Explanation
-
-
-  Each time Steam starts up it loads all of the appmanifest files it can find
-    both in it's default installation directory (Steam/steamapps) and your
-    custom Steam Library Folders listed in the file
-    Steam/steamapps/libraryfolders.vdf, and checks the server(s) for an update
-    to each of them, modifying the appmanifest accordingly.
-
-
-  Each appmanifest file contains an entry "StateFlags" which tells Steam about
-    the state of the installed app that it is tied to
-    ([list of possible states](https://github.com/lutris/lutris/blob/master/docs/steam.rst)).
-    A "StateFlags" value of "6" tells Steam that the app is fully installed but
-    also has an update available. When you try to launch the app it will start
-    the update, or try to and fail if you're offline, and of course you can't
-    use the app until it's finished updating.
-
-
-  If you start Steam in offline mode though (or with your internet off if you
-    do still have internet access) it will not be able to check for updates
-    and cannot update the appmanifest files. So, by changing the StateFlags
-    value to "4" and then running Steam offline you can use the apps without
-    updating them.
-
-
-#Note
-
+Unsigned
+========
 
   This is an unsigned application and it will not run on Windows or Mac
     without first warning the user and asking for consent (on Windows). On Mac
     it can be run by right clicking & pressing "Open" and then "Open" again in
     the dialog that pops up; you may need to enter the admin password to do this.
+
+Change Log
+==========
+
+* 1.2.0
+    * FIX: Implemented search filters for "Steam Apps" and "Blacklist".
+    * FIX: Steam Apps and Blacklist should now properly resize on startup.
+    * CHANGE: Reverted menu to using a background color; images too often make it difficult to see.
+    * CHANGE: Moved Steam installation settings to the Settings tab, and Blacklist to the Main tab.
+    * CHANGE: Changed background & text color pickers to use HTML5's color chooser.
+    * CHANGE: Updated README.
+    * ADD: Added [MIT License](https://github.com/l3laze/ReliefValve/blob/master/README.md).
+    * ADD: Implemented support for force starting a download, changing the Steam skin, and launching Steam with optional arguments; this is on the "Client" tab.
+
+* 1.1.0
+    * ADD: Implemented support for some minor settings - auto-load Steam installation, background (color or image), and text color.
+    * CHANGE: Small update to the menu - it's now transparent to better support the use of background images/colors, and only uses one button for the menu toggle (hamburger + X).
+    * CHANGE: Updated W3.CSS to the latest version (as of Feb 25th, 2017).
+    * FIX: Some other small bugfixes and general improvements of the UI I can't remember, but they're in there somewhere.
+
+* 1.0.1
+    * FIX: Stopped browser "devtools" from opening on startup. (Thanks probonopd!)
+
+* 1.0.0
+    * Initial release
+
+Contact
+=======
+
+l3l_aze (Tom Shaver) – [GitHub]([https://github.com/l3laze/) [Reddit](https://www.reddit.com/u/l3l_aze) [Steam](http://steamcommunity.com/id/l3l_aze/) [e-mail](mailto:l3l_aze@yahoo.com)
+
+Distributed under the MIT license. See [LICENSE](https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md) for more information.
+
+[https://github.com/l3laze/ReliefValve](https://github.com/l3laze/ReliefValve)

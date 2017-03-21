@@ -1,8 +1,8 @@
-#badger-container {
+.badger-container {
   width: 100%;
 }
 
-#badger-container .badger-badge {
+.badger-container .badger-badge {
   background-color: rgba( 150, 150, 150, 0.3 );
   border-radius: 5px;
   overflow: auto;
@@ -10,22 +10,21 @@
   margin-bottom: 8px;
 }
 
-#badger-container .badger-name {
+.badger-container .badger-name {
   display: inline-block;
-  font-weight: bolder;
   margin-left: 8px;
   margin-right: 2px;
 }
 
-#badger-container .badger-credits {
+.badger-container .badger-credits {
   float: right;
 }
 
-#badger-container .badger-home {
+.badger-container .badger-home {
   margin-left: 4px;
   margin-right: 8px;
 }
 
-#badger-container .badger-license {
+.badger-container .badger-license {
   margin-right: 8px;
 }
