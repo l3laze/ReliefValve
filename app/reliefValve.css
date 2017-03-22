@@ -375,6 +375,7 @@ label[for="cbOfflineFix"] {
 
 #howItsRun, #howItsMade {
   cursor: pointer;
+  font-weight: bold;
 }
 
 #love {
@@ -389,7 +390,7 @@ label[for="cbOfflineFix"] {
 }
 
 #aboutFooter {
-  
+
 }
 
 @media only screen and (min-width: 601px) {

@@ -13,8 +13,7 @@ const vdf = require('simple-vdf')
 const Config = require('electron-config')
 const config = new Config()
 const os = require('os')
-const eol = os.EOL;
-const Registry = require('winreg')
+const eol = os.EOL
 
 var apps,
     blacklist = {},
@@ -114,11 +113,7 @@ function chooseInstall() {
   var folder = ipc.sendSync( "getDirectory" );
   var sp = folder.toLowerCase().split( path.sep );
   if( folder === "undefined" ) return logger.info( "No directory was selected." );
-  if( sp[ sp.length - 1 ] !== ( "steam" )) {
-    alert( "Select a directory named \"Steam\" to continue." );
-    logger.info( "Select a directory named \"Steam\" to continue." );
-  }
-  else if( ! ipc.sendSync( "fileExists", path.join( folder, "steamapps" ))) {
+  if( ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
     alert( "The selected Steam installation is invalid." );
     logger.info( "The selected Steam installation is invalid." );
   }
@@ -334,68 +329,82 @@ function loadBlacklist() {
 }
 
 function addToBlacklist( list ) {
-  var selected = [], i, val, sel, keys, opt, ignoring = [];
-  for( i = 0; i < list.length; i++ ) {
-    val = list[ i ].value.split( "|" );
-    if( list[ i ].selected ) {
-      if( val[ 0 ] in blacklist ) {
-        ignoring.push( val[ 1 ]);
-      }
-      else {
-        selected[ val[ 0 ]] = val[ 1 ];
+  if( steamPath !== undefined ) {
+    var selected = [], i, val, sel, keys, opt, ignoring = [];
+    for( i = 0; i < list.length; i++ ) {
+      val = list[ i ].value.split( "|" );
+      if( list[ i ].selected ) {
+        if( val[ 0 ] in blacklist ) {
+          ignoring.push( val[ 1 ]);
+        }
+        else {
+          selected[ val[ 0 ]] = val[ 1 ];
+        }
       }
     }
+
+    if( ignoring.length > 0 ) {
+      alert( "The following apps are already on the blacklist, and will not be added again:" + ignoring.join( ", " ));
+    }
+
+    sel = document.getElementById( "blackList" );
+
+    keys = Object.keys( selected );
+
+    for( i = 0; i < keys.length; i++ ) {
+      blacklist[ keys[ i ]] = selected[ keys[ i ]];
+    }
+
+    config.set( "blacklist", blacklist );
+    loadBlacklist();
+    loadSteamApps( document.getElementById( "installLocation" ).innerHTML );
   }
-
-  alert( "The following apps are already on the blacklist, and will not be added again." );
-
-  sel = document.getElementById( "blackList" );
-
-  keys = Object.keys( selected );
-
-  for( i = 0; i < keys.length; i++ ) {
-    blacklist[ keys[ i ]] = selected[ keys[ i ]];
+  else {
+    alert( "Set a valid Steam path first." );
   }
-
-  config.set( "blacklist", blacklist );
-  loadBlacklist();
-  loadSteamApps( document.getElementById( "installLocation" ).innerHTML );
 }
 
 function removeFromBlacklist() {
-  var selected = [], i, val, sel;
-  sel = document.getElementById( "blackList" );
-  for( i = 0; i < sel.length; i++ ) {
-    val = sel[ i ].value;
-    if( sel[ i ].selected ) {
-      if( val === "250820" ) { // Keep SteamVR on the blacklist.
-        alert( "SteamVR cannot be removed from the blacklist." );
-      }
-      else {
-        selected.push( i );
+  if( steamPath !== undefined ) {
+    var selected = [], i, val, sel;
+    sel = document.getElementById( "blackList" );
+    for( i = 0; i < sel.length; i++ ) {
+      val = sel[ i ].value;
+      if( sel[ i ].selected ) {
+        if( val === "250820" ) { // Keep SteamVR on the blacklist.
+          alert( "SteamVR cannot be removed from the blacklist." );
+        }
+        else {
+          selected.push( i );
+        }
       }
     }
-  }
 
-  for( i = selected.length - 1; i >= 0; i-- ) {
-    val = sel[ selected[ i ]].value;
-    delete blacklist[ val ];
-    sel.remove( selected[ i ]);
-  }
+    for( i = selected.length - 1; i >= 0; i-- ) {
+      val = sel[ selected[ i ]].value;
+      delete blacklist[ val ];
+      sel.remove( selected[ i ]);
+    }
 
-  config.set( "blacklist", blacklist );
-  loadBlacklist();
-  loadSteamApps( document.getElementById( "installLocation" ).innerHTML );
-  sel.selectedIndex = 0;
-  sel.options[ 0 ].selected = false;
-  sel.focus();
+    config.set( "blacklist", blacklist );
+    loadBlacklist();
+    loadSteamApps( document.getElementById( "installLocation" ).innerHTML );
+    sel.selectedIndex = 0;
+    sel.options[ 0 ].selected = false;
+    sel.focus();
+  }
+  else {
+    alert( "Set a valid Steam path first." );
+  }
 }
 
 function resetBlacklist() {
   if( window.confirm( "Are you sure you want to reset the blacklist?" ) === true ) {
     config.delete( "blacklist" );
     loadBlacklist();
-    loadSteamApps( document.getElementById( "installLocation" ).innerHTML );
+    if( steamPath !== undefined ) {
+      loadSteamApps( document.getElementById( "installLocation" ).innerHTML );
+    }
   }
 }
 
@@ -678,34 +687,39 @@ function loadSteamSkins() {
 }
 
 function applySteamAppSettings() {
-  var list = document.getElementById( "gameList" ),
-      selected = [], i;
-  settings[ "aub" ] = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
-  settings[ "fix" ] = document.getElementById( "cbOfflineFix" ).checked;
-  for( i = 0; i < list.length; i++ ) {
-    if( list[ i ].selected ) {
-      selected.push( i );
+  if( steamPath !== undefined ) {
+    var list = document.getElementById( "gameList" ),
+        selected = [], i;
+    settings[ "aub" ] = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
+    settings[ "fix" ] = document.getElementById( "cbOfflineFix" ).checked;
+    for( i = 0; i < list.length; i++ ) {
+      if( list[ i ].selected ) {
+        selected.push( i );
+      }
     }
-  }
 
-  for( i = 0; i < selected.length; i++ ) {
-    var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
-    if( ipc.sendSync( "fileExists", file ) === false ) {
-      alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
+    for( i = 0; i < selected.length; i++ ) {
+      var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
+      if( ipc.sendSync( "fileExists", file ) === false ) {
+        alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
+      }
+      else {
+        var data = vdf.parse( ipc.sendSync( "readFile", file ));
+        if( settings.fix && data.AppState.StateFlags === "6" )
+          data.AppState.StateFlags = "4";
+        if( data.AppState.AutoUpdateBehavior !== settings.aub )
+          data.AppState.AutoUpdateBehavior = settings.aub;
+        ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
+        list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
+      }
     }
-    else {
-      var data = vdf.parse( ipc.sendSync( "readFile", file ));
-      if( settings.fix && data.AppState.StateFlags === "6" )
-        data.AppState.StateFlags = "4";
-      if( data.AppState.AutoUpdateBehavior !== settings.aub )
-        data.AppState.AutoUpdateBehavior = settings.aub;
-      ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
-      list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
-    }
+    list.selectedIndex = 0;
+    list.options[ 0 ].selected = false;
+    list.focus();
   }
-  list.selectedIndex = 0;
-  list.options[ 0 ].selected = false;
-  list.focus();
+  else {
+    alert( "You must set a valid Steam path first." );
+  }
 }
 
 function applySkinSetting( toWhat, list ) {
@@ -713,6 +727,7 @@ function applySkinSetting( toWhat, list ) {
   if( steamPath === undefined ) {
     return alert( "Set a valid Steam path first!" );
   }
+
   if( toWhat === "<Random>" ) {
     /* Based on code from:
      *   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -722,7 +737,12 @@ function applySkinSetting( toWhat, list ) {
     rand = Math.floor( Math.random() * ( max - min + 1)) + min;
     toWhat = list[ rand ].text;
   }
-  if( toWhat !== "<Default>" && process.platform === "darwin" || process.platform === "linux" ) {
+
+  if( toWhat === "<Default?" ) {
+    toWhat = "";
+  }
+
+  if( process.platform === "darwin" || process.platform === "linux" ) {
     if( ipc.sendSync( "fileExists", path.join( steamPath, "registry.vdf" ))) {
       var regvdf = vdf.parse( ipc.sendSync( "readFile", path.join( steamPath, "registry.vdf" )));
       regvdf.Registry.HKCU.Software.Valve.Steam.SkinV4 = toWhat;
@@ -732,10 +752,11 @@ function applySkinSetting( toWhat, list ) {
       alert( "Couldn't find the file " + path.join( steamPath, "registry.vdf" ));
     }
   }
-  else if( toWhat !== "<Default>" && process.platform === "win32" ) {
+  else if( process.platform === "win32" ) {
+    const Registry = require('winreg')
     reg = new Registry({
       hive: Registry.HKCU,
-      key: "Software\\Valve\\Steam"
+      key: "\\Software\\Valve\\Steam"
     });
     reg.set( "SkinV4", Registry.REG_SZ, toWhat, function( entry ) {
       if( entry !== toWhat ) {
@@ -771,7 +792,7 @@ function applyRVSettings( list, doSave ) {
     document.getElementById( "theBody" ).style = "background: " + value;
     settings.bgValue = value;
     el = document.getElementById( "bgImage" );
-    el.style[ "background" ] = "";
+    el.style[ "background-image" ] = "";
   }
   else if( bg === "Image" ) {
     el = document.getElementById( "bgImage" );
@@ -784,7 +805,7 @@ function applyRVSettings( list, doSave ) {
   else if( bg === "Default" ) {
     settings.bgValue = "";
     document.getElementById( "theBody" ).style[ "background" ] = "";
-    document.getElementById( "bgImage" ).style[ "background" ] = "";
+    document.getElementById( "bgImage" ).style[ "background-image" ] = "";
   }
 
   el = document.getElementById( "textSettingsColor" );
@@ -803,10 +824,15 @@ function applyRVSettings( list, doSave ) {
 }
 
 function applyUserSettings( auto, loc ) {
-  settings.autoLoad = auto;
-  settings.autoLoadValue = loc;
-  config.set( "settings", settings );
-  console.log( "Saved user settings." );
+  if( steamPath !== undefined ) {
+    settings.autoLoad = auto;
+    settings.autoLoadValue = loc;
+    config.set( "settings", settings );
+    console.log( "Saved user settings." );
+  }
+  else {
+    alert( "Set a valid Steam installation path first." );
+  }
 }
 
 function modalTabbing( event ) {
