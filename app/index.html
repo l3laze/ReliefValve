@@ -163,17 +163,13 @@
         <div id="launchOptionsContainer" class="w3-modal">
           <div class="w3-modal-content">
             <header class="w3-container w3-black">
-              <a id="closeModal" href="javascript:void(0);" onclick="document.getElementById( 'launchOptionsContainer' ).style.display='none'" class="w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
+              <a href="javascript:void(0);" onclick="document.getElementById( 'launchOptionsContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
               <h4 id="modalHeader" class="bolded">Launch Options</h4>
             </header>
             <br />
             <div class="w3-row">
-              <div class="w3-left w3-half">
-                <ul id="launchOptionsListLeft" class="w3-left w3-container w3-padding">
-                  <li>
-                    <input type="checkbox" id="lo_clearbeta" class="w3-check">
-                    <label for="lo_clearbeta" title="Opt out of Beta without having to go into the client settings.">Clear Beta</label>
-                  </li>
+              <div class="w3-container w3-whole">
+                <ul id="launchOptionsList" class="w3-container w3-padding centered">
                   <li>
                     <input type="checkbox" id="lo_console" class="w3-check">
                     <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging.">Enable Console</label>
@@ -183,36 +179,8 @@
                     <label for="lo_developer" title="Enable VGUI editor (F6) and VGUI zoo (F7); for use with skin development.">Developer Mode</label>
                   </li>
                   <li>
-                    <input type="checkbox" id="lo_silent" class="w3-check">
-                    <label for="lo_silent" title="Start Steam in silent mode - will keep the window from showing once it connects.">Silent Start</label>
-                  </li>
-                  <li>
-                    <input type="checkbox" id="lo_tcp" class="w3-check">
-                    <label for="lo_tcp" title="Use TCP mode to connect to Steam servers.">TCP Mode</label>
-                  </li>
-                </ul>
-              </div>
-              <div class="w3-right w3-half">
-                <ul id="launchOptionsListRight" class="w3-right w3-container w3-padding">
-                  <li>
-                    <input type="checkbox" id="lo_no_bpm" class="w3-check" onclick="toggleNoBPM( this, this.checked )">
-                    <label for="lo_no_bpm" title="Don't start in Big Picture Mode.">No Big Picture Mode</label>
-                  </li>
-                  <li>
                     <input type="checkbox" id="lo_bpm" class="w3-check">
                     <label for="lo_bpm" title="Start Steam in Big Picture Mode.">Big Picture Mode</label>
-                  </li>
-                  <li>
-                    <select id="bpmModeList" class="w3-white" disabled title="Big Picture Mode resolution settings.">
-                      <option title="Use the default Big Picture Mode resolution (1080p).">Default</option>
-                      <option title="Run Big Picture Mode in 480p rather than 1080p.">480p</option>
-                      <option title="Run Big Picture Mode in 720p rather than 1080p.">720p</option>
-                      <option title="Use the default Big Picture Mode resolution (1080p).">Full Desktop</option>
-                    </select>
-                  </li>
-                  <li>
-                    <input type="checkbox" class="w3-white" id="lo_bpm_windowed"/>
-                    <label for="lo_bpm_windowed" title="Run Big Picture Mode in windowed mode rather than fullscreen borderless window.">Windowed</label>
                   </li>
                 </ul>
               </div>
@@ -285,7 +253,7 @@
     <br />
     <div id="aboutHeader" class="w3-container w3-padding">
       <div id="explainTheDefault" class="w3-container">
-        <span>ReliefValve is distributed under the <a href="">MIT License</a></span>
+        <span>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></span>
       </div>
       <div id="explainTheWhat" class="w3-container w3-hide">
           <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
@@ -368,18 +336,17 @@
             </div>
 
             <div class="badger-badge">
-              <span class="badger-name w3-left">node-winreg</span>
-              <span class="badger-credits">
-                <a href="http://fresc81.github.io/node-winreg/index.html" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://github.com/fresc81/node-winreg#license" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
               <span class="badger-name w3-left">jQuery</span>
               <span class="badger-credits">
                 <a href="http://jquery.com/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
                 <a href="https://js.foundation/pdf/ip-policy.pdf" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
+              </span>
+            </div>
+
+            <div class="badger-badge">
+              <span class="badger-name w3-left">node-winreg</span>
+              <span class="badger-credits">
+                <a href="https://github.com/CharlieHess/node-winreg" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
               </span>
             </div>
 
@@ -439,10 +406,10 @@
       <div id="explainTheWarning" class="w3-container w3-hide">
           <span>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</span>
       </div>
+      <footer id="aboutFooter" class="w3-container w3-bottom centered">
+        <span>Made with <span id="love">&hearts;</span> by l3l_aze</span>
+      </footer>
     </div>
-    <footer id="aboutFooter" class="w3-container w3-bottom centered">
-      <span>Made with <span id="love">&hearts;</span> by l3l_aze</span>
-    </footer>
   </div>
 
   <div id="bgImage" data-location=""></div>
@@ -471,8 +438,8 @@
     window.addEventListener( "resize", handleResize );
 
     window.addEventListener( "click", function() {
-      var modal = document.getElementById( "launchOptionsContainer" );
-      if( event.target === modal )
+      var lo_modal = document.getElementById( "launchOptionsContainer" )
+      if( event.target === lo_modal )
         toggleLaunchOptions();
     });
 
