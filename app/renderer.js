@@ -9,7 +9,7 @@ const remote = require('electron').remote
 const app = remote.require('electron').app
 const path = require('path')
 const ipc = require('electron').ipcRenderer
-const vdf = require('simple-vdf')
+const vdf = require('simple-vdf2')
 const Config = require('electron-config')
 const config = new Config()
 const os = require('os')
@@ -148,11 +148,18 @@ function chooseInstall() {
     logger.info( "The selected Steam installation is invalid." );
   }
   else {
-    document.getElementById( "installLocation" ).innerHTML = folder;
+    var last = folder.lastIndexOf( path.sep );
+    var loc = folder.substring( folder.lastIndexOf( path.sep, last - 1 ));
+    document.getElementById( "installLocation" ).innerHTML = "..." + loc;
     loadSteamApps( folder );
     steamPath = folder;
     loadSteamSkins();
   }
+}
+
+function refreshSteamApps( elem ) {
+  loadSteamApps( steamPath );
+  elem.blur();
 }
 
 function loadSteamApps( loc ) {
@@ -306,7 +313,9 @@ function loadSettings() {
       loadSteamApps( settings.autoLoadValue );
       steamPath = settings.autoLoadValue;
       loadSteamSkins();
-      document.getElementById( "installLocation" ).innerHTML = settings.autoLoadValue;
+      var last = settings.autoLoadValue.lastIndexOf( path.sep );
+      var loc = settings.autoLoadValue.substring( settings.autoLoadValue.lastIndexOf( path.sep, last - 1 ));
+      document.getElementById( "installLocation" ).innerHTML = "..." + loc;
     }
 
     resetLaunchOpts();
