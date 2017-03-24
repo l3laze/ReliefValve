@@ -148,9 +148,7 @@ function chooseInstall() {
     logger.info( "The selected Steam installation is invalid." );
   }
   else {
-    var last = folder.lastIndexOf( path.sep );
-    var loc = folder.substring( folder.lastIndexOf( path.sep, last - 1 ));
-    document.getElementById( "installLocation" ).innerHTML = "..." + loc;
+    document.getElementById( "installLocation" ).innerHTML = folder;
     loadSteamApps( folder );
     steamPath = folder;
     loadSteamSkins();
@@ -313,9 +311,7 @@ function loadSettings() {
       loadSteamApps( settings.autoLoadValue );
       steamPath = settings.autoLoadValue;
       loadSteamSkins();
-      var last = settings.autoLoadValue.lastIndexOf( path.sep );
-      var loc = settings.autoLoadValue.substring( settings.autoLoadValue.lastIndexOf( path.sep, last - 1 ));
-      document.getElementById( "installLocation" ).innerHTML = "..." + loc;
+      document.getElementById( "installLocation" ).innerHTML = settings.autoLoadValue;
     }
 
     resetLaunchOpts();
@@ -764,7 +760,7 @@ function applySkinSetting( toWhat, list ) {
         logger.error( "Error with winreg (get#2): " + err );
       }
       else {
-        if( val.value === toWhat ) {
+        if(( val === null && toWhat === "" ) || val.value === toWhat ) {
           logger.info( "Successfully set skin." );
         }
       }
