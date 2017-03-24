@@ -47,10 +47,10 @@ Installation
 ============
 
   ### Windows
-   Download the ReliefValve-v#.#.#-Setup.exe and install it. On 32-bit systems get the ia32 (32-bit) version, on 64-bit systems get the x86_64 (64-bit) version.
+   Download the ReliefValve-v#.#.#-Setup.exe and install it.
 
   ### Linux
-   * Download the AppImage for your system.
+   * Download the AppImage for your system. On 32-bit systems get the ia32 (32-bit) version, on 64-bit systems get the x86_64 (64-bit) version.
    * Open a terminal and cd into the folder where the app is.
    * Make it executable with
 
