@@ -9,7 +9,7 @@ const remote = require('electron').remote
 const app = remote.require('electron').app
 const path = require('path')
 const ipc = require('electron').ipcRenderer
-const vdf = require('simple-vdf')
+const vdf = require('simple-vdf2')
 const Config = require('electron-config')
 const config = new Config()
 const os = require('os')
@@ -84,6 +84,36 @@ function toggleLaunchOptions() {
     lo.style.display = "none";
   else
     lo.style.display = "block";
+
+  var el = document.getElementById( "theBody" );
+  if( isWhiteish( el.style.color )) {
+    lo.style.color = "#555555";
+  }
+  else {
+    lo.style.color = "";
+  }
+}
+
+function isWhiteish( col ) {
+  col = rgbExtract( col );
+  if( col === null ) return false;
+  if( col[ 'r' ] > 140 && col[ 'g' ] > 140 && col[ 'b' ] > 140 )
+  return true;
+}
+
+/*
+ * Code from:
+ * http://stackoverflow.com/a/34458994/7665043
+ */
+
+function rgbExtract(s) {
+  var match = /^\s*rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\)\s*$/.exec(s);
+  if (match === null) {
+    return null;
+  }
+  return { r: parseInt(match[1], 10),
+           g: parseInt(match[2], 10),
+           b: parseInt(match[3], 10) };
 }
 
 function handleResize() {
@@ -123,6 +153,11 @@ function chooseInstall() {
     steamPath = folder;
     loadSteamSkins();
   }
+}
+
+function refreshSteamApps( elem ) {
+  loadSteamApps( steamPath );
+  elem.blur();
 }
 
 function loadSteamApps( loc ) {
@@ -228,14 +263,10 @@ function loadSettings() {
       autoLoad: false,
       autoLoadValue: "...",
       launchOptions: {
-        clearbeta: false,
         console: false,
         developer: false,
-        silent: false,
-        tcp: false,
-        nobpm: false,
         bpm: false,
-        bpmMode: 0
+        exit_rv: false
       }
     };
     config.set( "settings", settings );
@@ -245,19 +276,16 @@ function loadSettings() {
     settings = config.get( "settings" );
     if( ! ( settings.hasOwnProperty( "launchOptions"))) {
       settings.launchOptions = {
-        clearbeta: false,
         console: false,
         developer: false,
-        silent: false,
-        tcp: false,
-        nobpm: false,
         bpm: false,
-        bpmMode: 0
+        exit_rv: false
       };
       logger.info( "Upgraded settings to v1.2 (add launchOptions)." );
     }
     value = parseInt( settings.bg );
-    document.getElementById( "bgSettingsList" ).selectedIndex = value;
+    if( process.platform === "win32" && value === 2 )
+      settings.bgValue = JSON.parse( settings.bgValue );
     if( value === 1 ) {
       document.getElementById( "bgSettingsSolid" ).value = settings.bgValue;
     }
@@ -273,6 +301,7 @@ function loadSettings() {
         settings.bgValue = "...";
       }
     }
+    document.getElementById( "bgSettingsList" ).selectedIndex = value;
     document.getElementById( "textSettingsColor" ).value = settings.text;
     el = document.getElementById( "autoLoad" );
     el.checked = settings.autoLoad;
@@ -528,30 +557,18 @@ function resetLaunchOpts() {
   }
   if( settings[ "launchOptions" ] === undefined )
     settings[ "launchOptions" ] = {
-      clearbeta: false,
       console: false,
       developer: false,
-      silent: false,
-      tcp: false,
-      nobpm: false,
       bpm: false,
-      bpmMode: 0,
-      bpmWindowed: false
+      exit_rv: false
     };
 
-  var lnb = document.getElementById( "lo_no_bpm" ),
-      lb = document.getElementById( "lo_bpm" );
+  var lb = document.getElementById( "lo_bpm" );
 
-  document.getElementById( "lo_clearbeta" ).checked = settings.launchOptions.clearbeta;
   document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
   document.getElementById( "lo_developer" ).checked = settings.launchOptions.developer;
-  document.getElementById( "lo_silent" ).checked = settings.launchOptions.silent;
-  document.getElementById( "lo_tcp" ).checked = settings.launchOptions.tcp;
-  lnb.checked = settings.launchOptions.nobpm;
   lb.checked = settings.launchOptions.bpm;
-  document.getElementById( "bpmModeList" ).selectedIndex = settings.launchOptions.bpmMode;
-
-  toggleNoBPM( lnb, settings.launchOptions.nobpm );
+  document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
 }
 
 function saveLaunchOpts() {
@@ -565,15 +582,10 @@ function saveLaunchOpts() {
       autoLoad: false,
       autoLoadValue: "...",
       launchOptions: {
-        clearbeta: false,
         console: false,
         developer: false,
-        silent: false,
-        tcp: false,
-        nobpm: false,
         bpm: false,
-        bpmMode: 0,
-        bpmWindowed: false
+        exit_rv: false
       }
     };
   }
@@ -582,24 +594,11 @@ function saveLaunchOpts() {
     settings[ "launchOptions" ] = {};
   }
 
-  var lnb = document.getElementById( "lo_no_bpm" ),
-      lb = document.getElementById( "lo_bpm" );
-  settings.launchOptions.clearbeta = document.getElementById( "lo_clearbeta" ).checked;
+  var lb = document.getElementById( "lo_bpm" );
   settings.launchOptions.console = document.getElementById( "lo_console" ).checked;
   settings.launchOptions.developer = document.getElementById( "lo_developer" ).checked;
-  settings.launchOptions.silent = document.getElementById( "lo_silent" ).checked;
-  settings.launchOptions.tcp = document.getElementById( "lo_tcp" ).checked;
-  settings.launchOptions.nobpm = lnb.checked;
-  if( lnb.checked === false ) {
-    settings.launchOptions.bpm = lb.checked;
-    settings.launchOptions.bpmMode = document.getElementById( "bpmModeList" ).selectedIndex;
-    settings.launchOptions.bpmWindowed = document.getElementById( "lo_bpm_windowed" ).checked;
-  }
-  else {
-    settings.launchOptions.bpm = false;
-    settings.launchOptions.bpmMode = 0;
-    settings.launchOptions.bpmWindowed = false;
-  }
+  settings.launchOptions.bpm = lb.checked;
+  settings.launchOptions.exit_rv = document.getElementById( "lo_exit" ).checked;
 
   config.set( "settings", settings)
   console.log( "Launch options have been saved." );
@@ -607,35 +606,21 @@ function saveLaunchOpts() {
 }
 
 function launchSteamApp() {
-  var lnb = document.getElementById( "lo_no_bpm" ),
-      lb = document.getElementById( "lo_bpm" ),
+  var lb = document.getElementById( "lo_bpm" ),
       opts = {
-        clearbeta: document.getElementById( "lo_clearbeta" ).checked,
         console: document.getElementById( "lo_console" ).checked,
         developer: document.getElementById( "lo_developer" ).checked,
-        silent: document.getElementById( "lo_silent" ).checked,
-        tcp: document.getElementById( "lo_tcp" ).checked,
-        nobpm: lnb.checked,
-        bpm: lb.checked,
-        bpmMode: document.getElementById( "bpmModeList" ).selectedIndex,
-        bpmWindowed: document.getElementById( "lo_bpm_windowed" ).checked
+        bpm: lb.checked
       },
       args = [],
       skinSel = document.getElementById( "skinList" );
 
-  if( opts.clearbeta ) args.push( "-clearbeta" );
   if( opts.console ) args.push( "-console" );
   if( opts.developer ) args.push( "-developer" );
-  if( opts.silent ) args.push( "-silent" );
-  if( opts.tcp ) args.push( "-tcp" );
-  if( opts.nobpm ) args.push( "-nobigpicture" );
-  else if( opts.bpm ) {
-    args.push( "-bigpicture" );
-    if( opts.bpmMode === 1 ) args.push( "-480p" );
-    if( opts.bpmMode === 2 ) args.push( "-720p" );
-    if( opts.bpmMode === 3 ) args.push( "-fulldesktopres" );
-    if( opts.bpmWindowed ) args.push( "-windowed" );
-  }
+  if( opts.bpm ) args.push( "//open/bigpicture" );
+
+  if( args.length === 0 )
+    args.push( "//open/main" );
 
   var ll = document.getElementById( "launchLink" );
   if( args.length > 0 ) {
@@ -643,6 +628,10 @@ function launchSteamApp() {
       ll.href = "steam:" + item;
       ll.click();
     });
+  }
+
+  if( document.getElementById( "lo_exit" ).checked ) {
+    app.quit();
   }
 }
 /*  Replacement, if needed...
@@ -662,8 +651,9 @@ function launchSteamApp() {
 function loadSteamSkins() {
   var skins, skinPath, sel, opt;
 
-  if( platform === "darwin" )
+  if( platform === "darwin" ) {
     skinPath = path.join( steamPath, "Steam.AppBundle/Steam/Contents/MacOS/skins" );
+  }
   else
     skinPath = path.join( steamPath, "skins" );
 
@@ -738,7 +728,7 @@ function applySkinSetting( toWhat, list ) {
     toWhat = list[ rand ].text;
   }
 
-  if( toWhat === "<Default?" ) {
+  if( toWhat === "<Default>" ) {
     toWhat = "";
   }
 
@@ -753,32 +743,33 @@ function applySkinSetting( toWhat, list ) {
     }
   }
   else if( process.platform === "win32" ) {
-    const Registry = require('winreg')
-    reg = new Registry({
-      hive: Registry.HKCU,
-      key: "\\Software\\Valve\\Steam"
+    var Registry = require('winreg'),
+        skinKey = new Registry({
+          hive: Registry.HKCU,
+          key: '\\Software\\Valve\\Steam'
+        });
+
+    skinKey.set( 'SkinV4', Registry.REG_SZ, toWhat, function( err ) {
+      if( err ) {
+        logger.error( "Error with winreg (set): " + err );
+      }
     });
-    reg.set( "SkinV4", Registry.REG_SZ, toWhat, function( entry ) {
-      if( entry !== toWhat ) {
-        console.log( "Failed to set Steam skin!" );
-        alert( "Failed to change Steam skin!" );
+
+    skinKey.get( 'SkinV4', function( err, val ) {
+      if( err ) {
+        logger.error( "Error with winreg (get#2): " + err );
+      }
+      else {
+        if(( val === null && toWhat === "" ) || val.value === toWhat ) {
+          logger.info( "Successfully set skin." );
+        }
       }
     });
   }
 }
 
-function toggleNoBPM( el, state ) {
-  state = state || el.checked;
-  var lb = document.getElementById( "lo_bpm" ),
-      lw = document.getElementById( "lo_bpm_windowed" ),
-      bml = document.getElementById( "bpmModeList" );
-
-  el.checked = state;
-
-  lb.disabled = el.checked;
-  lw.disabled = el.checked;
-  bml.disabled = el.checked;
-}
+/*
+*/
 
 function applyRVSettings( list, doSave ) {
   var bg = list.options[ list.selectedIndex ].text,
@@ -792,20 +783,24 @@ function applyRVSettings( list, doSave ) {
     document.getElementById( "theBody" ).style = "background: " + value;
     settings.bgValue = value;
     el = document.getElementById( "bgImage" );
-    el.style[ "background-image" ] = "";
+    el.style.backgroundImage = "";
   }
   else if( bg === "Image" ) {
     el = document.getElementById( "bgImage" );
     value = el[ "data-location" ];
+    if( value === undefined ) value = "...";
     if( value !== "..." ) {
+      if( process.platform === "win32" ) {
+        value = JSON.stringify( value.substring( value.indexOf( "file:///" )));
+      }
       settings.bgValue = value;
-      el.style[ "background-image" ] = "url( " + value + " )";
+      el.style.backgroundImage = "url( " + value + " )";
     }
   }
   else if( bg === "Default" ) {
     settings.bgValue = "";
     document.getElementById( "theBody" ).style[ "background" ] = "";
-    document.getElementById( "bgImage" ).style[ "background-image" ] = "";
+    document.getElementById( "bgImage" ).style.backgroundImage = "";
   }
 
   el = document.getElementById( "textSettingsColor" );
@@ -836,8 +831,10 @@ function applyUserSettings( auto, loc ) {
 }
 
 function modalTabbing( event ) {
-  var firstInput = $( "#closeModal" );
-  var lastInput = $( "#saveLaunchOptions" );
+  var firstInput, lastInput;
+
+  firstInput = $( "#closeModal" );
+  lastInput = $( "#saveLaunchOptions" );
 
   /*redirect last tab to first input*/
   lastInput.on('keydown', function (e) {

@@ -207,35 +207,20 @@ a:focus, button:focus {
   margin-bottom: 8px;
 }
 
-#launchBtn {
-  margin-top: 4px;
-  margin-bottom: 8px;
-}
-
-#launchOptionsListLeft, #launchOptionsListRight {
+#launchOptionsList {
   width: 100%;
   list-style-type: none;
   line-height: 2em;
   margin-top: -1em;
 }
 
-#launchOptionsListLeft label, #launchOptionsListRight label {
+#launchBtn {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+#launchOptionsList label {
   cursor: pointer;
-}
-
-#lo_arg_daisy_wheel {
-  margin-left: 8px;
-  width: 70px;
-}
-
-#lo_arg_bitness {
-  margin-left: 8px;
-  width: 45px
-}
-
-#lo_arg_platform {
-  margin-left: 8px;
-  width: 98px;
 }
 
 #skinList {
@@ -244,11 +229,11 @@ a:focus, button:focus {
   margin-bottom: 6px;
 }
 
-#modalHeader {
+.modalHeader {
   margin-left: 2em;
 }
 
-#closeModal {
+.closeModal {
   margin-top: 4px;
   margin-right: -12px;
   width: 48px;
@@ -378,19 +363,19 @@ label[for="cbOfflineFix"] {
   font-weight: bold;
 }
 
-#love {
+#aboutFooter {
+  margin-bottom: 8px;
+}
+
+.love {
+  color: red;
   font-size: 24px;
-  color:red;
-  vertical-align: -3px;
+  vertical-align: -2px;
 }
 
 #featureList li {
   margin-bottom: 4px;
   list-style: upper-roman;
-}
-
-#aboutFooter {
-
 }
 
 @media only screen and (min-width: 601px) {
@@ -416,5 +401,17 @@ label[for="cbOfflineFix"] {
 @media only screen and (max-width: 600px) {
   #launchOptionsListRight {
     margin-top: -32px;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  #blacklistRemove {
+    margin-bottom: 8px;
+    clear: right;
+  }
+
+  #blacklistReset {
+    margin-bottom: 8px;
+    clear: left;
   }
 }
