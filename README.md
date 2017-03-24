@@ -5,6 +5,10 @@
 
 [![Travis-CI Build Status](https://travis-ci.org/l3laze/testingelectron.svg?branch=master)](https://travis-ci.org/l3laze/testingelectron) [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/sqaop6q2o30cp0wo?svg=true)](https://ci.appveyor.com/project/l3laze/testingelectron)
 
+> A tool to help manage the Steam client, and apps installed via Steam.
+
+----
+
 Table of contents
 =================
 
@@ -63,12 +67,13 @@ Change Log
 * 1.2.0
     * FIX: Implemented search filters for "Steam Apps" and "Blacklist".
     * FIX: Steam Apps and Blacklist should now properly resize on startup.
+    * FIX: Fixed VDF output (tabs between "key" and "value" instead of spaces).
     * CHANGE: Reverted menu to using a background color; images too often make it difficult to see.
     * CHANGE: Moved Steam installation settings to the Settings tab, and Blacklist to the Main tab.
     * CHANGE: Changed background & text color pickers to use HTML5's color chooser.
     * CHANGE: Updated README.
     * ADD: Added [MIT License](https://github.com/l3laze/ReliefValve/blob/master/README.md).
-    * ADD: Implemented support for force starting a download, changing the Steam skin, and launching Steam with optional arguments; this is on the "Client" tab.
+    * ADD: Implemented support for force starting a download, changing the Steam skin, and launching Steam with optional arguments; this is on the "Client" tab. Can also set an option to close RV when launching Steam.
 
 * 1.1.0
     * ADD: Implemented support for some minor settings - auto-load Steam installation, background (color or image), and text color.
@@ -85,7 +90,8 @@ Change Log
 Contact
 =======
 
-l3l_aze (Tom Shaver) – [GitHub]([https://github.com/l3laze/) [Reddit](https://www.reddit.com/u/l3l_aze) [Steam](http://steamcommunity.com/id/l3l_aze/) [e-mail](mailto:l3l_aze@yahoo.com)
+l3l_aze (Tom Shaver)
+[GitHub]([https://github.com/l3laze/) [Reddit](https://www.reddit.com/u/l3l_aze) [Steam](http://steamcommunity.com/id/l3l_aze/) [e-mail](mailto:l3l_aze@yahoo.com)
 
 Distributed under the MIT license. See [LICENSE](https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md) for more information.
 

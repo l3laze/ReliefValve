@@ -84,6 +84,36 @@ function toggleLaunchOptions() {
     lo.style.display = "none";
   else
     lo.style.display = "block";
+
+  var el = document.getElementById( "theBody" );
+  if( isWhiteish( el.style.color )) {
+    lo.style.color = "#555555";
+  }
+  else {
+    lo.style.color = "";
+  }
+}
+
+function isWhiteish( col ) {
+  col = rgbExtract( col );
+  if( col === null ) return false;
+  if( col[ 'r' ] > 140 && col[ 'g' ] > 140 && col[ 'b' ] > 140 )
+  return true;
+}
+
+/*
+ * Code from:
+ * http://stackoverflow.com/a/34458994/7665043
+ */
+
+function rgbExtract(s) {
+  var match = /^\s*rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\)\s*$/.exec(s);
+  if (match === null) {
+    return null;
+  }
+  return { r: parseInt(match[1], 10),
+           g: parseInt(match[2], 10),
+           b: parseInt(match[3], 10) };
 }
 
 function handleResize() {
@@ -230,7 +260,8 @@ function loadSettings() {
       launchOptions: {
         console: false,
         developer: false,
-        bpm: false
+        bpm: false,
+        exit_rv: false
       }
     };
     config.set( "settings", settings );
@@ -242,7 +273,8 @@ function loadSettings() {
       settings.launchOptions = {
         console: false,
         developer: false,
-        bpm: false
+        bpm: false,
+        exit_rv: false
       };
       logger.info( "Upgraded settings to v1.2 (add launchOptions)." );
     }
@@ -522,7 +554,8 @@ function resetLaunchOpts() {
     settings[ "launchOptions" ] = {
       console: false,
       developer: false,
-      bpm: false
+      bpm: false,
+      exit_rv: false
     };
 
   var lb = document.getElementById( "lo_bpm" );
@@ -530,6 +563,7 @@ function resetLaunchOpts() {
   document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
   document.getElementById( "lo_developer" ).checked = settings.launchOptions.developer;
   lb.checked = settings.launchOptions.bpm;
+  document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
 }
 
 function saveLaunchOpts() {
@@ -545,7 +579,8 @@ function saveLaunchOpts() {
       launchOptions: {
         console: false,
         developer: false,
-        bpm: false
+        bpm: false,
+        exit_rv: false
       }
     };
   }
@@ -558,6 +593,7 @@ function saveLaunchOpts() {
   settings.launchOptions.console = document.getElementById( "lo_console" ).checked;
   settings.launchOptions.developer = document.getElementById( "lo_developer" ).checked;
   settings.launchOptions.bpm = lb.checked;
+  settings.launchOptions.exit_rv = document.getElementById( "lo_exit" ).checked;
 
   config.set( "settings", settings)
   console.log( "Launch options have been saved." );
@@ -587,6 +623,10 @@ function launchSteamApp() {
       ll.href = "steam:" + item;
       ll.click();
     });
+  }
+
+  if( document.getElementById( "lo_exit" ).checked ) {
+    app.quit();
   }
 }
 /*  Replacement, if needed...
