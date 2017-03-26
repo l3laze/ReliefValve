@@ -1,5 +1,3 @@
-
-
 <img src="https://cloud.githubusercontent.com/assets/18404758/24127483/f846e6f0-0da2-11e7-9d27-ddcdafe026ff.png" width="60" align="center" alt="ReliefValve icon" href="ReliefValve" />ReliefValve
 ===========
 
@@ -56,6 +54,164 @@ Information about ReliefValve.
 * How - How the app is built, powered.
 * Warning - Warning that "ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve."
 
+Installation
+============
+
+  ### Windows
+   Download the ReliefValve-v#.#.#-Setup.exe and install it.
+
+  ### Linux
+   * Download the AppImage for your system. On 32-bit systems get the ia32 (32-bit) version, on 64-bit systems get the x86_64 (64-bit) version.
+   * Open a terminal and cd into the folder where the app is.
+   * Make it executable with
+
+    chmod a+x ReliefValve*.AppImage
+
+   * Run it with
+
+    ./ReliefValve*.AppImage
+
+   * ...or by double-clicking, if you're into that kinda thing.
+
+  ### Mac
+   Download the .dmg, mount it, and then drag ReliefValve.app to Applications.
+
+Usage
+=====
+
+  ### Notes
+  The application is "frameless" by default, so does not have an outer edge. This means it can easily blend into other windows and be hard to see the edges of it. Setting a background image will help with this until I can try to add a setting to toggle the window frame on/off.
+
+  RV does a lot of reading/writing - it's config file that stores the settings, your Steam installation, and the Windows registry (to change the selected Steam skin). Using it on/from a SSD is not recommended.
+
+
+----
+
+
+  ### Setup
+  Open "Settings" and press "Choose", and then select the folder where Steam is installed to load your installation. If you want to automatically load it when RV is started check "Auto-load" and press Apply.
+
+
+----
+
+
+  ### Main
+  ![main](https://cloud.githubusercontent.com/assets/18404758/24328202/fb20221a-11a8-11e7-8a47-709c91e91e68.jpg)
+
+
+  ##### Steam Apps
+  On the left is your list of apps installed via Steam, aka Steam Apps. On the left of it's label is a refresh button to reload the list, and on the right is the number of items currently in the list (which is updated when you filter the list using the search box).
+
+
+  Below that the boxes are:
+
+
+  * Blue - The total number of currently selected apps.
+  * Green - The total number of currently selected apps that are playable.
+  * Yellow - The total number of currently selected apps that are fully installed, but have an update available, and can be fixed for offline play.
+  * Red - The total number of currently selected apps that are useless.
+
+
+  ##### Steam App Controls
+  * First is the auto-update setting control, which you may be familiar with from Steam because it's the exact same idea & wording. This will apply the chosen auto-update setting to each selected app when you press "Apply" on the bottom left of the main page.
+  * Next is the "Offline Fix" checkbox. If any of the selected apps can be fixed for offline play, this will do the fix when you press "Apply" on the bottom left of the main page.
+  * Next, "Add To Blacklist". This will add all of the currently selected apps to the blacklist on the right, which is explained further below.
+
+
+  ##### Blacklist
+  On the right is the Blacklist, which is apps that will be ignored by ReliefValve and not loaded, to keep it from messing with them in any way. Next to the label is the number of items currently in the list (which is also updated when you filter the list using the search box).
+
+
+  Below the Blacklist the box is the same as for the Steam Apps list:
+
+
+  * Blue - The total number of currently selected apps.
+
+
+  ##### Blacklist Controls
+  * "Remove Selected" will remove the currently selected apps fromt the Blacklist. Note that SteamVR is permanently blacklisted as I'm not sure how Steam would deal with changing it's appmanifest file.
+  * "Reset Blacklist" will remove everything (except SteamVR) from the Blacklist, resetting it to it's beginning state.
+
+
+----
+
+
+  ### Settings
+  ![settings](https://cloud.githubusercontent.com/assets/18404758/24328203/fb24b366-11a8-11e7-8ba9-15ef57f97111.jpg)
+
+
+  ##### Steam Location
+  Controls for the Steam install location RV uses.
+
+  * Choose button - Select a new Steam Location; also loads it when chosen.
+  
+  * Auto-load User - Auto-load the chosen Steam Location when ReliefValve starts.
+  
+  * Apply - Save the auto-load setting, including the chosen Steam Location.
+
+
+  ##### ReliefValve Settings
+  Controls for RV's own settings.
+
+
+  * Background - Choose default (nothing, will use default background color), Solid (solid color background), or Image (a background image, as in the screenshots). When you choose "Solid" or "Background" another control will popup. When solid is selected it will be a color bar (as is shown by the "Text Color" setting) which when clicked will open a color picker that lets you pick a  solid color. When Image is selected it will display a label with the file name of the current background image or "..." if nothing is selected, and below it a "Choose" button that will let you pick a different background image.
+  * Text Color - The text color which will be used throughout most of the application.
+  * Apply - Saves the selected settings and applies them the app.
+
+
+----
+
+
+  ### Client
+  ![client](https://cloud.githubusercontent.com/assets/18404758/24328199/fb17fd60-11a8-11e7-967f-2d0edf5d9e33.jpg)
+
+
+  ###### Force Start Download
+  Enter an appid or Steam Store URL of an app to "force download" it on an unsupported platform.
+
+
+  * The text box is where to enter the appid or store url.
+  * The "Game Name" label will be updated with the name of the game if it's found.
+  * The "Clear" button will clear the text box.
+  * The "Add" button will add the forced download.
+
+
+  ###### Client Options
+  Options for the Steam client.
+
+  * "Launch Options" opens a dialog with some launch options for the Steam client. Check a box if you want to use an option.
+  * "Launch" will launch the Steam client with the selected Launch Options.
+
+  ###### Launch Options
+  ![client-launch-options](https://cloud.githubusercontent.com/assets/18404758/24328456/eaa49900-11af-11e7-9692-1bf3a2367201.jpg)
+  
+  Launch options for the Steam client.
+  
+  * Enable Console - Enables the debugging console of the Steam client, found under the Console tab when it's enabled. Allows access to some special hidden commands and variables.
+  * Developer Mode - Enables the console + developer mode of the Steam client. Developer mode enables use of VGUI inspector by pressing F6 (similar to a modern browser's "devtools") or VGUI zoo by pressing F7, which are useful for Steam skin development.
+  * Big Picture Mode - Open Steam in Big Picture Mode.
+  * Close ReliefValve - If this is selected then when you press "Launch" to start Steam ReliefValve will close itself.
+  * Reset - Reset launch options to the last saved defaults.
+  * Save - Save the currently selected launch options as the default.
+
+
+----
+
+
+  ### Help
+  A very minimal version of the README documentation. Needs an upgrade.
+
+
+----
+
+
+  ### About
+  Information about ReliefValve.
+
+  * What - What the app can do.
+  * How - How the app is built, powered.
+  * Warning - Warning that "ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve."
+
 Unsigned
 ========
 
@@ -68,9 +224,9 @@ Change Log
 ==========
 
 * 1.2.1
-  * FIX: Removed dependencies (font-awesome, jquery, w3.css) from repo, as they should be.
-  * CHANGE: Updated W3.CSS to 2.9.9, and jquery to 3.2.1 (versions on NPM).
-  * ADD: More README updates.
+    * FIX: Removed dependencies (font-awesome, jquery, w3.css) from repo, as they should be.
+    * CHANGE: Updated W3.CSS to 2.9.9, and jquery to 3.2.1 (versions on NPM).
+    * ADD: More README updates.
 
 * 1.2.0
   * FIX: Removed requirement for Steam install path to actually be named Steam; now it will check for the existence of the file config/loginusers.vdf within the selected folder instead.
