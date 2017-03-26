@@ -8,6 +8,9 @@ const template = [
     label: 'View',
     submenu: [
       {
+        role: 'reload'
+      },
+      {
         role: 'toggledevtools'
       },
       {
@@ -30,7 +33,8 @@ const template = [
     role: 'help',
     submenu: [
       {
-        label: 'Lol. You\'re so funny'
+        label: 'View the README file online',
+        click () { require('electron').shell.openExternal('https://github.com/l3laze/ReliefValve/blob/master/README.md#reliefvalve') }
       }
     ]
   }
@@ -39,13 +43,27 @@ const template = [
 if (process.platform === 'darwin') {
   const name = app.getName()
   template.unshift({
+    label: 'Edit',
+    submenu: [
+      {
+        role: 'cut'
+      },
+      {
+        role: 'copy'
+      },
+      {
+        role: 'paste'
+      },
+      {
+        role: 'selectall'
+      }
+    ]
+  })
+  template.unshift({
     label: name,
     submenu: [
       {
         role: 'about'
-      },
-      {
-        type: 'separator'
       },
       {
         type: 'separator'

@@ -315,6 +315,10 @@ label[for="cbOfflineFix"] {
   vertical-align: text-top;
 }
 
+#steamAppApply, #blacklistAdd {
+  margin-top: 8px;
+}
+
 #linkSettings {
   width: 5em;
 }

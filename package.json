@@ -1,5 +1,10 @@
 {
   "name": "ReliefValve",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+github.com/l3laze/ReliefValve.git"
+  },
   "build": {
     "appId": "tmshvr.reliefvalve",
     "mac": {

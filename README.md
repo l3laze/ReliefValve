@@ -144,9 +144,9 @@ Usage
   Controls for the Steam install location RV uses.
 
   * Choose button - Select a new Steam Location; also loads it when chosen.
-  
+
   * Auto-load User - Auto-load the chosen Steam Location when ReliefValve starts.
-  
+
   * Apply - Save the auto-load setting, including the chosen Steam Location.
 
 
@@ -184,9 +184,9 @@ Usage
 
   ###### Launch Options
   ![client-launch-options](https://cloud.githubusercontent.com/assets/18404758/24328456/eaa49900-11af-11e7-9692-1bf3a2367201.jpg)
-  
+
   Launch options for the Steam client.
-  
+
   * Enable Console - Enables the debugging console of the Steam client, found under the Console tab when it's enabled. Allows access to some special hidden commands and variables.
   * Developer Mode - Enables the console + developer mode of the Steam client. Developer mode enables use of VGUI inspector by pressing F6 (similar to a modern browser's "devtools") or VGUI zoo by pressing F7, which are useful for Steam skin development.
   * Big Picture Mode - Open Steam in Big Picture Mode.
@@ -211,6 +211,10 @@ Usage
   * What - What the app can do.
   * How - How the app is built, powered.
   * Warning - Warning that "ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve."
+
+
+----
+
 
 Unsigned
 ========
