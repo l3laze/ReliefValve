@@ -383,6 +383,11 @@ label[for="cbOfflineFix"] {
   list-style: upper-roman;
 }
 
+#muses {
+  list-style-type: none;
+  overflow-y: auto;
+}
+
 @media only screen and (min-width: 601px) {
   #aboutSeparator {
     display: none;

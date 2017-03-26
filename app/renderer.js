@@ -94,6 +94,22 @@ function toggleLaunchOptions() {
   }
 }
 
+function toggleMuses() {
+  var mm = document.getElementById( "museContainer" );
+  if( mm.style.display === "block" )
+    mm.style.display = "none";
+  else
+    mm.style.display = "block";
+
+  var el = document.getElementById( "theBody" );
+  if( isWhiteish( el.style.color )) {
+    mm.style.color = "#555555";
+  }
+  else {
+    mm.style.color = "";
+  }
+}
+
 function isWhiteish( col ) {
   col = rgbExtract( col );
   if( col === null ) return false;
@@ -486,14 +502,36 @@ function addForcedDownload( app ) {
     alert( "Enter a valid appid for an app to force download first." );
   }
   else {
+    var exists = false;
     temp = getAppInfo( app );
     fing = temp[ 0 ];
     ow = temp[ 1 ];
     if( fing.AppState.installdir !== undefined ) {
       document.getElementById( "forceGameName" ).innerText = fing.AppState.installdir;
-      ipc.sendSync( "writeFile", path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" ), vdf.stringify( fing, true ));
-      console.log( "Created appmanifest for " + name + " ("+ app + ")." );
-      apps.push({ "appid": fing.AppState.AppID, "name": fing.AppState.name, "state": fing.AppState.StateFlags, "aub": fing.AppState.AutoUpdateBehavior, "path": path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" )});
+      for( var i = 0; i < apps.length; i++ ) {
+        if( apps[ i ].name === fing.AppState.name ) {
+          exists = true;
+          apps[ i ] = {
+            "appid": fing.AppState.AppID,
+            "name": fing.AppState.name,
+            "state": fing.AppState.StateFlags,
+            "aub": fing.AppState.AutoUpdateBehavior,
+            "path": path.join( steamPath, "steamapps", "appmanifest_" + fing.AppState.AppID + ".acf" )
+          };
+          logger.info( "Updated appmanifest for " + apps[ i ].name + " (" + apps[ i ].appid + ")" );
+        }
+      }
+      if( exists === false ) {
+        apps.push({
+          "appid": fing.AppState.AppID,
+          "name": fing.AppState.name,
+          "state": fing.AppState.StateFlags,
+          "aub": fing.AppState.AutoUpdateBehavior,
+          "path": path.join( steamPath, "steamapps", "appmanifest_" + fing.AppState.AppID + ".acf" )
+        });
+        logger.info( "Created new appmanifest for " + apps[ apps.length - 1 ].name  + " (" + apps[ apps.length - 1 ].appid + ")"  );
+      }
+      ipc.sendSync( "writeFile", path.join( steamPath, "steamapps", "appmanifest_" + fing.AppState.AppID + ".acf" ), vdf.stringify( fing, true ));
       sortAppList();
     }
     else {
@@ -504,7 +542,7 @@ function addForcedDownload( app ) {
 }
 
 function getAppInfo( appid ) {
-  var name, overwrite;
+  var name, overwrite, forcing;
 
   appid = parseInt( appid );
   if( isNaN( appid )) {
@@ -518,10 +556,10 @@ function getAppInfo( appid ) {
         overwrite = true;
     }
 
-    if( overwrite === undefined || overwrite === true ) {
-      var forcing = {
+    if( overwrite !== false ) {
+      forcing = {
         AppState: {
-          AppID: appid,
+          AppID: "" + appid,
           Universe: "1",
           installdir: name,
           StateFlags: "6",

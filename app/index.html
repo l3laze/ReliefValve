@@ -413,6 +413,8 @@
       </div>
       <footer id="aboutFooter" class="w3-container w3-bottom centered">
         <span>Made with <i class="fa fa-heart love"></i> by l3l_aze</span>
+        <br />
+        <span>Inspired by <a href="javascript:void(0);" onclick="toggleMuses()">muses</a></span>
       </footer>
     </div>
   </div>
@@ -424,6 +426,29 @@
   <a id="launchLink" href="javascript:void(0);" style="display:none">Super-secret hidden link</a>
 
   <div id="bg_overlay"></div>
+
+  <div id="museContainer" class="w3-modal centered">
+    <div class="w3-modal-content">
+      <header class="w3-container w3-black">
+        <a href="javascript:void(0);" onclick="document.getElementById( 'museContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
+        <h4 id="modalHeader" class="bolded">Inspired By</h4>
+      </header>
+      <br />
+      <div class="w3-row">
+        <div class="w3-container w3-whole">
+          <ul id="muses" class="w3-container w3-padding centered">
+            <li>
+              <i class="fa fa-reddit" title="Reddit"></i> <a href="https://www.reddit.com/user/Birth_Defect">Birth_Defect</a> - Change/randomize Steam skin.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <footer class="w3-container w3-black">
+        <br />
+        <br />
+      </footer>
+    </div>
+  </div>
   <!-- Insert this line above script imports -->
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
@@ -443,22 +468,29 @@
     window.addEventListener( "resize", handleResize );
 
     window.addEventListener( "click", function() {
-      var lo_modal = document.getElementById( "launchOptionsContainer" )
+      var lo_modal = document.getElementById( "launchOptionsContainer" ),
+          mu_modal = document.getElementById( "museContainer" );
       if( event.target === lo_modal )
         toggleLaunchOptions();
+      else if( event.target === mu_modal )
+        toggleMuses();
     });
 
     /* Setup ignoring of tabbing while status overlay is active,
      *   and using Esc to close the menu.
      */
     window.addEventListener( "keyup", function( event ) {
-      if( event.which === 9 && document.getElementById( "launchOptionsContainer" ).style.display === "block" )
+      if( event.which === 9 && document.getElementById( "launchOptionsContainer" ).style.display === "block" ) {
         modalTabbing( event );
-      else if( event.which === 27 )
+      }
+      else if( event.which === 27 ) {
         if( window.innerWidth < 601 && document.getElementById( "menuToggle" )[ "data-state" ] !== true )
           toggleMenu();
         else if( document.getElementById( "launchOptionsContainer" ).style.display === "block" )
           toggleLaunchOptions();
+        else if( document.getElementById( "museContainer" ).style.display === "block" )
+          toggleMuses();
+      }
     });
 
     document.getElementById( "gameList" ).addEventListener( "change", function( event ) {
