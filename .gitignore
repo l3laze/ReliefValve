@@ -3,4 +3,6 @@ dist/
 
 node_modules/
 
-app/resources/w3\.css\.old
+.DS_Store
+
+*/.DS_Store

@@ -524,9 +524,25 @@ function getAppInfo( appid ) {
           AppID: appid,
           Universe: "1",
           installdir: name,
-          StateFlags: "1026",
+          StateFlags: "6",
           name: name,
-          AutoUpdateBehavior: "1"
+          LastUpdated: "0",
+          UpdateResult: "0",
+          SizeOnDisk: "0",
+          buildid: "0",
+          LastOwner: "0",
+          BytesToDownload: "0",
+          BytesDownloaded: "0",
+          AutoUpdateBehavior: "0",
+          AllowOtherDownloadsWhileRunning: "0",
+          UserConfig: {
+          },
+          InstalledDepots: {
+          },
+          MountedDepots: {
+          },
+          StagedDepots: {
+          }
         }
       };
     }
