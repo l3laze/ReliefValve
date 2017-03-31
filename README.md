@@ -233,9 +233,13 @@ Change Log
 ==========
 
 * 1.2.1
-    * FIX: Removed dependencies (font-awesome, jquery, w3.css) from repo, as they should be.
-    * CHANGE: Updated W3.CSS to 2.9.9, and jquery to 3.2.1 (versions on NPM).
-    * ADD: More README updates.
+  * FIX: Removed dependencies (font-awesome, jquery, w3.css, badger.js) from repo, as they should be.
+  * FIX: Minor HTML & CSS tweaks.
+  * CHANGE: Updated code to use Badger.JS instead of Badger.CSS.
+  * CHANGE: Updated W3.CSS to 2.9.9, and jquery to 3.2.1 (versions on NPM).
+  * CHANGE: Set default cursor for all elements to prevent the text-editing cursor from showing.
+  * ADD: More README updates.
+  * ADD: "Muses" modal dialog for people who inspire/request features.
 
 * 1.2.0
   * FIX: Removed requirement for Steam install path to actually be named Steam; now it will check for the existence of the file config/loginusers.vdf within the selected folder instead.
