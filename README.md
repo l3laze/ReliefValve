@@ -233,6 +233,8 @@ Change Log
 ==========
 
 * 1.2.1
+  * FIX: Force download functionality should no longer add multiple copies of a "game" to the Steam Apps list when it has to create the appmanifest file.
+  * FIX: Select all/cut/copy/paste keyboard shortcuts are now enabled on Mac (again?).
   * FIX: Removed dependencies (font-awesome, jquery, w3.css, badger.js) from repo, as they should be.
   * FIX: Minor HTML & CSS tweaks.
   * CHANGE: Updated code to use Badger.JS instead of Badger.CSS.
