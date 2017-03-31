@@ -2,6 +2,11 @@
 ===========
 
 [![Travis-CI Build Status](https://travis-ci.org/l3laze/testingelectron.svg?branch=master)](https://travis-ci.org/l3laze/testingelectron) [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/sqaop6q2o30cp0wo?svg=true)](https://ci.appveyor.com/project/l3laze/testingelectron)
+[![Libraries.io for GitHub](https://img.shields.io/librariesio/github/l3laze/ReliefValve.svg)]()
+
+[![GitHub issues](https://img.shields.io/github/issues/l3laze/ReliefValve.svg)](https://github.com/l3laze/ReliefValve/issues)
+
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/l3laze/ReliefValve/master/LICENSE.md)
 
 > A tool to help manage the Steam client, and apps installed via Steam.
 

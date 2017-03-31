@@ -9,10 +9,11 @@
 
 * {
   box-sizing: border-box;
+  cursor: default;
 }
 
 select[disabled] {
-  border: 2px solid gold;
+  border: 2px solid red;
 }
 
 input[type="checkbox" disabled] {
@@ -27,7 +28,6 @@ input[type="checkbox" disabled] {
   width: 100%;
   height: 100%;
   background-position: center;
-  -webkit-app-region: drag;
 }
 
 html {
@@ -39,6 +39,7 @@ html {
 
 body {
   animation: fadein 0.5s;
+  -webkit-app-region: drag;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   background: white;
@@ -56,10 +57,6 @@ input, select, button, a, textarea, label {
 
 label {
   cursor: default;
-}
-
-.no-app-drag {
-  -webkit-app-region: no-drag;
 }
 
 span, .status-container {
@@ -370,10 +367,21 @@ label[for="cbOfflineFix"] {
 #howItsRun, #howItsMade {
   cursor: pointer;
   font-weight: bold;
+  -webkit-app-region: drag;
+}
+
+#aboutContent {
+  -webkit-app-region: drag;
 }
 
 #aboutFooter {
   margin-bottom: 8px;
+  -webkit-app-region: drag;
+}
+
+#madeWith {
+  margin-left: -8px;
+  margin-right: 16px;
 }
 
 .love {
@@ -399,10 +407,6 @@ label[for="cbOfflineFix"] {
 
   #aboutFooter {
     margin-top: 0;
-  }
-
-  #aboutView > div:nth-child(4) {
-    left: 20%;
   }
 }
 

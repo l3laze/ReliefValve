@@ -908,7 +908,7 @@ function modalTabbing( event ) {
 }
 
 function openAboutTab( event, which ) {
-  var tabs = document.querySelectorAll( "#aboutView #aboutHeader > div" ),
+  var tabs = document.querySelectorAll( "#aboutContent > div" ),
       el = "explain" + event.currentTarget.id.substring( 0, 1 ).toUpperCase() + event.currentTarget.id.substring( 1 ),
       what = document.getElementById( el ),
       isActive = false;
@@ -957,6 +957,105 @@ function sortBy( field, reverse, primer ) {
    return function( a, b ) {
      return a = key( a ), b = key( b ), reverse * (( a > b ) - ( b > a ));
    }
+}
+
+function osInit() {
+  if( process.platform === "darwin" ) {
+    document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
+  }
+}
+
+function initBadges() {
+  var builtWithBadges = [
+    {
+      name: "GitHub",
+      home: "https://github.com/",
+      license: ""
+    },
+    {
+      name: "GitKraken",
+      home: "https://www.gitkraken.com/",
+      license: ""
+    },
+    {
+      name: "Atom",
+      home: "https://atom.io/",
+      license: ""
+    },
+    {
+      name: "Appveyor",
+      home: "https://www.appveyor.com/",
+      license: ""
+    },
+    {
+      name: "Travis-CI",
+      home: "https://travis-ci.org/",
+      license: ""
+    },
+    {
+      name: "electron-builder",
+      home: "https://github.com/electron-userland/electron-builder",
+      license: "https://github.com/electron-userland/electron-builder/blob/master/LICENSE"
+    }
+  ],
+  poweredByBadges = [
+    {
+      name: "Electron",
+      home: "http://electron.atom.io/",
+      license: "https://github.com/electron/electron/blob/master/LICENSE"
+    },
+    {
+      name: "electron-config",
+      home: "https://github.com/sindresorhus/electron-config",
+      license: "https://github.com/sindresorhus/electron-config/blob/master/license"
+    },
+    {
+      name: "electron-log",
+      home: "https://github.com/megahertz/electron-log",
+      license: "https://github.com/megahertz/electron-log/blob/master/LICENSE"
+    },
+    {
+      name: "simple-vdf2",
+      home: "https://github.com/l3laze/vdf-parser",
+      license: "https://github.com/rossengeorgiev/vdf-parser/blob/master/LICENSE"
+    },
+    {
+      name: "Font-Awesome",
+      home: "http://fontawesome.io/",
+      license: "http://fontawesome.io/license/"
+    },
+    {
+      name: "jQuery",
+      home: "http://jquery.com/",
+      license: "https://github.com/jquery/jquery/blob/master/LICENSE.txt"
+    },
+    {
+      name: "Badger.JS",
+      home: "https://github.com/l3laze/Badger.js",
+      license: "https://github.com/l3laze/Badger.js/blob/master/LICENSE"
+    },
+    {
+      name: "W3.CSS",
+      home: "http://www.w3schools.com/w3css/",
+      license: ""
+    },
+    {
+      name: "node-winreg",
+      home: "https://github.com/CharlieHess/node-winreg",
+      license: ""
+    }
+  ],
+  elBuilt = document.getElementById( "builtWith" ).getElementsByClassName( "badger-container" )[ 0 ],
+  elPowered = document.getElementById( "poweredBy" ).getElementsByClassName( "badger-container" )[ 0 ],
+  i;
+
+  for( i = 0; i < builtWithBadges.length; i++ ) {
+    elBuilt.appendChild( craftBadge( builtWithBadges[ i ]));
+  }
+
+  for( i = 0; i < poweredByBadges.length; i++ ) {
+    elPowered.appendChild( craftBadge( poweredByBadges[ i ]));
+  }
 }
 
 process.on('uncaughtException', (err) => {
