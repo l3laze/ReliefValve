@@ -8,9 +8,9 @@
   <meta name="author" content="Tom Shaver">
   <title>ReliefValve</title>
   <link rel="shortcut icon" type="image/x-icon" href="resources/favicon.ico" />
-  <link rel="stylesheet" href="resources/w3.css" />
-  <link rel="stylesheet" href="resources/badger.css" />
-  <link rel="stylesheet" href="resources/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="node_modules/w3-css/w3.css" />
+  <link rel="stylesheet" href="node_modules/badger.js/badger.css" />
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
   <link rel="stylesheet" href="reliefValve.css" />
 </head>
 <body id="theBody">
@@ -44,7 +44,7 @@
     <div id="gameContainer" class="w3-half w3-container view-container">
       <div class="w3-container centered">
         <div class="centered">
-          <a href="javascript:void(0);" onclick="refreshSteamApps(this)" title="Reload Steam apps."><i class="fa fa-refresh"></i></a>
+          <a href="javascript:void(0);" id="reloadSteamApps" onclick="refreshSteamApps(this)" title="Reload Steam apps."><i class="fa fa-refresh"></i></a>
           <label class="w3-large w3-content centered bolded">Steam Apps</label>
           <span id="numberTotal" class="w3-large w3-content w3-padding" title="Total number of apps loaded.">0</span>
         </div>
@@ -70,8 +70,7 @@
         </select>
       </div>
       <div class="w3-row w3-container centered">
-        <input type="checkbox" id="cbOfflineFix" class="w3-check" />
-        <label for="cbOfflineFix">Offline fix</label>
+        <label for="cbOfflineFix"><input type="checkbox" id="cbOfflineFix" class="w3-check" /> Offline fix</label>
       </div>
       <div class="w3-container centered">
         <a href="javascript:void(0)" id="steamAppApply" class="w3-btn w3-white w3-ripple w3-border">Apply</a>
@@ -109,8 +108,7 @@
       <a href="javascript:void(0)" id="chooseSteam" class="w3-btn w3-white w3-ripple w3-border">Choose</a>
       <br />
       <div id="autoLoadContainer">
-        <input type="checkbox" id="autoLoad" class="w3-check" data-location="" />
-        <label for="autoLoad">Auto-load User</label>
+        <label for="autoLoad"><input type="checkbox" id="autoLoad" class="w3-check" data-location="" /> Auto-load User</label>
         <br />
         <button id="applyUserSettings" class="w3-btn w3-white w3-ripple w3-border">Apply</button>
       </div>
@@ -172,20 +170,16 @@
               <div class="w3-container w3-whole">
                 <ul id="launchOptionsList" class="w3-container w3-padding centered">
                   <li>
-                    <input type="checkbox" id="lo_console" class="w3-check">
-                    <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging.">Enable Console</label>
+                    <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="checkbox" id="lo_console" class="w3-check" /> Enable Console</label>
                   </li>
                   <li>
-                    <input type="checkbox" id="lo_developer" class="w3-check">
-                    <label for="lo_developer" title="Enable VGUI editor (F6) and VGUI zoo (F7); for use with skin development.">Developer Mode</label>
+                    <label for="lo_developer" title="Enable VGUI editor (F6) and VGUI zoo (F7); for use with skin development."><input type="checkbox" id="lo_developer" class="w3-check" /> Developer Mode</label>
                   </li>
                   <li>
-                    <input type="checkbox" id="lo_bpm" class="w3-check">
-                    <label for="lo_bpm" title="Start Steam in Big Picture Mode.">Big Picture Mode</label>
+                    <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="checkbox" id="lo_bpm" class="w3-check" /> Big Picture Mode</label>
                   </li>
                   <li>
-                    <input type="checkbox" id="lo_exit" class="w3-check">
-                    <label for="lo_exit" title="Close RV when starting Steam.">Close ReliefValve</label>
+                    <label for="lo_exit" title="Close RV when starting Steam."><input type="checkbox" id="lo_exit" class="w3-check" /> Close ReliefValve</label>
                   </li>
                 </ul>
               </div>
@@ -200,7 +194,7 @@
         <button id="launchBtn" class="w3-btn w3-white w3-ripple w3-border" title="Launch the Steam client.">Launch</button>
         <hr class="splitter" />
         <div class="w3-container centered">
-          <label for="skinList" class="w3-large w3-content centered bolded">Steam Skin</label>
+          <label class="w3-large w3-content centered bolded">Steam Skin</label>
           <br />
           <select id="skinList" class="w3-white">
             <option>&lt;Default&gt;</option>
@@ -226,7 +220,7 @@
           apps you've installed via Steam will be
           loaded into the "Steam Apps" list. Below
           the list are controls for the apps auto-update
-          behavior and to apply an <a href="javascript:void(0);">"offline fix"</a>.
+          behavior and to apply an "offline fix".
       </p>
       <p>
         <hr class="splitter" />
@@ -249,171 +243,53 @@
     </div>
   </div>
 
-  <div id="aboutView" class="appView centered">
-    <div class="w3-container">
-      <button id="theWhat" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">"What?"</button>
-      <button id="theHow" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">"How?!"</button>
-      <button id="theWarning" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">Warning!</button>
+  <div id="aboutView" class="appView">
+    <div class="w3-container w3-margin-bottom centered">
+      <button id="theWhat" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"What?"</button>
+      <button id="theHow" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"How?!"</button>
     </div>
-    <br />
-    <div id="aboutHeader" class="w3-container w3-padding">
-      <div id="explainTheDefault" class="w3-container">
-        <span>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></span>
+    <div id="aboutContent" class="w3-container centered">
+      <div id="explainTheDefault" class="w3-container w3-margin-top">
+        <p>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</p>
+        <p>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></p>
       </div>
-      <div id="explainTheWhat" class="w3-container w3-hide">
-          <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
-          <br />
-          <ul id="featureList">
-            <li>
-              Manage auto-update settings for apps you've installed via the Steam client.
-            </li>
-            <li>
-              Apply an offline fix to make some games playable in offline mode.
-            </li>
-            <li>
-              Help force start a download for a game that's not compatible with your system.
-            </li>
-            <li>
-              Change the selected Steam skin to one you have installed; can also change to a random skin.
-            </li>
-          </ul>
+      <div id="explainTheWhat" class="w3-container w3-hide w3-margin-top">
+        <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
+        <br />
+        <ul id="featureList">
+          <li>
+            Manage auto-update settings for apps you've installed via the Steam client.
+          </li>
+          <li>
+            Apply an offline fix to make some games playable in offline mode.
+          </li>
+          <li>
+            Help force start a download for a game that's not compatible with your system.
+          </li>
+          <li>
+            Change the selected Steam skin to one you have installed; can also change to a random skin.
+          </li>
+        </ul>
       </div>
       <div id="explainTheHow" class="w3-container w3-hide">
         <div id="poweredBy" class="w3-container">
-          This app is <a id="howItsRun">powered by&gt;</a> the following:
+          This app is <a href="#" onclick="changeHowTab(event)" class="poweredBy">powered by &gt;</a> the following:
           <br />
-          <div class="w3-container badger-container">
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">Electron</span>
-              <span class="badger-credits">
-                <a href="http://electron.atom.io/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://github.com/electron/electron/blob/master/LICENSE" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">electron-config</span>
-              <span class="badger-credits">
-                <a href="https://github.com/sindresorhus/electron-config" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://github.com/sindresorhus/electron-config/blob/master/license" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">electron-log</span>
-              <span class="badger-credits">
-                <a href="https://github.com/megahertz/electron-log" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://github.com/megahertz/electron-log/blob/master/LICENSE" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">simple-vdf2</span>
-              <span class="badger-credits">
-                <a href="https://github.com/l3laze/vdf-parser" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://github.com/rossengeorgiev/vdf-parser/blob/master/LICENSE" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">W3.CSS</span>
-              <span class="badger-credits">
-                <a href="http://www.w3schools.com/w3css/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="http://www.w3schools.com/w3css/" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">Font Awesome</span>
-              <span class="badger-credits">
-                <a href="http://fontawesome.io/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;id=OFL" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">Badger.CSS</span>
-              <span class="badger-credits">
-                <a href="https://github.com/l3laze/Badger" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://github.com/l3laze/Badger" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">jQuery</span>
-              <span class="badger-credits">
-                <a href="http://jquery.com/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://js.foundation/pdf/ip-policy.pdf" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">node-winreg</span>
-              <span class="badger-credits">
-                <a href="https://github.com/CharlieHess/node-winreg" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-              </span>
-            </div>
-
+          <div class="w3-container badger-container w3-margin-top">
+            <!-- This will be generated -->
           </div>
         </div>
         <div id="builtWith" class="w3-container w3-hide">
-          This app is <a id="howItsMade">&lt; built with</a> the following:
+          This app is <a onclick="changeHowTab(event)" class="builtWith">&lt; built with</a> the following:
           <br />
-          <div class="w3-container badger-container">
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">GitHub</span>
-              <span class="badger-credits">
-                <a href="https://github.com/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">GitKraken</span>
-              <span class="badger-credits">
-                <a href="https://www.gitkraken.com/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">Atom</span>
-              <span class="badger-credits">
-                <a href="https://atom.io/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">Appveyor</span>
-              <span class="badger-credits">
-                <a href="https://www.appveyor.com/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">Travis-CI</span>
-              <span class="badger-credits">
-                <a href="https://travis-ci.org/" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-              </span>
-            </div>
-
-            <div class="badger-badge">
-              <span class="badger-name w3-left">electron-builder</span>
-              <span class="badger-credits">
-                <a href="https://github.com/electron-userland/electron-builder" class="badger-home"><i class="fa fa-home" title="Homepage"></i></a>
-                <a href="https://github.com/electron-userland/electron-builder/blob/master/LICENSE" class="badger-license"><i class="fa fa-file-text-o" title="License page"></i></a>
-              </span>
-            </div>
-
+          <div class="w3-container badger-container w3-margin-top">
+            <!-- This will be generated -->
           </div>
         </div>
       </div>
-      <div id="explainTheWarning" class="w3-container w3-hide">
-          <span>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</span>
-      </div>
-      <footer id="aboutFooter" class="w3-container w3-bottom centered">
-        <span>Made with <i class="fa fa-heart love"></i> by l3l_aze</span>
-      </footer>
+    </div>
+    <div id="aboutFooter" class="w3-bottom centered">
+      <span id="madeWith">Made with <i class="fa fa-heart love"></i> by l3l_aze and <a href="javascript:void(0);" onclick="toggleContributors()">contributors</a></span>
     </div>
   </div>
 
@@ -424,11 +300,34 @@
   <a id="launchLink" href="javascript:void(0);" style="display:none">Super-secret hidden link</a>
 
   <div id="bg_overlay"></div>
+
+  <div id="contributorContainer" class="w3-modal centered">
+    <div class="w3-modal-content">
+      <header class="w3-container w3-black">
+        <a href="javascript:void(0);" onclick="document.getElementById( 'contributorContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
+        <h4 id="modalHeader" class="bolded">Contributors</h4>
+      </header>
+      <br />
+      <div class="w3-row">
+        <div class="w3-container w3-whole">
+          <ul id="contributors" class="w3-container w3-padding centered">
+            <li>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <footer class="w3-container w3-black">
+        <br />
+        <br />
+      </footer>
+    </div>
+  </div>
   <!-- Insert this line above script imports -->
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
   <!-- normal script imports etc  -->
-  <script src="resources/jquery-3.1.1.min.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/badger.js/badger.js"></script>
   <script src="renderer.js"></script>
   <!-- Insert this line after script imports -->
   <script>if (window.module) module = window.module;</script>
@@ -437,28 +336,44 @@
     var overlayTimer, debug = false;
 
     window.addEventListener( "DOMContentLoaded", function() {
+      osInit();
+      initBadges();
       loadSettings();
     });
 
     window.addEventListener( "resize", handleResize );
 
     window.addEventListener( "click", function() {
-      var lo_modal = document.getElementById( "launchOptionsContainer" )
+      var lo_modal = document.getElementById( "launchOptionsContainer" ),
+          mu_modal = document.getElementById( "contributorContainer" );
       if( event.target === lo_modal )
         toggleLaunchOptions();
+      else if( event.target === mu_modal )
+        toggleContributors();
     });
 
     /* Setup ignoring of tabbing while status overlay is active,
      *   and using Esc to close the menu.
      */
     window.addEventListener( "keyup", function( event ) {
-      if( event.which === 9 && document.getElementById( "launchOptionsContainer" ).style.display === "block" )
-        modalTabbing( event );
-      else if( event.which === 27 )
+      if( event.which === 9 ) {
+        var loc = document.getElementById( "launchOptionsContainer" ),
+            mc = document.getElementById( "contributorContainer" );
+        if( loc.style.display === "block" ) {
+          modalTabbing( event, loc );
+        }
+        else if( mc.style.display === "block" ) {
+          modalTabbing( event, mc );
+        }
+      }
+      else if( event.which === 27 ) {
         if( window.innerWidth < 601 && document.getElementById( "menuToggle" )[ "data-state" ] !== true )
           toggleMenu();
         else if( document.getElementById( "launchOptionsContainer" ).style.display === "block" )
           toggleLaunchOptions();
+        else if( document.getElementById( "contributorContainer" ).style.display === "block" )
+          toggleContributors();
+      }
     });
 
     document.getElementById( "gameList" ).addEventListener( "change", function( event ) {
@@ -522,14 +437,6 @@
 
     $( "#theWarning" ).on( "click", function( event ) {
       openAboutTab( event, "theWarning" );
-    });
-
-    document.getElementById( "howItsRun" ).addEventListener( "click", function( event ) {
-      changeHowTab( event );
-    });
-
-    document.getElementById( "howItsMade" ).addEventListener( "click", function( event ) {
-      changeHowTab( event );
     });
 
     window.setTimeout( "handleResize()", 100 );

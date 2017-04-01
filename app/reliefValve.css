@@ -9,10 +9,11 @@
 
 * {
   box-sizing: border-box;
+  cursor: default;
 }
 
 select[disabled] {
-  border: 2px solid gold;
+  border: 2px solid red;
 }
 
 input[type="checkbox" disabled] {
@@ -38,6 +39,7 @@ html {
 
 body {
   animation: fadein 0.5s;
+  -webkit-app-region: drag;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   background: white;
@@ -46,15 +48,15 @@ body {
   height: 100%;
 }
 
-input, select, button, a, textarea {
+input, select, option, button, a, textarea, label {
   cursor: pointer;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -webkit-app-region: no-drag;
 }
 
-.no-app-drag {
-  -webkit-app-region: no-drag;
+label {
+  cursor: default;
 }
 
 span, .status-container {
@@ -178,6 +180,10 @@ a:focus, button:focus {
   display: none;
 }
 
+#reloadSteamApps i {
+  cursor: pointer;
+}
+
 #helpView {
   margin-left: 15px;
   margin-right: 15px;
@@ -262,8 +268,8 @@ a:focus, button:focus {
 
 #VMenu {
   list-style-type: none;
-  margin: 0;
-  padding: 0;
+//  margin: 0;
+//  padding: 0;
 }
 
 #navMenu {
@@ -308,6 +314,10 @@ label[for="cbOfflineFix"] {
   cursor: pointer;
   margin-top: 16px;
   vertical-align: text-top;
+}
+
+#steamAppApply, #blacklistAdd {
+  margin-top: 8px;
 }
 
 #linkSettings {
@@ -358,13 +368,19 @@ label[for="cbOfflineFix"] {
   color: black;
 }
 
-#howItsRun, #howItsMade {
+.poweredBy, .builtWith {
   cursor: pointer;
   font-weight: bold;
 }
 
 #aboutFooter {
   margin-bottom: 8px;
+  -webkit-app-region: drag;
+}
+
+#madeWith {
+  margin-left: -8px;
+  margin-right: 16px;
 }
 
 .love {
@@ -378,6 +394,11 @@ label[for="cbOfflineFix"] {
   list-style: upper-roman;
 }
 
+#contributors {
+  list-style-type: none;
+  overflow-y: auto;
+}
+
 @media only screen and (min-width: 601px) {
   #aboutSeparator {
     display: none;
@@ -385,10 +406,6 @@ label[for="cbOfflineFix"] {
 
   #aboutFooter {
     margin-top: 0;
-  }
-
-  #aboutView > div:nth-child(4) {
-    left: 20%;
   }
 }
 

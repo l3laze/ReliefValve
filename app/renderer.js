@@ -94,6 +94,22 @@ function toggleLaunchOptions() {
   }
 }
 
+function toggleContributors() {
+  var mm = document.getElementById( "contributorContainer" );
+  if( mm.style.display === "block" )
+    mm.style.display = "none";
+  else
+    mm.style.display = "block";
+
+  var el = document.getElementById( "theBody" );
+  if( isWhiteish( el.style.color )) {
+    mm.style.color = "#555555";
+  }
+  else {
+    mm.style.color = "";
+  }
+}
+
 function isWhiteish( col ) {
   col = rgbExtract( col );
   if( col === null ) return false;
@@ -486,14 +502,36 @@ function addForcedDownload( app ) {
     alert( "Enter a valid appid for an app to force download first." );
   }
   else {
+    var exists = false;
     temp = getAppInfo( app );
     fing = temp[ 0 ];
     ow = temp[ 1 ];
     if( fing.AppState.installdir !== undefined ) {
       document.getElementById( "forceGameName" ).innerText = fing.AppState.installdir;
-      ipc.sendSync( "writeFile", path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" ), vdf.stringify( fing, true ));
-      console.log( "Created appmanifest for " + name + " ("+ app + ")." );
-      apps.push({ "appid": fing.AppState.AppID, "name": fing.AppState.name, "state": fing.AppState.StateFlags, "aub": fing.AppState.AutoUpdateBehavior, "path": path.join( steamPath, "steamapps", "appmanifest_" + app + ".acf" )});
+      for( var i = 0; i < apps.length; i++ ) {
+        if( apps[ i ].name === fing.AppState.name ) {
+          exists = true;
+          apps[ i ] = {
+            "appid": fing.AppState.AppID,
+            "name": fing.AppState.name,
+            "state": fing.AppState.StateFlags,
+            "aub": fing.AppState.AutoUpdateBehavior,
+            "path": path.join( steamPath, "steamapps", "appmanifest_" + fing.AppState.AppID + ".acf" )
+          };
+          logger.info( "Updated appmanifest for " + apps[ i ].name + " (" + apps[ i ].appid + ")" );
+        }
+      }
+      if( exists === false ) {
+        apps.push({
+          "appid": fing.AppState.AppID,
+          "name": fing.AppState.name,
+          "state": fing.AppState.StateFlags,
+          "aub": fing.AppState.AutoUpdateBehavior,
+          "path": path.join( steamPath, "steamapps", "appmanifest_" + fing.AppState.AppID + ".acf" )
+        });
+        logger.info( "Created new appmanifest for " + apps[ apps.length - 1 ].name  + " (" + apps[ apps.length - 1 ].appid + ")"  );
+      }
+      ipc.sendSync( "writeFile", path.join( steamPath, "steamapps", "appmanifest_" + fing.AppState.AppID + ".acf" ), vdf.stringify( fing, true ));
       sortAppList();
     }
     else {
@@ -504,7 +542,7 @@ function addForcedDownload( app ) {
 }
 
 function getAppInfo( appid ) {
-  var name, overwrite;
+  var name, overwrite, forcing;
 
   appid = parseInt( appid );
   if( isNaN( appid )) {
@@ -518,15 +556,31 @@ function getAppInfo( appid ) {
         overwrite = true;
     }
 
-    if( overwrite === undefined || overwrite === true ) {
-      var forcing = {
+    if( overwrite !== false ) {
+      forcing = {
         AppState: {
-          AppID: appid,
+          AppID: "" + appid,
           Universe: "1",
           installdir: name,
-          StateFlags: "1026",
+          StateFlags: "6",
           name: name,
-          AutoUpdateBehavior: "1"
+          LastUpdated: "0",
+          UpdateResult: "0",
+          SizeOnDisk: "0",
+          buildid: "0",
+          LastOwner: "0",
+          BytesToDownload: "0",
+          BytesDownloaded: "0",
+          AutoUpdateBehavior: "0",
+          AllowOtherDownloadsWhileRunning: "0",
+          UserConfig: {
+          },
+          InstalledDepots: {
+          },
+          MountedDepots: {
+          },
+          StagedDepots: {
+          }
         }
       };
     }
@@ -830,14 +884,19 @@ function applyUserSettings( auto, loc ) {
   }
 }
 
-function modalTabbing( event ) {
+function modalTabbing( event, modal ) {
   var firstInput, lastInput;
 
-  firstInput = $( "#closeModal" );
-  lastInput = $( "#saveLaunchOptions" );
+  firstInput = modal.getElementsByClassName( "closeModal" )[ 0 ];
+  if( modal.id === "launchOptionsContainer" ) {
+    lastInput = document.getElementById( "saveLaunchOptions" );
+  }
+  else {
+    lastInput = firstInput;
+  }
 
   /*redirect last tab to first input*/
-  lastInput.on('keydown', function (e) {
+  lastInput.addEventListener('keydown', function (e) {
      if ((e.which === 9 && !e.shiftKey)) {
          e.preventDefault();
          firstInput.focus();
@@ -845,7 +904,7 @@ function modalTabbing( event ) {
   });
 
   /*redirect first shift+tab to last input*/
-  firstInput.on('keydown', function (e) {
+  firstInput.addEventListener('keydown', function (e) {
       if ((e.which === 9 && e.shiftKey)) {
           e.preventDefault();
           lastInput.focus();
@@ -854,7 +913,7 @@ function modalTabbing( event ) {
 }
 
 function openAboutTab( event, which ) {
-  var tabs = document.querySelectorAll( "#aboutView #aboutHeader > div" ),
+  var tabs = document.querySelectorAll( "#aboutContent > div" ),
       el = "explain" + event.currentTarget.id.substring( 0, 1 ).toUpperCase() + event.currentTarget.id.substring( 1 ),
       what = document.getElementById( el ),
       isActive = false;
@@ -882,9 +941,9 @@ function changeHowTab( event ) {
       made = document.getElementById( "builtWith" ),
       run = document.getElementById( "poweredBy" );
 
-  if( el.id === "howItsRun" ) {
-    made.classList.remove( "w3-hide" );
-    run.classList.add( "w3-hide" );
+  if( el.classList.contains( "poweredBy" )) {
+      made.classList.remove( "w3-hide" );
+      run.classList.add( "w3-hide" );
   }
   else {
     made.classList.add( "w3-hide" );
@@ -903,6 +962,105 @@ function sortBy( field, reverse, primer ) {
    return function( a, b ) {
      return a = key( a ), b = key( b ), reverse * (( a > b ) - ( b > a ));
    }
+}
+
+function osInit() {
+  if( process.platform === "darwin" ) {
+    document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
+  }
+}
+
+function initBadges() {
+  var builtWithBadges = [
+    {
+      name: "GitHub",
+      home: "https://github.com/",
+      license: ""
+    },
+    {
+      name: "GitKraken",
+      home: "https://www.gitkraken.com/",
+      license: ""
+    },
+    {
+      name: "Atom",
+      home: "https://atom.io/",
+      license: ""
+    },
+    {
+      name: "Appveyor",
+      home: "https://www.appveyor.com/",
+      license: ""
+    },
+    {
+      name: "Travis-CI",
+      home: "https://travis-ci.org/",
+      license: ""
+    },
+    {
+      name: "electron-builder",
+      home: "https://github.com/electron-userland/electron-builder",
+      license: "https://github.com/electron-userland/electron-builder/blob/master/LICENSE"
+    }
+  ],
+  poweredByBadges = [
+    {
+      name: "Electron",
+      home: "http://electron.atom.io/",
+      license: "https://github.com/electron/electron/blob/master/LICENSE"
+    },
+    {
+      name: "electron-config",
+      home: "https://github.com/sindresorhus/electron-config",
+      license: "https://github.com/sindresorhus/electron-config/blob/master/license"
+    },
+    {
+      name: "electron-log",
+      home: "https://github.com/megahertz/electron-log",
+      license: "https://github.com/megahertz/electron-log/blob/master/LICENSE"
+    },
+    {
+      name: "simple-vdf2",
+      home: "https://github.com/l3laze/vdf-parser",
+      license: "https://github.com/rossengeorgiev/vdf-parser/blob/master/LICENSE"
+    },
+    {
+      name: "Font-Awesome",
+      home: "http://fontawesome.io/",
+      license: "http://fontawesome.io/license/"
+    },
+    {
+      name: "jQuery",
+      home: "http://jquery.com/",
+      license: "https://github.com/jquery/jquery/blob/master/LICENSE.txt"
+    },
+    {
+      name: "Badger.JS",
+      home: "https://github.com/l3laze/Badger.js",
+      license: "https://github.com/l3laze/Badger.js/blob/master/LICENSE"
+    },
+    {
+      name: "W3.CSS",
+      home: "http://www.w3schools.com/w3css/",
+      license: ""
+    },
+    {
+      name: "node-winreg",
+      home: "https://github.com/CharlieHess/node-winreg",
+      license: ""
+    }
+  ],
+  elBuilt = document.getElementById( "builtWith" ).getElementsByClassName( "badger-container" )[ 0 ],
+  elPowered = document.getElementById( "poweredBy" ).getElementsByClassName( "badger-container" )[ 0 ],
+  i;
+
+  for( i = 0; i < builtWithBadges.length; i++ ) {
+    elBuilt.appendChild( craftBadge( builtWithBadges[ i ]));
+  }
+
+  for( i = 0; i < poweredByBadges.length; i++ ) {
+    elPowered.appendChild( craftBadge( poweredByBadges[ i ]));
+  }
 }
 
 process.on('uncaughtException', (err) => {
