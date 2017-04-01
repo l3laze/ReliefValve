@@ -44,7 +44,7 @@
     <div id="gameContainer" class="w3-half w3-container view-container">
       <div class="w3-container centered">
         <div class="centered">
-          <a href="javascript:void(0);" onclick="refreshSteamApps(this)" title="Reload Steam apps."><i class="fa fa-refresh"></i></a>
+          <a href="javascript:void(0);" id="reloadSteamApps" onclick="refreshSteamApps(this)" title="Reload Steam apps."><i class="fa fa-refresh"></i></a>
           <label class="w3-large w3-content centered bolded">Steam Apps</label>
           <span id="numberTotal" class="w3-large w3-content w3-padding" title="Total number of apps loaded.">0</span>
         </div>
@@ -244,15 +244,16 @@
   </div>
 
   <div id="aboutView" class="appView">
-    <button id="theWhat" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">"What?"</button>
-    <button id="theHow" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">"How?!"</button>
-    <button id="theWarning" class="w3-btn w3-third w3-border w3-hover-white w3-hover-text-black">Warning!</button>
-    <br />
-    <div id="aboutContent" class="w3-container w3-whole centered">
-      <div id="explainTheDefault" class="w3-container">
-        <span>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></span>
+    <div class="w3-container w3-margin-bottom centered">
+      <button id="theWhat" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"What?"</button>
+      <button id="theHow" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"How?!"</button>
+    </div>
+    <div id="aboutContent" class="w3-container centered">
+      <div id="explainTheDefault" class="w3-container w3-margin-top">
+        <p>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</p>
+        <p>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></p>
       </div>
-      <div id="explainTheWhat" class="w3-container w3-hide">
+      <div id="explainTheWhat" class="w3-container w3-hide w3-margin-top">
         <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
         <br />
         <ul id="featureList">
@@ -272,27 +273,23 @@
       </div>
       <div id="explainTheHow" class="w3-container w3-hide">
         <div id="poweredBy" class="w3-container">
-          This app is <a id="howItsRun">powered by&gt;</a> the following:
+          This app is <a href="#" onclick="changeHowTab(event)" class="poweredBy">powered by &gt;</a> the following:
           <br />
-          <div class="w3-container badger-container">
+          <div class="w3-container badger-container w3-margin-top">
             <!-- This will be generated -->
           </div>
         </div>
         <div id="builtWith" class="w3-container w3-hide">
-          This app is <a id="howItsMade">&lt; built with</a> the following:
+          This app is <a onclick="changeHowTab(event)" class="builtWith">&lt; built with</a> the following:
           <br />
-          <div class="w3-container badger-container">
+          <div class="w3-container badger-container w3-margin-top">
             <!-- This will be generated -->
           </div>
         </div>
       </div>
-      <div id="explainTheWarning" class="w3-container w3-hide">
-          <span>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</span>
-      </div>
     </div>
     <div id="aboutFooter" class="w3-bottom centered">
-      <span id="madeWith">Made with <i class="fa fa-heart love"></i> by l3l_aze</span>
-      <span>Inspired by <a href="javascript:void(0);" onclick="toggleMuses()">muses</a></span>
+      <span id="madeWith">Made with <i class="fa fa-heart love"></i> by l3l_aze and <a href="javascript:void(0);" onclick="toggleContributors()">contributors</a></span>
     </div>
   </div>
 
@@ -304,21 +301,19 @@
 
   <div id="bg_overlay"></div>
 
-  <div id="museContainer" class="w3-modal centered">
+  <div id="contributorContainer" class="w3-modal centered">
     <div class="w3-modal-content">
       <header class="w3-container w3-black">
-        <a href="javascript:void(0);" onclick="document.getElementById( 'museContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
-        <h4 id="modalHeader" class="bolded">Inspired By</h4>
+        <a href="javascript:void(0);" onclick="document.getElementById( 'contributorContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
+        <h4 id="modalHeader" class="bolded">Contributors</h4>
       </header>
       <br />
       <div class="w3-row">
         <div class="w3-container w3-whole">
-          <ul id="muses" class="w3-container w3-padding centered">
+          <ul id="contributors" class="w3-container w3-padding centered">
             <li>
-              <i class="fa fa-reddit" title="Reddit user"></i> * - Change/randomize Steam skin.
             </li>
           </ul>
-          <span>Note: * = name withheld.</span>
         </div>
       </div>
       <footer class="w3-container w3-black">
@@ -350,27 +345,34 @@
 
     window.addEventListener( "click", function() {
       var lo_modal = document.getElementById( "launchOptionsContainer" ),
-          mu_modal = document.getElementById( "museContainer" );
+          mu_modal = document.getElementById( "contributorContainer" );
       if( event.target === lo_modal )
         toggleLaunchOptions();
       else if( event.target === mu_modal )
-        toggleMuses();
+        toggleContributors();
     });
 
     /* Setup ignoring of tabbing while status overlay is active,
      *   and using Esc to close the menu.
      */
     window.addEventListener( "keyup", function( event ) {
-      if( event.which === 9 && document.getElementById( "launchOptionsContainer" ).style.display === "block" ) {
-        modalTabbing( event );
+      if( event.which === 9 ) {
+        var loc = document.getElementById( "launchOptionsContainer" ),
+            mc = document.getElementById( "contributorContainer" );
+        if( loc.style.display === "block" ) {
+          modalTabbing( event, loc );
+        }
+        else if( mc.style.display === "block" ) {
+          modalTabbing( event, mc );
+        }
       }
       else if( event.which === 27 ) {
         if( window.innerWidth < 601 && document.getElementById( "menuToggle" )[ "data-state" ] !== true )
           toggleMenu();
         else if( document.getElementById( "launchOptionsContainer" ).style.display === "block" )
           toggleLaunchOptions();
-        else if( document.getElementById( "museContainer" ).style.display === "block" )
-          toggleMuses();
+        else if( document.getElementById( "contributorContainer" ).style.display === "block" )
+          toggleContributors();
       }
     });
 
@@ -435,14 +437,6 @@
 
     $( "#theWarning" ).on( "click", function( event ) {
       openAboutTab( event, "theWarning" );
-    });
-
-    document.getElementById( "howItsRun" ).addEventListener( "click", function( event ) {
-      changeHowTab( event );
-    });
-
-    document.getElementById( "howItsMade" ).addEventListener( "click", function( event ) {
-      changeHowTab( event );
     });
 
     window.setTimeout( "handleResize()", 100 );

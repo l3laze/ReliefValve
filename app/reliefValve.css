@@ -48,7 +48,7 @@ body {
   height: 100%;
 }
 
-input, select, button, a, textarea, label {
+input, select, option, button, a, textarea, label {
   cursor: pointer;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -180,6 +180,10 @@ a:focus, button:focus {
   display: none;
 }
 
+#reloadSteamApps i {
+  cursor: pointer;
+}
+
 #helpView {
   margin-left: 15px;
   margin-right: 15px;
@@ -264,8 +268,8 @@ a:focus, button:focus {
 
 #VMenu {
   list-style-type: none;
-  margin: 0;
-  padding: 0;
+//  margin: 0;
+//  padding: 0;
 }
 
 #navMenu {
@@ -364,14 +368,9 @@ label[for="cbOfflineFix"] {
   color: black;
 }
 
-#howItsRun, #howItsMade {
+.poweredBy, .builtWith {
   cursor: pointer;
   font-weight: bold;
-  -webkit-app-region: drag;
-}
-
-#aboutContent {
-  -webkit-app-region: drag;
 }
 
 #aboutFooter {
@@ -395,7 +394,7 @@ label[for="cbOfflineFix"] {
   list-style: upper-roman;
 }
 
-#muses {
+#contributors {
   list-style-type: none;
   overflow-y: auto;
 }

@@ -233,15 +233,19 @@ Change Log
 ==========
 
 * 1.2.1
+  * FIX: The powered by/built links on the about page now work correctly on Windows, again.
   * FIX: Force download functionality should no longer add multiple copies of a "game" to the Steam Apps list when it has to create the appmanifest file.
   * FIX: Select all/cut/copy/paste keyboard shortcuts are now enabled on Mac (again?).
   * FIX: Removed dependencies (font-awesome, jquery, w3.css, badger.js) from repo, as they should be.
+  * FIX: Tabbing with the launch options modal open should now behave properly (you can only use tab to get to controls that are part of the modal, not the window behind it). This also applies to the new "contributors" modal.
+  * FIX: Labels attached to checkboxes now function as expected (can click label to check/uncheck the control).
   * FIX: Minor HTML & CSS tweaks.
+  * CHANGE: Removed "Warning" tab from About page, just made it part of the default instead.
   * CHANGE: Updated code to use Badger.JS instead of Badger.CSS.
   * CHANGE: Updated W3.CSS to 2.9.9, and jquery to 3.2.1 (versions on NPM).
   * CHANGE: Set default cursor for all elements to prevent the text-editing cursor from showing.
   * ADD: More README updates.
-  * ADD: "Muses" modal dialog for people who inspire/request features.
+  * ADD: "Contributors" modal dialog for people who request features/otherwise contribute somehow (and want their name included).
 
 * 1.2.0
   * FIX: Removed requirement for Steam install path to actually be named Steam; now it will check for the existence of the file config/loginusers.vdf within the selected folder instead.

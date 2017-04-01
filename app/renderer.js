@@ -94,8 +94,8 @@ function toggleLaunchOptions() {
   }
 }
 
-function toggleMuses() {
-  var mm = document.getElementById( "museContainer" );
+function toggleContributors() {
+  var mm = document.getElementById( "contributorContainer" );
   if( mm.style.display === "block" )
     mm.style.display = "none";
   else
@@ -884,14 +884,19 @@ function applyUserSettings( auto, loc ) {
   }
 }
 
-function modalTabbing( event ) {
+function modalTabbing( event, modal ) {
   var firstInput, lastInput;
 
-  firstInput = $( "#closeModal" );
-  lastInput = $( "#saveLaunchOptions" );
+  firstInput = modal.getElementsByClassName( "closeModal" )[ 0 ];
+  if( modal.id === "launchOptionsContainer" ) {
+    lastInput = document.getElementById( "saveLaunchOptions" );
+  }
+  else {
+    lastInput = firstInput;
+  }
 
   /*redirect last tab to first input*/
-  lastInput.on('keydown', function (e) {
+  lastInput.addEventListener('keydown', function (e) {
      if ((e.which === 9 && !e.shiftKey)) {
          e.preventDefault();
          firstInput.focus();
@@ -899,7 +904,7 @@ function modalTabbing( event ) {
   });
 
   /*redirect first shift+tab to last input*/
-  firstInput.on('keydown', function (e) {
+  firstInput.addEventListener('keydown', function (e) {
       if ((e.which === 9 && e.shiftKey)) {
           e.preventDefault();
           lastInput.focus();
@@ -936,9 +941,9 @@ function changeHowTab( event ) {
       made = document.getElementById( "builtWith" ),
       run = document.getElementById( "poweredBy" );
 
-  if( el.id === "howItsRun" ) {
-    made.classList.remove( "w3-hide" );
-    run.classList.add( "w3-hide" );
+  if( el.classList.contains( "poweredBy" )) {
+      made.classList.remove( "w3-hide" );
+      run.classList.add( "w3-hide" );
   }
   else {
     made.classList.add( "w3-hide" );
