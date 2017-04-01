@@ -1,6 +1,6 @@
 {
   "name": "ReliefValve",
-  "version": "v1.2.1-beta",
+  "version": "v1.2.1",
   "description": "Helps manage the Steam client application in offline mode.",
   "main": "main.js",
   "author": "l3l_aze <l3l_aze@yahoo.com>",
