@@ -9,7 +9,7 @@ init:
 
 install:
 # Install/switch to node 7 for x64.
-- ps: Install-Product node LTS x64
+- ps: Install-Product node LTS x86
 # Update global npm install.
 - npm install npm -g
 # Install app dependencies.
