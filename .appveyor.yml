@@ -1,6 +1,6 @@
 # Build using 64-bit Windows.
 os: unstable
-platform: x64
+platform: x86
 
 # Because of this:
 #   https://help.github.com/articles/dealing-with-line-endings/
