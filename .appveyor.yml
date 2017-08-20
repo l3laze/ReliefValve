@@ -12,8 +12,8 @@ install:
 - ps: Install-Product node LTS x64
 # Update global npm install.
 - npm install npm -g
-# Install 7zip-bin-win globally so maybe AV won't be broken.
-- npm i 7zip-bin-win -g
+# Install 7zip-bin globally so maybe AV won't be broken.
+- npm i 7zip-bin -g
 # Install app dependencies.
 - npm i
 
