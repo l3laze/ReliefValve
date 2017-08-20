@@ -1,5 +1,5 @@
 # Build using 64-bit Windows.
-os: unstable
+os: stable
 platform: x64
 
 # Because of this:
@@ -14,8 +14,6 @@ install:
 - npm install npm -g
 # Install app dependencies.
 - npm i
-# Remove extraneous packages.
-- npm prune
 
 
 # Only build on tags.
@@ -24,8 +22,8 @@ skip_non_tags: true
 # Download repo as a zip file.
 shallow_clone: true
 
-# Only clone the latest commit.
-clone_depth: 1
+# Only clone the 3 latest commits.
+clone_depth: 3
 
 
 # Cache some dirs for faster build.
