@@ -38,9 +38,9 @@ script:
 #   of the 32 & 64-bit release packages
 #   and echo their paths.
 before_deploy:
-#- export RELEASE_32=$(ls $TRAVIS_BUILD_DIR/dist/*ia32.AppImage)
-- export RELEASE=$(ls $TRAVIS_BUILD_DIR/dist/*x86_64.AppImage)
-- echo "Deploying $RELEASE to GitHub releases."
+- export RELEASE_32=$(ls $TRAVIS_BUILD_DIR/dist/*86.AppImage)
+- export RELEASE_64=$(ls $TRAVIS_BUILD_DIR/dist/*64.AppImage)
+- echo "Deploying $RELEASE_32 & $RELEASE_64 to GitHub releases."
 
 
 # Handle deploying the app to GitHub
@@ -54,7 +54,9 @@ deploy:
   # Needed to upload multiple artifacts
   #   (files), AFAIK.
   file_glob: true
-  file: "$RELEASE"
+  file:
+    - "$RELEASE_32"
+    - "$RELEASE_64"
   # Don't let the system clean up, it
   #   will delete the built files and
   #   then the deploy will fail as
