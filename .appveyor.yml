@@ -34,8 +34,8 @@ cache:
 
 
 # Quiet-ish build.
-build:
-  verbosity: minimal
+#build:
+#  verbosity: minimal
 
 
 # The executable(s) expected.
