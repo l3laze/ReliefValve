@@ -1,5 +1,5 @@
 # Build using 64-bit Windows.
-os: stable
+os: unstable
 platform: x64
 
 # Because of this:
