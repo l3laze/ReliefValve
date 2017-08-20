@@ -35,7 +35,7 @@
     "nsis": {
       "oneClick": true,
       "allowToChangeInstallationDirectory": true,
-      "artifactName": "${productName}-${version}-Setup.${ext}",
+      "artifactName": "${productName}_${version}_Setup.${ext}",
       "deleteAppDataOnUninstall": true
     },
     "linux": {
