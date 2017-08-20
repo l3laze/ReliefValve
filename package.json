@@ -1,6 +1,8 @@
 {
   "name": "ReliefValve",
+  "author": "l3l_aze <l3l_aze@yahoo.com>",
   "license": "MIT",
+  "copyright": "Copyright © year ${author}"
   "repository": {
     "type": "git",
     "url": "git+github.com/l3laze/ReliefValve.git"
@@ -14,6 +16,7 @@
       ]
     },
     "dmg": {
+      "artifactName": "${productName}-${version}.${ext}",
       "icon": null,
       "contents": [
         {
@@ -37,7 +40,6 @@
       "includeRequiredLib": "true",
       "category": "Utility;FileTools"
     },
-    "artifactName": "${productName}-${version}.${ext}"
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
