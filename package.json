@@ -34,7 +34,7 @@
     },
     "nsis": {
       "oneClick": true,
-      "allowUserToChangeInstallDirectory": true,
+      "allowToChangeInstallationDirectory": true,
       "artifactName": "${productName}-${version}-Setup.${ext}",
       "deleteAppDataOnUninstall": true
     },
