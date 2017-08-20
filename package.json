@@ -39,7 +39,7 @@
     "appImage": {
       "includeRequiredLib": "true",
       "category": "Utility;FileTools"
-    },
+    }
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
