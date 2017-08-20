@@ -12,8 +12,11 @@ install:
 - ps: Install-Product node LTS x64
 # Update global npm install.
 - npm install npm -g
+# Install 7zip globally so maybe AV won't be broken.
+- npm i 7zip -g
 # Install app dependencies.
 - npm i
+
 
 
 # Only build on tags.
