@@ -14,31 +14,16 @@
   <link rel="stylesheet" href="reliefValve.css" />
 </head>
 <body id="theBody">
-  <nav id="navMenu">
-    <ul id="VMenu" class="w3-navbar w3-white w3-show w3-left-align w3-top">
-      <li id="menuToggleContainer">
-        <a href="javascript:void(0);" id="menuToggle" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="toggleMenu();this.blur()" data-state="true">&times;</a>
-      </li>
-      <li id="VMainContainer">
-        <a href="javascript:void(0);" id="VMain" class="active tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'mainView' )">Main</a>
-      </li>
-      <li id="VSettingsContainer">
-        <a href="javascript:void(0);" id="VSettings" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'settingsView' )">Settings</a>
-      </li>
-      <li id="VClientContainer">
-        <a href="javascript:void(0);" id="VClient" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'clientView' )">Client</a>
-      </li>
-      <li id="VHelpContainer">
-        <a href="javascript:void(0);" id="VHelp" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'helpView' )">Help</a>
-      </li>
-      <li id="VAboutContainer">
-        <a href="javascript:void(0);" id="VAbout" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="openView( event, 'aboutView' )">About</a>
-      </li>
-      <li id="VExitContainer">
-        <a href="javascript:void(0);" id="VExit" class="tablink w3-border w3-hover-white w3-hover-text-black" onclick="app.quit()">Exit</a>
-      </li>
-    </ul>
-  </nav>
+
+  <div id="VMenu" class="w3-bar w3-show w3-white w3-right w3-margin-bottom w3-top">
+    <a href="javascript:void(0);" id="menuToggle" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="toggleMenu()" data-state="true">&times;</a>
+    <a href="javascript:void(0);" id="VMain" class="tablink w3-black w3-hover-gray w3-bar-item" onclick="openView( event, 'mainView' )">Main</a>
+    <a href="javascript:void(0);" id="VSettings" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'settingsView' )">Settings</a>
+    <a href="javascript:void(0);" id="VClient" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'clientView' )">Client</a>
+    <a href="javascript:void(0);" id="VHelp" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'helpView' )">Help</a>
+    <a href="javascript:void(0);" id="VAbout" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'aboutView' )">About</a>
+    <a href="javascript:void(0);" id="VExit" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="app.quit()">Exit</a>
+  </div>
 
   <div id="mainView" class="appView">
     <div id="gameContainer" class="w3-half w3-container view-container">
@@ -73,8 +58,8 @@
         <label for="cbOfflineFix"><input type="checkbox" id="cbOfflineFix" class="w3-check" /> Offline fix</label>
       </div>
       <div class="w3-container centered">
-        <a href="javascript:void(0)" id="steamAppApply" class="w3-btn w3-white w3-ripple w3-border">Apply</a>
-        <a href="javascript:void(0);" id="blacklistAdd" class="w3-btn w3-ripple w3-white w3-border">Add to Blacklist</a>
+        <a href="javascript:void(0)" id="steamAppApply" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply</a>
+        <a href="javascript:void(0);" id="blacklistAdd" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Add to Blacklist</a>
       </div>
     </div>
     <div id="blacklistContainer" class="w3-half w3-container centered view-container">
@@ -94,8 +79,8 @@
         <hr class="splitter w3-hide-small" />
         <label class="w3-large bolded">Blacklist Controls</label>
         <br />
-        <a href="javascript:void(0);" id="blacklistRemove" class="w3-btn w3-ripple w3-white w3-border w3-round">Remove Selected</a>
-        <a href="javascript:void(0);" id="blacklistReset" class="w3-btn w3-ripple w3-white w3-border w3-round">Reset Blacklist</a>
+        <a href="javascript:void(0);" id="blacklistRemove" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Remove Selected</a>
+        <a href="javascript:void(0);" id="blacklistReset" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Reset Blacklist</a>
       </div>
     </div>
   </div>
@@ -105,12 +90,12 @@
       <label class="w3-large bolded">Steam Location</label><br />
       <label id="installLocation">...</label>
       <br />
-      <a href="javascript:void(0)" id="chooseSteam" class="w3-btn w3-white w3-ripple w3-border">Choose</a>
+      <a href="javascript:void(0)" id="chooseSteam" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Choose</a>
       <br />
       <div id="autoLoadContainer">
         <label for="autoLoad"><input type="checkbox" id="autoLoad" class="w3-check" data-location="" /> Auto-load User</label>
         <br />
-        <button id="applyUserSettings" class="w3-btn w3-white w3-ripple w3-border">Apply</button>
+        <button id="applyUserSettings" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply</button>
       </div>
       <div id="settingsControlsContainer" class="w3-container view-container">
         <div id="bgSettingsContainer" class="w3-container">
@@ -130,14 +115,14 @@
           <div id="bgSettingsImageContainer" class="w3-container w3-hide">
             <label id="bgSettingsImageCurrent" data-location="...">...</label>
             <br />
-            <a href="javascript:void(0)" id="bgSettingsImageChoose" class="w3-btn w3-ripple w3-white w3-border w3-round">Choose</a>
+            <a href="javascript:void(0)" id="bgSettingsImageChoose" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Choose</a>
           </div>
         </div>
         <div id="textSettingsContainer" class="w3-container">
           <label>Text Color</label>
           <input id="textSettingsColor" type="color" value="#FFFFFF" />
         </div>
-        <a href="javascript:void(0);" id="applyAppSettings" class="w3-btn w3-ripple w3-white w3-border w3-round">Apply Settings</a>
+        <a href="javascript:void(0);" id="applyAppSettings" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply Settings</a>
       </div>
     </div>
   </div>
@@ -151,18 +136,18 @@
         <br />
         <label id="forceGameName">Game Name</label>
         <br />
-        <a href="javascript:void(0)" id="clearForce" class="w3-btn w3-white w3-ripple w3-border">Clear</a>
-        <a href="javascript:void(0)" id="addForce" class="w3-btn w3-white w3-ripple w3-border">Add</a>
+        <a href="javascript:void(0)" id="clearForce" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Clear</a>
+        <a href="javascript:void(0)" id="addForce" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Add</a>
         <hr class="splitter" />
       </div>
       <div class="w3-container centered">
         <label class="w3-large w3-content centered bolded">Client Options</label>
         <br />
-        <button id="launchOptions" onclick="toggleLaunchOptions()" class="w3-btn w3-white w3-ripple w3-border">Launch Options</button>
+        <button id="launchOptions" onclick="toggleLaunchOptions()" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Launch Options</button>
         <div id="launchOptionsContainer" class="w3-modal">
           <div class="w3-modal-content">
             <header class="w3-container w3-black">
-              <a href="javascript:void(0);" onclick="document.getElementById( 'launchOptionsContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
+              <a href="javascript:void(0);" onclick="document.getElementById( 'launchOptionsContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-text-black">&times;</a>
               <h4 id="modalHeader" class="bolded">Launch Options</h4>
             </header>
             <br />
@@ -185,13 +170,13 @@
               </div>
             </div>
             <footer class="w3-container w3-black">
-              <button id="resetLaunchOptions" class="w3-btn w3-white w3-ripple w3-border bolded" title="Reset settings to default.">Reset</button>
-              <button id="saveLaunchOptions" class="w3-btn w3-white w3-ripple w3-border bolded" title="Save settings as default.">Save</button>
+              <button id="resetLaunchOptions" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Reset settings to default.">Reset</button>
+              <button id="saveLaunchOptions" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Save settings as default.">Save</button>
             </footer>
           </div>
         </div>
         <br />
-        <button id="launchBtn" class="w3-btn w3-white w3-ripple w3-border" title="Launch the Steam client.">Launch</button>
+        <button id="launchBtn" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Launch the Steam client.">Launch</button>
         <hr class="splitter" />
         <div class="w3-container centered">
           <label class="w3-large w3-content centered bolded">Steam Skin</label>
@@ -201,7 +186,7 @@
             <option>&lt;Random&gt;</option>
           </select>
           <br />
-          <button id="applySkinSetting" class="w3-btn w3-white w3-ripple w3-border">Apply</button>
+          <button id="applySkinSetting" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply</button>
         </div>
       </div>
     </div>
@@ -245,8 +230,8 @@
 
   <div id="aboutView" class="appView">
     <div class="w3-container w3-margin-bottom centered">
-      <button id="theWhat" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"What?"</button>
-      <button id="theHow" class="w3-btn w3-border w3-hover-white w3-hover-text-black">"How?!"</button>
+      <button id="theWhat" class="w3-btn w3-border w3-hover-white w3-hover-text-black w3-round">"What?"</button>
+      <button id="theHow" class="w3-btn w3-border w3-hover-white w3-hover-text-black w3-round">"How?!"</button>
     </div>
     <div id="aboutContent" class="w3-container centered">
       <div id="explainTheDefault" class="w3-container w3-margin-top">
@@ -273,14 +258,14 @@
       </div>
       <div id="explainTheHow" class="w3-container w3-hide">
         <div id="poweredBy" class="w3-container">
-          This app is <a href="#" onclick="changeHowTab(event)" class="poweredBy">powered by &gt;</a> the following:
+          This app is <a href="#" onclick="changeHowTab(event);this.blur()" class="poweredBy">powered by &gt;</a> the following:
           <br />
           <div class="w3-container badger-container w3-margin-top">
             <!-- This will be generated -->
           </div>
         </div>
-        <div id="builtWith" class="w3-container w3-hide">
-          This app is <a onclick="changeHowTab(event)" class="builtWith">&lt; built with</a> the following:
+        <div id="builtWith" class="w3-container">
+          This app is <a href="#" onclick="changeHowTab(event);this.blur()" class="builtWith">&lt; built with</a> the following:
           <br />
           <div class="w3-container badger-container w3-margin-top">
             <!-- This will be generated -->
@@ -289,7 +274,7 @@
       </div>
     </div>
     <div id="aboutFooter" class="w3-bottom centered">
-      <span id="madeWith">Made with <i class="fa fa-heart love"></i> by l3l_aze and <a href="javascript:void(0);" onclick="toggleContributors()">contributors</a></span>
+      <span id="madeWith">Made with <i class="fa fa-heart love"></i> by l3l_aze with help from <a href="javascript:void(0);" onclick="toggleContributors()">contributors</a></span>
     </div>
   </div>
 
@@ -297,7 +282,7 @@
 
   <div id="scrapingDiv" style="display:none"></div>
 
-  <a id="launchLink" href="javascript:void(0);" style="display:none">Super-secret hidden link</a>
+  <a id="launchLink" href="javascript:void(0);" style="display:none" tabindex="-1">Super-secret hidden link</a>
 
   <div id="bg_overlay"></div>
 
@@ -312,6 +297,7 @@
         <div class="w3-container w3-whole">
           <ul id="contributors" class="w3-container w3-padding centered">
             <li>
+              <span class="contributor-text">probonopd - Bug reports, enhancement suggestions.</span>
             </li>
           </ul>
         </div>
@@ -438,6 +424,8 @@
     $( "#theWarning" ).on( "click", function( event ) {
       openAboutTab( event, "theWarning" );
     });
+
+    document.getElementById( "VMain" ).click();
 
     window.setTimeout( "handleResize()", 100 );
   --></script>

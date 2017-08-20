@@ -7,6 +7,15 @@
   }
 }
 
+@keyframes slidein {
+  from {
+    left: 0;
+  }
+  to {
+    left: 100%;
+  }
+}
+
 * {
   box-sizing: border-box;
   cursor: default;
@@ -67,25 +76,17 @@ select, input[type=search] {
   width: 90%;
 }
 
+select {
+  overflow: auto;
+}
+
+select option {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
 a:focus, button:focus {
   outline: #00BFFF solid 2px;
-}
-
-#closeModal:focus {
-  background: white;
-  text: black;
-  outline: #00BFFF solid 2px;
-}
-
-.tablink {
-  border-left: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-.active {
-  background: black;
-  color: white;
 }
 
 .border-right-black {
@@ -176,6 +177,29 @@ a:focus, button:focus {
   vertical-align: middle;
 }
 
+.appView {
+  margin-top: 48px;
+}
+
+.modalHeader {
+  margin-left: 2em;
+}
+
+.closeModal {
+  margin-top: 4px;
+  margin-right: -12px;
+  width: 48px;
+  height: 42px;
+  font-size: 2em;
+  text-decoration: none;
+}
+
+#closeModal:focus {
+  background: white;
+  text: black;
+  outline: #00BFFF solid 2px;
+}
+
 #blacklistView, #clientView, #settingsView, #helpView, #aboutView, #debugView {
   display: none;
 }
@@ -235,18 +259,6 @@ a:focus, button:focus {
   margin-bottom: 6px;
 }
 
-.modalHeader {
-  margin-left: 2em;
-}
-
-.closeModal {
-  margin-top: 4px;
-  margin-right: -12px;
-  width: 48px;
-  height: 42px;
-  font-size: 2em;
-}
-
 #resetLaunchOptions, #saveLaunchOptions {
   margin-top: 8px;
   margin-bottom: 8px;
@@ -268,12 +280,15 @@ a:focus, button:focus {
 
 #VMenu {
   list-style-type: none;
-//  margin: 0;
-//  padding: 0;
 }
 
-#navMenu {
-  margin-bottom: 48px;
+#VMenu a {
+  text-decoration: none;
+  text-align: center;
+}
+
+#VMenu a:hover {
+  border-bottom: 2px solid grey;
 }
 
 #autoUpdateBehaviorList {
@@ -373,6 +388,10 @@ label[for="cbOfflineFix"] {
   font-weight: bold;
 }
 
+#builtWith {
+  display: none;
+}
+
 #aboutFooter {
   margin-bottom: 8px;
   -webkit-app-region: drag;
@@ -419,6 +438,40 @@ label[for="cbOfflineFix"] {
   #launchOptionsListRight {
     margin-top: -32px;
   }
+
+  #VMenu {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+
+  #VMenu a {
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  #menuToggle[ data-state="true" ] {
+    width: 100%;
+  }
+
+  #menuToggle[ data-state="false" ] {
+    width: 10%;
+  }
+
+  #VSettings {
+    width: 20%;
+  }
+
+  #VMain, #VClient, #VHelp, #VAbout, #VExit {
+    width: 14%;
+  }
+
+  #VMenu a:focus {
+    border-top: 2px solid #00BFFF;
+    border-bottom: 2px solid #00BFFF;
+  }
 }
 
 @media only screen and (min-width: 601px) {
@@ -430,5 +483,19 @@ label[for="cbOfflineFix"] {
   #blacklistReset {
     margin-bottom: 8px;
     clear: left;
+  }
+
+  #menuToggle {
+    padding-bottom: 8px;
+    border-right: 1px solid black;
+    border-bottom: 2px solid black;
+  }
+
+  #menuToggle:focus {
+    padding-bottom: 8px;
+  }
+
+  #VMenu a:focus {
+    border-bottom: 2px solid #00BFFF;
   }
 }

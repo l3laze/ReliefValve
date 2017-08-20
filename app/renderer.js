@@ -42,9 +42,16 @@ function openView( evt, viewName ) {
   }
   tablinks = document.getElementsByClassName( "tablink" );
   for( i = 0; i < tablinks.length; i++ ) {
-    tablinks[ i ].classList.remove( "active" );
+    tablinks[ i ].classList.add( "w3-white" );
+    tablinks[ i ].classList.remove( "w3-black" );
+    tablinks[ i ].style.border="";
   }
-  evt.currentTarget.classList.add( "active" );
+  evt.currentTarget.classList.add( "w3-black" );
+  evt.currentTarget.style[ "border-bottom" ] = "2px solid black";
+
+  if( evt.type === "click" ) {
+    evt.currentTarget.blur();
+  }
 
   document.getElementById( viewName ).style.display = "block";
 
@@ -55,7 +62,7 @@ function openView( evt, viewName ) {
 }
 
 function toggleMenu() {
-  var x, items = $( "#VMenu li a " ),
+  var x, items = $( "#VMenu a " ),
   m = document.getElementById( "menuToggle" ),
   state = m[ "data-state" ];
   for( x = 0; x < items.length; x++ ) {
@@ -70,9 +77,11 @@ function toggleMenu() {
 
   if( state ) {
     m.innerHTML = "&times;";
+    document.getElementById( "VMenu" ).classList.add( "w3-white" );
   }
   else {
     m.innerHTML = "&#9776;";
+    document.getElementById( "VMenu" ).classList.remove( "w3-white" );
   }
 
   m[ "data-state" ] = ( !state );
@@ -730,42 +739,6 @@ function loadSteamSkins() {
   }
 }
 
-function applySteamAppSettings() {
-  if( steamPath !== undefined ) {
-    var list = document.getElementById( "gameList" ),
-        selected = [], i;
-    settings[ "aub" ] = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
-    settings[ "fix" ] = document.getElementById( "cbOfflineFix" ).checked;
-    for( i = 0; i < list.length; i++ ) {
-      if( list[ i ].selected ) {
-        selected.push( i );
-      }
-    }
-
-    for( i = 0; i < selected.length; i++ ) {
-      var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
-      if( ipc.sendSync( "fileExists", file ) === false ) {
-        alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
-      }
-      else {
-        var data = vdf.parse( ipc.sendSync( "readFile", file ));
-        if( settings.fix && data.AppState.StateFlags === "6" )
-          data.AppState.StateFlags = "4";
-        if( data.AppState.AutoUpdateBehavior !== settings.aub )
-          data.AppState.AutoUpdateBehavior = settings.aub;
-        ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
-        list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
-      }
-    }
-    list.selectedIndex = 0;
-    list.options[ 0 ].selected = false;
-    list.focus();
-  }
-  else {
-    alert( "You must set a valid Steam path first." );
-  }
-}
-
 function applySkinSetting( toWhat, list ) {
   var rand;
   if( steamPath === undefined ) {
@@ -773,13 +746,19 @@ function applySkinSetting( toWhat, list ) {
   }
 
   if( toWhat === "<Random>" ) {
-    /* Based on code from:
-     *   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-     */
-    var min = 2, // Don't want to select <Default> or <Random>.
-        max = list.length - 1;
-    rand = Math.floor( Math.random() * ( max - min + 1)) + min;
-    toWhat = list[ rand ].text;
+    if( list.length > 2 ) {
+      /* Based on code from:
+       *   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+       */
+      var min = 2, // Don't want to select <Default> or <Random>.
+          max = list.length - 1;
+      rand = Math.floor( Math.random() * ( max - min + 1)) + min;
+      toWhat = list[ rand ].text;
+    }
+
+    else {
+      alert( "You don't have any skins installed to pick from!" );
+    }
   }
 
   if( toWhat === "<Default>" ) {
@@ -819,6 +798,42 @@ function applySkinSetting( toWhat, list ) {
         }
       }
     });
+  }
+}
+
+function applySteamAppSettings() {
+  if( steamPath !== undefined ) {
+    var list = document.getElementById( "gameList" ),
+        selected = [], i;
+    settings[ "aub" ] = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
+    settings[ "fix" ] = document.getElementById( "cbOfflineFix" ).checked;
+    for( i = 0; i < list.length; i++ ) {
+      if( list[ i ].selected ) {
+        selected.push( i );
+      }
+    }
+
+    for( i = 0; i < selected.length; i++ ) {
+      var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
+      if( ipc.sendSync( "fileExists", file ) === false ) {
+        alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
+      }
+      else {
+        var data = vdf.parse( ipc.sendSync( "readFile", file ));
+        if( settings.fix && data.AppState.StateFlags === "6" )
+          data.AppState.StateFlags = "4";
+        if( data.AppState.AutoUpdateBehavior !== settings.aub )
+          data.AppState.AutoUpdateBehavior = settings.aub;
+        ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
+        list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
+      }
+    }
+    list.selectedIndex = 0;
+    list.options[ 0 ].selected = false;
+    list.focus();
+  }
+  else {
+    alert( "You must set a valid Steam path first." );
   }
 }
 
@@ -942,12 +957,13 @@ function changeHowTab( event ) {
       run = document.getElementById( "poweredBy" );
 
   if( el.classList.contains( "poweredBy" )) {
-      made.classList.remove( "w3-hide" );
-      run.classList.add( "w3-hide" );
+    made.style.display = "block"
+    run.style.display = "none";
   }
   else {
-    made.classList.add( "w3-hide" );
-    run.classList.remove( "w3-hide" );
+    made.style.display = "none"
+    run.style.display = "block";
+    $( "#theHow" ).focus().blur();
   }
 }
 
@@ -966,7 +982,7 @@ function sortBy( field, reverse, primer ) {
 
 function osInit() {
   if( process.platform === "darwin" ) {
-    document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
+//    document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
   }
 }
 

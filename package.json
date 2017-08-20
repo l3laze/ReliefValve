@@ -8,7 +8,7 @@
   "build": {
     "appId": "tmshvr.reliefvalve",
     "mac": {
-      "category": "public.app-category.games",
+      "category": "public.app-category.productivity",
       "target": [
         "dmg"
       ]
@@ -34,12 +34,13 @@
       "deleteAppDataOnUninstall": "true"
     },
     "appImage": {
-      "includeRequiredLib": "true"
+      "includeRequiredLib": "true",
+      "category": "Utility;FileTools"
     },
     "artifactName": "${productName}-${version}.${ext}"
   },
   "scripts": {
-    "postinstall": "install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "start": "electron ./app --enable-logging",
     "dev": "NODE_ENV='development' npm run start",
     "pack": "build --dir -lmw",
@@ -53,7 +54,7 @@
     "dist-32_64": "build --ia32 --x64"
   },
   "devDependencies": {
-    "electron": "^1.6.2",
-    "electron-builder": "^13.6.0"
+    "electron": "^1.7.5",
+    "electron-builder": "^19.22.1"
   }
 }
