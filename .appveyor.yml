@@ -1,6 +1,6 @@
 # Build using 64-bit Windows.
 os: unstable
-platform: x86
+platform: x64
 
 # Because of this:
 #   https://help.github.com/articles/dealing-with-line-endings/
@@ -9,7 +9,7 @@ init:
 
 install:
 # Install/switch to node 7 for x64.
-- ps: Install-Product node LTS x86
+- ps: Install-Product node LTS x64
 # Update global npm install.
 - npm install npm -g
 # Install app dependencies.
@@ -34,16 +34,14 @@ cache:
 
 
 # Quiet-ish build.
-#build:
-#  verbosity: minimal
+build:
+  verbosity: minimal
 
 
 # The executable(s) expected.
 artifacts:
   # Path to artifact
 - path: dist/*.exe
-  # Assign a unique name to it.
-  name: reliefvalve
 
 # ...
 build_script:
