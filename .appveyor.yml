@@ -30,8 +30,8 @@ clone_depth: 1
 
 # Cache some dirs for faster build.
 cache:
-  - node_modules
-  - app/node_modules
+#  - node_modules
+#  - app/node_modules
 
 
 # Quiet-ish build.
