@@ -1,5 +1,6 @@
 {
   "name": "ReliefValve",
+  "version": "v1.2.2-beta",
   "author": "l3l_aze <l3l_aze@yahoo.com>",
   "license": "MIT",
   "copyright": "Copyright © year ${author}",
@@ -32,12 +33,13 @@
       ]
     },
     "nsis": {
-      "allowUserToChangeInstallDirectory": "true",
+      "oneClick": true,
+      "allowUserToChangeInstallDirectory": true,
       "artifactName": "${productName}-${version}-Setup.${ext}",
-      "deleteAppDataOnUninstall": "true"
+      "deleteAppDataOnUninstall": true
     },
-    "appImage": {
-      "includeRequiredLib": "true",
+    "linux": {
+      "executableName": "${productName}",
       "category": "Utility;FileTools"
     }
   },
