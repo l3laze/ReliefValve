@@ -2,7 +2,7 @@
   "name": "ReliefValve",
   "author": "l3l_aze <l3l_aze@yahoo.com>",
   "license": "MIT",
-  "copyright": "Copyright © year ${author}"
+  "copyright": "Copyright © year ${author}",
   "repository": {
     "type": "git",
     "url": "git+github.com/l3laze/ReliefValve.git"
