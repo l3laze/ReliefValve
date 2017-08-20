@@ -46,7 +46,7 @@ artifacts:
 
 # ...
 build_script:
-- npm run dist-32_64
+- npm run dist-32
 
 # ...
 test: off
