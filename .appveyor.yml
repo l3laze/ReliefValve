@@ -51,7 +51,7 @@ deploy:
   # Do not create a prerelease
   prerelease: false
   # Do not create a draft
-  draft: false
+  draft: true
   on:
     # Only deploy from a tag.
     appveyor_repo_tag: true
