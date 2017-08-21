@@ -10,11 +10,6 @@ init:
 install:
   - yarn
 
-
-
-# Only build on tags.
-skip_non_tags: true
-
 # Download repo as a zip file.
 shallow_clone: true
 
@@ -53,10 +48,10 @@ deploy:
     secure: yc7IkqH7Sgpc9AaumTPtZXlpbPde5huW9CK9YoMqWYxIND1yrEzQeole585FKcWr
   # Refer to artifact by set name.
   artifact: dist\*.exe
-  # Do not create a draft.
-  draft: false
   # Do not create a prerelease
   prerelease: false
+  # Make it deploy even if this release already exists.
+  force_update: true
   on:
     # Only deploy from a tag.
     appveyor_repo_tag: true
