@@ -52,7 +52,7 @@ deploy:
   auth_token:
     secure: yc7IkqH7Sgpc9AaumTPtZXlpbPde5huW9CK9YoMqWYxIND1yrEzQeole585FKcWr
   # Refer to artifact by set name.
-  artifact: reliefvalve
+  artifact: dist\*.exe
   # Do not create a draft.
   draft: false
   # Do not create a prerelease
