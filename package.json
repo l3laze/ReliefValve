@@ -37,6 +37,9 @@
     },
     "linux": {
       "category": "Utility;FileTools"
+    },
+    "appImage": {
+      "systemIntegration": "doNotAsk"
     }
   },
   "scripts": {
