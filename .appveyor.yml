@@ -50,6 +50,8 @@ deploy:
   artifact: dist\*.exe
   # Do not create a prerelease
   prerelease: false
+  # Do not create a draft
+  draft: false
   # Make it deploy even if this release already exists.
   force_update: true
   on:
