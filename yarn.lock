@@ -415,7 +415,7 @@ electron-builder-util@19.24.0, electron-builder-util@~19.24.0:
     temp-file "^2.0.2"
     tunnel-agent "^0.6.0"
 
-electron-builder@^19.22.1:
+electron-builder@^19.24.1:
   version "19.24.1"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.24.1.tgz#451a8893fe4fd2603571f35c5097978ff10dbf83"
   dependencies:
