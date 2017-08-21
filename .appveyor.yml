@@ -34,7 +34,7 @@ artifacts:
 
 # ...
 build_script:
-  - yarn run dist-32
+  - yarn run dist-32_64
 
 # ...
 test: off
