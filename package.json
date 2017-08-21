@@ -42,7 +42,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron ./app --enable-logging",
-    "dev": "NODE_ENV='development' npm run start",
+    "dev": "NODE_ENV='development' yarn run start",
     "pack": "build --dir -lmw",
     "dist": "build",
     "dist:mac": "build -m",
