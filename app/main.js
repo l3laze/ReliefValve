@@ -78,6 +78,8 @@ function createWindow () {
 
   mainWindow.webContents.on('will-navigate', handleRedirect)
   mainWindow.webContents.on('new-window', handleRedirect)
+
+  console.log( "Logging to:" + logPath );
 }
 
 // Make app single-instance.

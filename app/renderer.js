@@ -168,7 +168,16 @@ function chooseInstall() {
   var folder = ipc.sendSync( "getDirectory" );
   var sp = folder.toLowerCase().split( path.sep );
   if( folder === "undefined" ) return logger.info( "No directory was selected." );
-  if( ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
+
+  if( process.platform === "linux" ) {
+    loc = path.join( loc, "steam" );
+  }
+
+  if( process.platform !== "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
+    alert( "The selected Steam installation is invalid." );
+    logger.info( "The selected Steam installation is invalid." );
+  }
+  else if ( process.platform === "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
     alert( "The selected Steam installation is invalid." );
     logger.info( "The selected Steam installation is invalid." );
   }
@@ -188,11 +197,11 @@ function refreshSteamApps( elem ) {
 function loadSteamApps( loc ) {
   if( loc === "..." ) {
     alert( "Choose a Steam install location first." );
-    return logger.info( "Choose a Steam install location first." );
+    return logger.warn( "Choose a Steam install location first." );
   }
   else if( ipc.sendSync( "fileExists", loc ) === false ) {
     alert( "Tried to load a Steam folder that doesn't exist: " + loc );
-    return logger.warn( "Tried to load a Steam install that doesn't exist." );
+    return logger.warn( "Tried to load a Steam install that doesn't exist (" + loc + ")" );
   }
   else {
     var libloc = path.join( loc, "steamapps", "libraryfolders.vdf" );
@@ -200,6 +209,7 @@ function loadSteamApps( loc ) {
         var file = vdf.parse( ipc.sendSync( "readFile", libloc )).LibraryFolders,
         libs = [],
         loading = [], l, x, y, sel, opt;
+      logger.info( "Found default Steam Library Folder: " + loc );
       apps = [];
       libs.push( path.join( loc, "steamapps" ));
       l = Object.keys( file );
@@ -229,6 +239,9 @@ function loadSteamApps( loc ) {
 
       document.getElementById( "numberTotal" ).innerHTML = apps.length;
       document.getElementById( "blacklistTotal" ).innerHTML = Object.keys( blacklist ).length;
+    }
+    else {
+      logger.warn( "Expected Steam Library Folder doesn't exist: " + loc );
     }
   }
 }
