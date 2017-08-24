@@ -416,8 +416,8 @@ electron-builder-util@19.24.0, electron-builder-util@~19.24.0:
     tunnel-agent "^0.6.0"
 
 electron-builder@^19.24.1:
-  version "19.24.1"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.24.1.tgz#451a8893fe4fd2603571f35c5097978ff10dbf83"
+  version "19.24.4"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.24.4.tgz#8a8e0dc72da1142a5377c56714b3089d81325a3e"
   dependencies:
     "7zip-bin" "^2.2.3"
     ajv "^5.2.2"
@@ -438,6 +438,7 @@ electron-builder@^19.24.1:
     electron-publish "19.24.0"
     fs-extra-p "^4.4.0"
     hosted-git-info "^2.5.0"
+    iconv-lite "^0.4.18"
     is-ci "^1.0.10"
     isbinaryfile "^3.0.2"
     js-yaml "^3.9.1"
@@ -737,6 +738,10 @@ http-signature@~1.1.0:
     assert-plus "^0.2.0"
     jsprim "^1.2.2"
     sshpk "^1.7.0"
+
+iconv-lite@^0.4.18:
+  version "0.4.18"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.18.tgz#23d8656b16aae6742ac29732ea8f0336a4789cf2"
 
 import-lazy@^2.1.0:
   version "2.1.0"
@@ -1448,8 +1453,8 @@ source-map-support@^0.4.16:
     source-map "^0.5.6"
 
 source-map@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
 
 spdx-correct@~1.0.0:
   version "1.0.2"

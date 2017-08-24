@@ -169,17 +169,13 @@ function chooseInstall() {
   var sp = folder.toLowerCase().split( path.sep );
   if( folder === "undefined" ) return logger.info( "No directory was selected." );
 
-  if( process.platform === "linux" ) {
-    loc = path.join( loc, "steam" );
-  }
-
   if( process.platform !== "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
     alert( "The selected Steam installation is invalid." );
-    logger.info( "The selected Steam installation is invalid." );
+    logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
   }
-  else if ( process.platform === "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
+  else if ( process.platform === "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "steam", "config", "loginusers.vdf" ))) {
     alert( "The selected Steam installation is invalid." );
-    logger.info( "The selected Steam installation is invalid." );
+    logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
   }
   else {
     document.getElementById( "installLocation" ).innerHTML = folder;
@@ -199,9 +195,18 @@ function loadSteamApps( loc ) {
     alert( "Choose a Steam install location first." );
     return logger.warn( "Choose a Steam install location first." );
   }
+
+  if( process.platform === "linux" ) {
+    loc = path.join( loc, "steam" );
+  }
+
+  if( ipc.sendSync( "checkAccess", loc ) === false ) {
+    alert( "Program can't access the folder \"loc\"." );
+    return logger.warn( "Program can't access the folder \"loc\"." );
+  }
   else if( ipc.sendSync( "fileExists", loc ) === false ) {
     alert( "Tried to load a Steam folder that doesn't exist: " + loc );
-    return logger.warn( "Tried to load a Steam install that doesn't exist (" + loc + ")" );
+    return logger.warn( "Tried to load a Steam folder that doesn't exist (" + loc + ")" );
   }
   else {
     var libloc = path.join( loc, "steamapps", "libraryfolders.vdf" );
@@ -678,33 +683,26 @@ function saveLaunchOpts() {
 
   config.set( "settings", settings)
   console.log( "Launch options have been saved." );
+  console.log( "settings.launchOptions=" + settings.launchOptions.console + " & " + settings.launchOptions.developer + " & " + settings.launchOptions.bpm + " & " + settings.launchOptions.exit_rv );
   toggleLaunchOptions();
 }
 
 function launchSteamApp() {
   var lb = document.getElementById( "lo_bpm" ),
-      opts = {
-        console: document.getElementById( "lo_console" ).checked,
-        developer: document.getElementById( "lo_developer" ).checked,
-        bpm: lb.checked
-      },
-      args = [],
+      opts = config.get( "settings" ).launchOptions,
+      arg = "",
       skinSel = document.getElementById( "skinList" );
 
-  if( opts.console ) args.push( "-console" );
-  if( opts.developer ) args.push( "-developer" );
-  if( opts.bpm ) args.push( "//open/bigpicture" );
+  if( opts.console ) arg = "//open/console";
+  if( opts.developer ) arg = "//open/developer";
+  if( opts.bpm ) arg = "//open/bigpicture";
 
-  if( args.length === 0 )
-    args.push( "//open/main" );
+  if( arg === "" )
+    arg = "//open/main";
 
   var ll = document.getElementById( "launchLink" );
-  if( args.length > 0 ) {
-    args.forEach( function( item ) {
-      ll.href = "steam:" + item;
-      ll.click();
-    });
-  }
+      ll.href = "steam:" + arg;
+      ll.click();;
 
   if( document.getElementById( "lo_exit" ).checked ) {
     app.quit();

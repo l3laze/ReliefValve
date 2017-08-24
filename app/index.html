@@ -155,13 +155,16 @@
               <div class="w3-container w3-whole">
                 <ul id="launchOptionsList" class="w3-container w3-padding centered">
                   <li>
-                    <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="checkbox" id="lo_console" class="w3-check" /> Enable Console</label>
+                    <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="radio" id="lo_console" name="launch_opt" class="w3-radio" /> Enable Console</label>
                   </li>
                   <li>
-                    <label for="lo_developer" title="Enable VGUI editor (F6) and VGUI zoo (F7); for use with skin development."><input type="checkbox" id="lo_developer" class="w3-check" /> Developer Mode</label>
+                    <label for="lo_developer" title="Enable VGUI editor (F6) and VGUI zoo (F7); for use with skin development."><input type="radio" id="lo_developer" name="launch_opt" class="w3-radio" /> Developer Mode</label>
                   </li>
                   <li>
-                    <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="checkbox" id="lo_bpm" class="w3-check" /> Big Picture Mode</label>
+                    <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="radio" id="lo_bpm" name="launch_opt" class="w3-radio" /> Big Picture Mode</label>
+                  </li>
+                  <li>
+                    <label for="lo_nothing" title="Disables all launch options."><input type="radio" id="lo_nothing" name="launch_opt" class="w3-radio" /> Nothing</label>
                   </li>
                   <li>
                     <label for="lo_exit" title="Close RV when starting Steam."><input type="checkbox" id="lo_exit" class="w3-check" /> Close ReliefValve</label>

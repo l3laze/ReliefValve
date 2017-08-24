@@ -228,6 +228,20 @@ ipcMain.on( 'writeFile', function( event, file, data ) {
   event.returnValue = "undefined";
 })
 
+ipcMain.on( 'checkAccess', function( event, pathData ) {
+  try {
+    fs.accessSync( pathData, fs.constants.F_OK, fs.constants.R_OK, fs.constants.W_OK, fs.constants.X_OK );
+  }
+  catch( err ) {
+    event.returnValue = false;
+  }
+  finally {
+    if( event.returnValue !== false ) {
+      event.returnValue = true;
+    }
+  }
+});
+
 /* Code from or based on
  * https://www.loggly.com/blog/node-js-error-handling/
  */
