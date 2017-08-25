@@ -33,7 +33,8 @@
       ]
     },
     "nsis": {
-      "deleteAppDataOnUninstall": true
+      "deleteAppDataOnUninstall": true,
+      "artifactName": "${productName}-${version}-Setup.${ext}",
     },
     "linux": {
       "category": "Utility;FileTools"
