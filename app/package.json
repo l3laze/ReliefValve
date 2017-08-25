@@ -1,6 +1,6 @@
 {
   "name": "ReliefValve",
-  "version": "v1.2.2-beta",
+  "version": "v1.2.2",
   "description": "Helps manage the Steam client application.",
   "main": "main.js",
   "author": "l3l_aze <l3l_aze@yahoo.com>",
