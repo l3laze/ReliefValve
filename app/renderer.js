@@ -42,9 +42,16 @@ function openView( evt, viewName ) {
   }
   tablinks = document.getElementsByClassName( "tablink" );
   for( i = 0; i < tablinks.length; i++ ) {
-    tablinks[ i ].classList.remove( "active" );
+    tablinks[ i ].classList.add( "w3-white" );
+    tablinks[ i ].classList.remove( "w3-black" );
+    tablinks[ i ].style.border="";
   }
-  evt.currentTarget.classList.add( "active" );
+  evt.currentTarget.classList.add( "w3-black" );
+  evt.currentTarget.style[ "border-bottom" ] = "2px solid black";
+
+  if( evt.type === "click" ) {
+    evt.currentTarget.blur();
+  }
 
   document.getElementById( viewName ).style.display = "block";
 
@@ -55,7 +62,7 @@ function openView( evt, viewName ) {
 }
 
 function toggleMenu() {
-  var x, items = $( "#VMenu li a " ),
+  var x, items = $( "#VMenu a " ),
   m = document.getElementById( "menuToggle" ),
   state = m[ "data-state" ];
   for( x = 0; x < items.length; x++ ) {
@@ -70,20 +77,28 @@ function toggleMenu() {
 
   if( state ) {
     m.innerHTML = "&times;";
+    document.getElementById( "VMenu" ).classList.add( "w3-white" );
   }
   else {
     m.innerHTML = "&#9776;";
+    document.getElementById( "VMenu" ).classList.remove( "w3-white" );
   }
 
   m[ "data-state" ] = ( !state );
 }
 
 function toggleLaunchOptions() {
-  var lo = document.getElementById( "launchOptionsContainer" );
+  var lo = document.getElementById( "launchOptionsContainer" ),
+      settings = config.get( "settings" );
   if( lo.style.display === "block" )
     lo.style.display = "none";
-  else
+  else {
     lo.style.display = "block";
+    document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
+    document.getElementById( "lo_bpm" ).checked = settings.launchOptions.bpm;
+    document.getElementById( "lo_nothing" ).checked = settings.launchOptions.nothing;
+    document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
+  }
 
   var el = document.getElementById( "theBody" );
   if( isWhiteish( el.style.color )) {
@@ -159,9 +174,14 @@ function chooseInstall() {
   var folder = ipc.sendSync( "getDirectory" );
   var sp = folder.toLowerCase().split( path.sep );
   if( folder === "undefined" ) return logger.info( "No directory was selected." );
-  if( ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
+
+  if( process.platform !== "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
     alert( "The selected Steam installation is invalid." );
-    logger.info( "The selected Steam installation is invalid." );
+    logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
+  }
+  else if ( process.platform === "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "steam", "config", "loginusers.vdf" ))) {
+    alert( "The selected Steam installation is invalid." );
+    logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
   }
   else {
     document.getElementById( "installLocation" ).innerHTML = folder;
@@ -179,11 +199,20 @@ function refreshSteamApps( elem ) {
 function loadSteamApps( loc ) {
   if( loc === "..." ) {
     alert( "Choose a Steam install location first." );
-    return logger.info( "Choose a Steam install location first." );
+    return logger.warn( "Choose a Steam install location first." );
+  }
+
+  if( process.platform === "linux" ) {
+    loc = path.join( loc, "steam" );
+  }
+
+  if( ipc.sendSync( "checkAccess", loc ) === false ) {
+    alert( "Program can't access the folder \"" + loc + "\"." );
+    return logger.warn( "Program can't access the folder \"" + loc + "\"." );
   }
   else if( ipc.sendSync( "fileExists", loc ) === false ) {
     alert( "Tried to load a Steam folder that doesn't exist: " + loc );
-    return logger.warn( "Tried to load a Steam install that doesn't exist." );
+    return logger.warn( "Tried to load a Steam folder that doesn't exist (" + loc + ")" );
   }
   else {
     var libloc = path.join( loc, "steamapps", "libraryfolders.vdf" );
@@ -191,6 +220,7 @@ function loadSteamApps( loc ) {
         var file = vdf.parse( ipc.sendSync( "readFile", libloc )).LibraryFolders,
         libs = [],
         loading = [], l, x, y, sel, opt;
+      logger.info( "Found default Steam Library Folder: " + loc );
       apps = [];
       libs.push( path.join( loc, "steamapps" ));
       l = Object.keys( file );
@@ -220,6 +250,9 @@ function loadSteamApps( loc ) {
 
       document.getElementById( "numberTotal" ).innerHTML = apps.length;
       document.getElementById( "blacklistTotal" ).innerHTML = Object.keys( blacklist ).length;
+    }
+    else {
+      logger.warn( "Expected Steam Library Folder doesn't exist: " + loc );
     }
   }
 }
@@ -280,8 +313,8 @@ function loadSettings() {
       autoLoadValue: "...",
       launchOptions: {
         console: false,
-        developer: false,
         bpm: false,
+        nothing: true,
         exit_rv: false
       }
     };
@@ -293,11 +326,11 @@ function loadSettings() {
     if( ! ( settings.hasOwnProperty( "launchOptions"))) {
       settings.launchOptions = {
         console: false,
-        developer: false,
         bpm: false,
+        nothing: true,
         exit_rv: false
       };
-      logger.info( "Upgraded settings to v1.2 (add launchOptions)." );
+      logger.info( "Upgraded settings to v1.2.2 (add launchOptions + lo_nothing)." );
     }
     value = parseInt( settings.bg );
     if( process.platform === "win32" && value === 2 )
@@ -612,17 +645,17 @@ function resetLaunchOpts() {
   if( settings[ "launchOptions" ] === undefined )
     settings[ "launchOptions" ] = {
       console: false,
-      developer: false,
       bpm: false,
+      nothing: true,
       exit_rv: false
     };
 
   var lb = document.getElementById( "lo_bpm" );
 
-  document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
-  document.getElementById( "lo_developer" ).checked = settings.launchOptions.developer;
-  lb.checked = settings.launchOptions.bpm;
-  document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
+  document.getElementById( "lo_console" ).checked = false;
+  document.getElementById( "lo_bpm" ).checked = false;
+  document.getElementById( "lo_nothing" ).checked = true;
+  document.getElementById( "lo_exit" ).checked = false;
 }
 
 function saveLaunchOpts() {
@@ -637,8 +670,8 @@ function saveLaunchOpts() {
       autoLoadValue: "...",
       launchOptions: {
         console: false,
-        developer: false,
         bpm: false,
+        nothing: true,
         exit_rv: false
       }
     };
@@ -648,41 +681,32 @@ function saveLaunchOpts() {
     settings[ "launchOptions" ] = {};
   }
 
-  var lb = document.getElementById( "lo_bpm" );
   settings.launchOptions.console = document.getElementById( "lo_console" ).checked;
-  settings.launchOptions.developer = document.getElementById( "lo_developer" ).checked;
-  settings.launchOptions.bpm = lb.checked;
+  settings.launchOptions.bpm = document.getElementById( "lo_bpm" ).checked;
+  settings.launchOptions.nothing = document.getElementById( "lo_nothing" ).checked;
   settings.launchOptions.exit_rv = document.getElementById( "lo_exit" ).checked;
 
   config.set( "settings", settings)
   console.log( "Launch options have been saved." );
+  console.log( "settings.launchOptions=" + settings.launchOptions.console + " & " + settings.launchOptions.bpm + " & " + settings.launchOptions.exit_rv );
   toggleLaunchOptions();
 }
 
 function launchSteamApp() {
   var lb = document.getElementById( "lo_bpm" ),
-      opts = {
-        console: document.getElementById( "lo_console" ).checked,
-        developer: document.getElementById( "lo_developer" ).checked,
-        bpm: lb.checked
-      },
-      args = [],
+      opts = config.get( "settings" ).launchOptions,
+      arg = "",
       skinSel = document.getElementById( "skinList" );
 
-  if( opts.console ) args.push( "-console" );
-  if( opts.developer ) args.push( "-developer" );
-  if( opts.bpm ) args.push( "//open/bigpicture" );
+  if( opts.console ) arg = "//open/console";
+  if( opts.bpm ) arg = "//open/bigpicture";
 
-  if( args.length === 0 )
-    args.push( "//open/main" );
+  if( arg === "" )
+    arg = "//open/main";
 
   var ll = document.getElementById( "launchLink" );
-  if( args.length > 0 ) {
-    args.forEach( function( item ) {
-      ll.href = "steam:" + item;
-      ll.click();
-    });
-  }
+      ll.href = "steam:" + arg;
+      ll.click();;
 
   if( document.getElementById( "lo_exit" ).checked ) {
     app.quit();
@@ -730,42 +754,6 @@ function loadSteamSkins() {
   }
 }
 
-function applySteamAppSettings() {
-  if( steamPath !== undefined ) {
-    var list = document.getElementById( "gameList" ),
-        selected = [], i;
-    settings[ "aub" ] = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
-    settings[ "fix" ] = document.getElementById( "cbOfflineFix" ).checked;
-    for( i = 0; i < list.length; i++ ) {
-      if( list[ i ].selected ) {
-        selected.push( i );
-      }
-    }
-
-    for( i = 0; i < selected.length; i++ ) {
-      var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
-      if( ipc.sendSync( "fileExists", file ) === false ) {
-        alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
-      }
-      else {
-        var data = vdf.parse( ipc.sendSync( "readFile", file ));
-        if( settings.fix && data.AppState.StateFlags === "6" )
-          data.AppState.StateFlags = "4";
-        if( data.AppState.AutoUpdateBehavior !== settings.aub )
-          data.AppState.AutoUpdateBehavior = settings.aub;
-        ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
-        list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
-      }
-    }
-    list.selectedIndex = 0;
-    list.options[ 0 ].selected = false;
-    list.focus();
-  }
-  else {
-    alert( "You must set a valid Steam path first." );
-  }
-}
-
 function applySkinSetting( toWhat, list ) {
   var rand;
   if( steamPath === undefined ) {
@@ -773,13 +761,19 @@ function applySkinSetting( toWhat, list ) {
   }
 
   if( toWhat === "<Random>" ) {
-    /* Based on code from:
-     *   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-     */
-    var min = 2, // Don't want to select <Default> or <Random>.
-        max = list.length - 1;
-    rand = Math.floor( Math.random() * ( max - min + 1)) + min;
-    toWhat = list[ rand ].text;
+    if( list.length > 2 ) {
+      /* Based on code from:
+       *   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+       */
+      var min = 2, // Don't want to select <Default> or <Random>.
+          max = list.length - 1;
+      rand = Math.floor( Math.random() * ( max - min + 1)) + min;
+      toWhat = list[ rand ].text;
+    }
+
+    else {
+      alert( "You don't have any skins installed to pick from!" );
+    }
   }
 
   if( toWhat === "<Default>" ) {
@@ -819,6 +813,42 @@ function applySkinSetting( toWhat, list ) {
         }
       }
     });
+  }
+}
+
+function applySteamAppSettings() {
+  if( steamPath !== undefined ) {
+    var list = document.getElementById( "gameList" ),
+        selected = [], i;
+    settings[ "aub" ] = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
+    settings[ "fix" ] = document.getElementById( "cbOfflineFix" ).checked;
+    for( i = 0; i < list.length; i++ ) {
+      if( list[ i ].selected ) {
+        selected.push( i );
+      }
+    }
+
+    for( i = 0; i < selected.length; i++ ) {
+      var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
+      if( ipc.sendSync( "fileExists", file ) === false ) {
+        alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
+      }
+      else {
+        var data = vdf.parse( ipc.sendSync( "readFile", file ));
+        if( settings.fix && data.AppState.StateFlags === "6" )
+          data.AppState.StateFlags = "4";
+        if( data.AppState.AutoUpdateBehavior !== settings.aub )
+          data.AppState.AutoUpdateBehavior = settings.aub;
+        ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
+        list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
+      }
+    }
+    list.selectedIndex = 0;
+    list.options[ 0 ].selected = false;
+    list.focus();
+  }
+  else {
+    alert( "You must set a valid Steam path first." );
   }
 }
 
@@ -942,12 +972,13 @@ function changeHowTab( event ) {
       run = document.getElementById( "poweredBy" );
 
   if( el.classList.contains( "poweredBy" )) {
-      made.classList.remove( "w3-hide" );
-      run.classList.add( "w3-hide" );
+    made.style.display = "block"
+    run.style.display = "none";
   }
   else {
-    made.classList.add( "w3-hide" );
-    run.classList.remove( "w3-hide" );
+    made.style.display = "none"
+    run.style.display = "block";
+    $( "#theHow" ).focus().blur();
   }
 }
 
@@ -966,7 +997,7 @@ function sortBy( field, reverse, primer ) {
 
 function osInit() {
   if( process.platform === "darwin" ) {
-    document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
+//    document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
   }
 }
 

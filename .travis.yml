@@ -1,29 +1,28 @@
 # Set language as Node.js, and use
 #   the latest stable release of v7.
 language: node_js
-node_js: "7"
+node_js: "8"
 
 
 # Run on Linux, Ubuntu 14.04.X LTS
 #   aka "Trusty Tahr".
 os: linux
 dist: trusty
+sudo: required
 
 
 # Cache directories for faster builds.
 # Need to add more to this..
 cache:
+  yarn: true
   directories:
   - node_modules
   - app/node_modules
 
-
-# Update the global npm install and
-#   then install the dependencies
-#   for ./app.
-install:
-- npm i npm -g
-- npm i
+# Install Yarn..
+before_install:
+  - npm i npm -g
+  - npm i yarn -g
 
 
 # Use npm run to execute
@@ -31,15 +30,15 @@ install:
 #   project for both 32 & 64-bit
 #   platforms of Linux or Windows.
 script:
-- npm run dist-32_64
+- yarn run dist-32_64
 
 
 # Create a global variable for each
 #   of the 32 & 64-bit release packages
 #   and echo their paths.
 before_deploy:
-- export RELEASE_32=$(ls $TRAVIS_BUILD_DIR/dist/*ia32.AppImage)
-- export RELEASE_64=$(ls $TRAVIS_BUILD_DIR/dist/*x86_64.AppImage)
+- export RELEASE_32=$(ls $TRAVIS_BUILD_DIR/dist/*86.AppImage)
+- export RELEASE_64=$(ls $TRAVIS_BUILD_DIR/dist/*64.AppImage)
 - echo "Deploying $RELEASE_32 & $RELEASE_64 to GitHub releases."
 
 

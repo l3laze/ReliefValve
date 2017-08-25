@@ -78,6 +78,8 @@ function createWindow () {
 
   mainWindow.webContents.on('will-navigate', handleRedirect)
   mainWindow.webContents.on('new-window', handleRedirect)
+
+  console.log( "Logging to:" + logPath );
 }
 
 // Make app single-instance.
@@ -225,6 +227,20 @@ ipcMain.on( 'writeFile', function( event, file, data ) {
   var ret = fs.writeFileSync( file, data );
   event.returnValue = "undefined";
 })
+
+ipcMain.on( 'checkAccess', function( event, pathData ) {
+  try {
+    fs.accessSync( pathData, fs.constants.F_OK, fs.constants.R_OK, fs.constants.W_OK, fs.constants.X_OK );
+  }
+  catch( err ) {
+    event.returnValue = false;
+  }
+  finally {
+    if( event.returnValue !== false ) {
+      event.returnValue = true;
+    }
+  }
+});
 
 /* Code from or based on
  * https://www.loggly.com/blog/node-js-error-handling/
