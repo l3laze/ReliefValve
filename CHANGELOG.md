@@ -15,6 +15,7 @@
   - CHANGE: Normal buttons (not menu or modal) are all now rounded.
   - CHANGE: Normal buttons now highlight black when hovered over.
   - CHANGE: Updated to latest Electron (1.7.5), electron-builder (19.24.1), and w3-css (4.0.4) as of August 20, 2017.
+  - CHANGE: Moved Changelog from README to it's own file.
 
 # 1.2.1
 
