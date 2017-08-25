@@ -207,8 +207,8 @@ function loadSteamApps( loc ) {
   }
 
   if( ipc.sendSync( "checkAccess", loc ) === false ) {
-    alert( "Program can't access the folder \"loc\"." );
-    return logger.warn( "Program can't access the folder \"loc\"." );
+    alert( "Program can't access the folder \"" + loc + "\"." );
+    return logger.warn( "Program can't access the folder \"" + loc + "\"." );
   }
   else if( ipc.sendSync( "fileExists", loc ) === false ) {
     alert( "Tried to load a Steam folder that doesn't exist: " + loc );

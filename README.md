@@ -232,15 +232,22 @@ This is an unsigned application and it will not run on Windows or Mac without fi
 # Change Log
 
 - 1.2.2
-
+  - FIX: Updated code to handle new Linux Steam folder configuration (almost no difference..they moved some stuff into .steam/steam...lol).
   - FIX: Removed line from osInit causing it to make the background draggable for Mac...was making the entire app draggable =| I thought I had fixed that already, sorry!
   - FIX: Error checking so app doesn't crash when "Random" is picked for the skin setting but there are no skins installed.
   - FIX: README had some wrong status badges (pointing to another repo of mine); updated them.
   - FIX: Updated menu; update of w3-css to 4.0+ broke it completely.
-  - CHANGE: Menu buttons no longer highlight white when hovered over, don't have borders except where it seems absolutely necessary.
-  - CHANGE: Large lists will now cut off text that overflows and use ellipsis at the end.
+  - FIX: "Launch" now uses the saved launch options rather than what's selected when it's pressed.
+  - CHANGE: Removed "Developer" launch option as it seems to no longer be supported (WTH?)
+  - CHANGE: Steam launch options are now radio button options instead of checkboxes because only one of the current options can be used at a time.
+  - CHANGE: Added a 1024x1024 PNG icon for Linux.
+  - CHANGE: The Launch Options "Reset" button now resets the settings to default, not to their saved state.
+  - CHANGE: Menu buttons now highlight grey when hovered over, and don't have borders except for the menu toggle button.
+  - CHANGE: Large lists will now cut off text that overflows and use ellipsis at the end (...).
+  - CHANGE: Added "Nothing" to Launch Options so that no options can be selected.
   - CHANGE: Normal buttons (not menu or modal) are all now rounded.
-  - CHANGE: Updated to latest Electron (1.7.5), electron-builder (19.22.1), and w3-css (4.0.4) as of August 20, 2017.
+  - CHANGE: Normal buttons now highlight black when hovered over.
+  - CHANGE: Updated to latest Electron (1.7.5), electron-builder (19.24.1), and w3-css (4.0.4) as of August 20, 2017.
 
 - 1.2.1
 

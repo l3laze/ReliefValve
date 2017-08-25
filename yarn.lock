@@ -23,8 +23,8 @@
     "7zip-bin-win" "^2.1.0"
 
 "@types/node@^7.0.18":
-  version "7.0.42"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.42.tgz#051ff1cdbd1e1b7523ba425bc388147483344dbf"
+  version "7.0.43"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.43.tgz#a187e08495a075f200ca946079c914e1a5fe962c"
 
 ajv-keywords@^2.1.0:
   version "2.1.0"
@@ -341,8 +341,8 @@ debug@^2.1.3, debug@^2.2.0, debug@^2.6.6, debug@^2.6.8:
     ms "2.0.0"
 
 debug@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.0.0.tgz#1d2feae53349047b08b264ec41906ba17a8516e4"
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.0.1.tgz#0564c612b521dc92d9f2988f0549e34f9c98db64"
   dependencies:
     ms "2.0.0"
 
@@ -416,8 +416,8 @@ electron-builder-util@19.24.0, electron-builder-util@~19.24.0:
     tunnel-agent "^0.6.0"
 
 electron-builder@^19.24.1:
-  version "19.24.4"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.24.4.tgz#8a8e0dc72da1142a5377c56714b3089d81325a3e"
+  version "19.24.1"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.24.1.tgz#451a8893fe4fd2603571f35c5097978ff10dbf83"
   dependencies:
     "7zip-bin" "^2.2.3"
     ajv "^5.2.2"
@@ -438,7 +438,6 @@ electron-builder@^19.24.1:
     electron-publish "19.24.0"
     fs-extra-p "^4.4.0"
     hosted-git-info "^2.5.0"
-    iconv-lite "^0.4.18"
     is-ci "^1.0.10"
     isbinaryfile "^3.0.2"
     js-yaml "^3.9.1"
@@ -738,10 +737,6 @@ http-signature@~1.1.0:
     assert-plus "^0.2.0"
     jsprim "^1.2.2"
     sshpk "^1.7.0"
-
-iconv-lite@^0.4.18:
-  version "0.4.18"
-  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.18.tgz#23d8656b16aae6742ac29732ea8f0336a4789cf2"
 
 import-lazy@^2.1.0:
   version "2.1.0"
