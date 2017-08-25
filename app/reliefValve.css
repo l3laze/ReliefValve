@@ -194,6 +194,11 @@ a:focus, button:focus {
   text-decoration: none;
 }
 
+#menuToggle {
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
 #closeModal:focus {
   background: white;
   text: black;
@@ -418,16 +423,6 @@ label[for="cbOfflineFix"] {
   overflow-y: auto;
 }
 
-@media only screen and (min-width: 601px) {
-  #aboutSeparator {
-    display: none;
-  }
-
-  #aboutFooter {
-    margin-top: 0;
-  }
-}
-
 @media only screen and (min-width: 768px) {
   #launchOptionsContainer {
       padding-top: 50px;
@@ -450,6 +445,10 @@ label[for="cbOfflineFix"] {
     padding-right: 0.5%;
     margin-right: 0;
     width: 100%;
+  }
+
+  #menuToggle {
+    border: 2px hidden black;
   }
 
   #menuToggle[ data-state="true" ] {
@@ -487,8 +486,6 @@ label[for="cbOfflineFix"] {
 
   #menuToggle {
     padding-bottom: 8px;
-    border-right: 1px solid black;
-    border-bottom: 2px solid black;
   }
 
   #menuToggle:focus {
@@ -497,5 +494,13 @@ label[for="cbOfflineFix"] {
 
   #VMenu a:focus {
     border-bottom: 2px solid #00BFFF;
+  }
+
+  #aboutSeparator {
+    display: none;
+  }
+
+  #aboutFooter {
+    margin-top: 0;
   }
 }

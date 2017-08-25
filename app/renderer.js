@@ -88,11 +88,17 @@ function toggleMenu() {
 }
 
 function toggleLaunchOptions() {
-  var lo = document.getElementById( "launchOptionsContainer" );
+  var lo = document.getElementById( "launchOptionsContainer" ),
+      settings = config.get( "settings" );
   if( lo.style.display === "block" )
     lo.style.display = "none";
-  else
+  else {
     lo.style.display = "block";
+    document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
+    document.getElementById( "lo_bpm" ).checked = settings.launchOptions.bpm;
+    document.getElementById( "lo_nothing" ).checked = settings.launchOptions.nothing;
+    document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
+  }
 
   var el = document.getElementById( "theBody" );
   if( isWhiteish( el.style.color )) {
@@ -307,8 +313,8 @@ function loadSettings() {
       autoLoadValue: "...",
       launchOptions: {
         console: false,
-        developer: false,
         bpm: false,
+        nothing: true,
         exit_rv: false
       }
     };
@@ -320,11 +326,11 @@ function loadSettings() {
     if( ! ( settings.hasOwnProperty( "launchOptions"))) {
       settings.launchOptions = {
         console: false,
-        developer: false,
         bpm: false,
+        nothing: true,
         exit_rv: false
       };
-      logger.info( "Upgraded settings to v1.2 (add launchOptions)." );
+      logger.info( "Upgraded settings to v1.2.2 (add launchOptions + lo_nothing)." );
     }
     value = parseInt( settings.bg );
     if( process.platform === "win32" && value === 2 )
@@ -639,17 +645,17 @@ function resetLaunchOpts() {
   if( settings[ "launchOptions" ] === undefined )
     settings[ "launchOptions" ] = {
       console: false,
-      developer: false,
       bpm: false,
+      nothing: true,
       exit_rv: false
     };
 
   var lb = document.getElementById( "lo_bpm" );
 
-  document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
-  document.getElementById( "lo_developer" ).checked = settings.launchOptions.developer;
-  lb.checked = settings.launchOptions.bpm;
-  document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
+  document.getElementById( "lo_console" ).checked = false;
+  document.getElementById( "lo_bpm" ).checked = false;
+  document.getElementById( "lo_nothing" ).checked = true;
+  document.getElementById( "lo_exit" ).checked = false;
 }
 
 function saveLaunchOpts() {
@@ -664,8 +670,8 @@ function saveLaunchOpts() {
       autoLoadValue: "...",
       launchOptions: {
         console: false,
-        developer: false,
         bpm: false,
+        nothing: true,
         exit_rv: false
       }
     };
@@ -675,15 +681,14 @@ function saveLaunchOpts() {
     settings[ "launchOptions" ] = {};
   }
 
-  var lb = document.getElementById( "lo_bpm" );
   settings.launchOptions.console = document.getElementById( "lo_console" ).checked;
-  settings.launchOptions.developer = document.getElementById( "lo_developer" ).checked;
-  settings.launchOptions.bpm = lb.checked;
+  settings.launchOptions.bpm = document.getElementById( "lo_bpm" ).checked;
+  settings.launchOptions.nothing = document.getElementById( "lo_nothing" ).checked;
   settings.launchOptions.exit_rv = document.getElementById( "lo_exit" ).checked;
 
   config.set( "settings", settings)
   console.log( "Launch options have been saved." );
-  console.log( "settings.launchOptions=" + settings.launchOptions.console + " & " + settings.launchOptions.developer + " & " + settings.launchOptions.bpm + " & " + settings.launchOptions.exit_rv );
+  console.log( "settings.launchOptions=" + settings.launchOptions.console + " & " + settings.launchOptions.bpm + " & " + settings.launchOptions.exit_rv );
   toggleLaunchOptions();
 }
 
@@ -694,7 +699,6 @@ function launchSteamApp() {
       skinSel = document.getElementById( "skinList" );
 
   if( opts.console ) arg = "//open/console";
-  if( opts.developer ) arg = "//open/developer";
   if( opts.bpm ) arg = "//open/bigpicture";
 
   if( arg === "" )

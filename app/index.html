@@ -158,13 +158,10 @@
                     <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="radio" id="lo_console" name="launch_opt" class="w3-radio" /> Enable Console</label>
                   </li>
                   <li>
-                    <label for="lo_developer" title="Enable VGUI editor (F6) and VGUI zoo (F7); for use with skin development."><input type="radio" id="lo_developer" name="launch_opt" class="w3-radio" /> Developer Mode</label>
-                  </li>
-                  <li>
                     <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="radio" id="lo_bpm" name="launch_opt" class="w3-radio" /> Big Picture Mode</label>
                   </li>
                   <li>
-                    <label for="lo_nothing" title="Disables all launch options."><input type="radio" id="lo_nothing" name="launch_opt" class="w3-radio" /> Nothing</label>
+                    <label for="lo_nothing" title="Disables all launch options."><input type="radio" id="lo_nothing" name="launch_opt" class="w3-radio" default /> Nothing</label>
                   </li>
                   <li>
                     <label for="lo_exit" title="Close RV when starting Steam."><input type="checkbox" id="lo_exit" class="w3-check" /> Close ReliefValve</label>
@@ -300,7 +297,7 @@
         <div class="w3-container w3-whole">
           <ul id="contributors" class="w3-container w3-padding centered">
             <li>
-              <span class="contributor-text">probonopd - Bug reports, enhancement suggestions.</span>
+              <span class="contributor-text"><a href="https://github.com/probonopd" title="https://github.com/probonopd">probonopd</a> - Bug reports, enhancement suggestions.</span>
             </li>
           </ul>
         </div>
@@ -313,11 +310,12 @@
   </div>
   <!-- Insert this line above script imports -->
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-
   <!-- normal script imports etc  -->
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="node_modules/badger.js/badger.js"></script>
-  <script src="renderer.js"></script>
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/badger.js/badger.js"></script>
+    <script src="renderer.js"></script>
+
   <!-- Insert this line after script imports -->
   <script>if (window.module) module = window.module;</script>
 
