@@ -43,7 +43,6 @@
 
   - [Client](#client)
 
-    - [Force Start Download](#force-start-download)
     - [Client Options](#client-options)
     - [Launch Options](#launch-options)
 
@@ -59,9 +58,11 @@
 
 - Apply an offline fix to make apps which have an update available playable in offline mode.
 
-- Help "force start" a download for a game that's not compatible with your system.
+- Manage Steam client settings without opening the Steam client.
 
-- Change your Steam skin, including to a random one. Information about ReliefValve.
+- Backup/restore Steam client settings.
+
+- Change your Steam skin, including to a random one.
 
 - What - What the app can do.
 
@@ -176,15 +177,6 @@ Controls for RV's own settings.
 
 ![client](https://cloud.githubusercontent.com/assets/18404758/24328199/fb17fd60-11a8-11e7-967f-2d0edf5d9e33.jpg)
 
-### Force Start Download
-
-Enter an appid or Steam Store URL of an app to "force download" it on an unsupported platform.
-
-- The text box is where to enter the appid or store url.
-- The "Game Name" label will be updated with the name of the game if it's found.
-- The "Clear" button will clear the text box.
-- The "Add" button will add the forced download.
-
 ### Client Options
 
 Options for the Steam client.
@@ -206,6 +198,10 @@ Options for the Steam client.
 - Close ReliefValve - If this is selected then when you press "Launch" to start Steam ReliefValve will close itself.
 - Reset - Reset launch options to the last saved defaults.
 - Save - Save the currently selected launch options as the default.
+
+### Client Settings
+
+Most of the Steam client settings, along with backup and restore support.
 
 --------------------------------------------------------------------------------
 

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" id="theHTML">
 <head>
-  <meta charset="utf-8">
+  <meta name="charset" content="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="Tom Shaver">
   <title>ReliefValve</title>
   <link rel="shortcut icon" type="image/x-icon" href="resources/favicon.ico" />
-  <link rel="stylesheet" href="node_modules/w3-css/w3.css" />
+  <link rel="stylesheet" href="node_modules/w3-css/pure-w3.css" />
   <link rel="stylesheet" href="node_modules/badger.js/badger.css" />
-  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="node_modules/font-awesome/css/pure-font-awesome.min.css" />
   <link rel="stylesheet" href="reliefValve.css" />
 </head>
-<body id="theBody">
+<body>
 
   <div id="VMenu" class="w3-bar w3-show w3-white w3-right w3-margin-bottom w3-top">
     <a href="javascript:void(0);" id="menuToggle" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="toggleMenu()" data-state="true">&times;</a>
@@ -129,6 +129,7 @@
 
   <div id="clientView" class="appView">
     <div id="forceDownloadContainer" class="w3-half w3-container view-container">
+      <!--
       <div id="forceContainer" class="w3-container centered">
         <label class="w3-large w3-content centered bolded">Force Start Download</label>
         <br />
@@ -140,10 +141,15 @@
         <a href="javascript:void(0)" id="addForce" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Add</a>
         <hr class="splitter" />
       </div>
+      -->
       <div class="w3-container centered">
         <label class="w3-large w3-content centered bolded">Client Options</label>
         <br />
+        <button id="showClientSettings" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Client Settings</button>
+        <br />
         <button id="launchOptions" onclick="toggleLaunchOptions()" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Launch Options</button>
+        <br />
+        <button id="launchBtn" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Launch the Steam client.">Launch</button>
         <div id="launchOptionsContainer" class="w3-modal">
           <div class="w3-modal-content">
             <header class="w3-container w3-black">
@@ -151,32 +157,43 @@
               <h4 id="modalHeader" class="bolded">Launch Options</h4>
             </header>
             <br />
-            <div class="w3-row">
-              <div class="w3-container w3-whole">
-                <ul id="launchOptionsList" class="w3-container w3-padding centered">
-                  <li>
-                    <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="radio" id="lo_console" name="launch_opt" class="w3-radio" /> Enable Console</label>
-                  </li>
-                  <li>
-                    <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="radio" id="lo_bpm" name="launch_opt" class="w3-radio" /> Big Picture Mode</label>
-                  </li>
-                  <li>
-                    <label for="lo_nothing" title="Disables all launch options."><input type="radio" id="lo_nothing" name="launch_opt" class="w3-radio" default /> Nothing</label>
-                  </li>
-                  <li>
-                    <label for="lo_exit" title="Close RV when starting Steam."><input type="checkbox" id="lo_exit" class="w3-check" /> Close ReliefValve</label>
-                  </li>
-                </ul>
+            <div class="w3-container">
+              <div class="w3-half w3-left" style="width:50%">
+                <label for="lo_no_bpm" title="Disables BPM."><input type="checkbox" id="lo_no_bpm" class="w3-check" /> Disable BPM</label>
+                <br />
+                <label for="lo_no_console" title="Disables console."><input type="checkbox" id="lo_no_console" class="w3-check" /> Disable Console</label>
+                <br />
+                <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="checkbox" id="lo_console" class="w3-check" /> Console</label>
+                <br />
+                <label for="lo_dev" title="Enables Steam developer mode, meant to help with making Steam skins."><input type="checkbox" id="lo_dev" class="w3-check" /> Developer</label>
+                <br />
+                <label for="lo_tcp" title="Forces connection to Steam backend to be via TCP."><input type="checkbox" id="lo_tcp" class="w3-check" /> TCP</label>
+                <br />
+                <label for="lo_silent" title="Silent startup mode (will open Steam, but won't show window on startup)."><input type="checkbox" id="lo_silent" class="w3-check" /> Silent</label>
               </div>
+              <div class="w3-half w3-right" style="width:50%">
+                <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="checkbox" id="lo_bpm" class="w3-check" /> Big Picture Mode</label>
+                <br />
+                <label for="lo_windowed" title="Run BPM in windowed mode rather than borderless fullscreen windowed."><input type="checkbox" id="lo_windowed" class="w3-check" /> Windowed</label>
+                <br />
+                <label for="lo_480p" title="480p mode for BPM."><input type="radio" id="lo_480p" name="lo_bpm_p" class="w3-radio" /> 480p</label>
+                <br />
+                <label for="lo_720p" title="720p mode for BPM."><input type="radio" id="lo_720p" name="lo_bpm_p" class="w3-radio" /> 720p</label>
+                <br />
+                <label for="lo_fulldesktopres" title="Full desktop resolution mode for BPM."><input type="radio" id="lo_fulldesktopres" name="lo_bpm_p" class="w3-radio" /> Desktop resolution</label>
+                <br />
+                <label for="lo_bpm_default" title="Default BPM resolution."><input type="radio" id="lo_bpm_default" name="lo_bpm_p" class="w3-radio" checked /> Default</label>
+              </div>
+              <br />
+              <label for="lo_exit" title="Close RV when starting Steam."><input type="checkbox" id="lo_exit" class="w3-check" /> Close RV</label>
             </div>
+            <br />
             <footer class="w3-container w3-black">
               <button id="resetLaunchOptions" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Reset launch options to default.">Reset</button>
               <button id="saveLaunchOptions" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Save launch options.">Save</button>
             </footer>
           </div>
         </div>
-        <br />
-        <button id="launchBtn" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Launch the Steam client.">Launch</button>
         <hr class="splitter" />
         <div class="w3-container centered">
           <label class="w3-large w3-content centered bolded">Steam Skin</label>
@@ -186,9 +203,10 @@
             <option>&lt;Random&gt;</option>
           </select>
           <br />
-          <button id="applySkinSetting" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply</button>
+          <button id="applySkinSetting" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round w3-margin">Apply</button>
         </div>
       </div>
+      <br />
     </div>
   </div>
 
@@ -198,8 +216,8 @@
         Go to "Settings" and press "Choose", then select
           your Steam installation folder (where Steam
           stores it's client data).
-          <hr class="splitter" />
       </p>
+      <hr class="splitter" />
       <p>
         Once you add a valid Steam installation the
           apps you've installed via Steam will be
@@ -207,8 +225,8 @@
           the list are controls for the apps auto-update
           behavior and to apply an "offline fix".
       </p>
+      <hr class="splitter" />
       <p>
-        <hr class="splitter" />
         Next to the Steam Apps list is the Blacklist
           - apps which will NOT be loaded. If you add
           an app to the blacklist it will be ignored
@@ -230,15 +248,15 @@
 
   <div id="aboutView" class="appView">
     <div class="w3-container w3-margin-bottom centered">
-      <button id="theWhat" class="w3-btn w3-border w3-hover-white w3-hover-text-black w3-round">"What?"</button>
-      <button id="theHow" class="w3-btn w3-border w3-hover-white w3-hover-text-black w3-round">"How?!"</button>
+      <button id="theWhat" class="w3-btn w3-border w3-hover-black w3-white w3-round">"What?"</button>
+      <button id="theHow" class="w3-btn w3-border w3-hover-black w3-white w3-round">"How?!"</button>
     </div>
     <div id="aboutContent" class="w3-container centered">
       <div id="explainTheDefault" class="w3-container w3-margin-top">
         <p>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</p>
         <p>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></p>
       </div>
-      <div id="explainTheWhat" class="w3-container w3-hide w3-margin-top">
+      <div id="explainTheWhat" class="w3-hide w3-margin-top">
         <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
         <br />
         <ul id="featureList">
@@ -256,18 +274,18 @@
           </li>
         </ul>
       </div>
-      <div id="explainTheHow" class="w3-container w3-hide">
-        <div id="poweredBy" class="w3-container">
+      <div id="explainTheHow" class="w3-hide">
+        <div id="poweredBy" class="">
           This app is <a href="#" onclick="changeHowTab(event);this.blur()" class="poweredBy">powered by &gt;</a> the following:
           <br />
-          <div class="w3-container badger-container w3-margin-top">
+          <div class="badger-container">
             <!-- This will be generated -->
           </div>
         </div>
-        <div id="builtWith" class="w3-container">
+        <div id="builtWith" class="">
           This app is <a href="#" onclick="changeHowTab(event);this.blur()" class="builtWith">&lt; built with</a> the following:
           <br />
-          <div class="w3-container badger-container w3-margin-top">
+          <div class="badger-container">
             <!-- This will be generated -->
           </div>
         </div>
@@ -290,7 +308,7 @@
     <div class="w3-modal-content">
       <header class="w3-container w3-black">
         <a href="javascript:void(0);" onclick="document.getElementById( 'contributorContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
-        <h4 id="modalHeader" class="bolded">Contributors</h4>
+        <h4 class="bolded">Contributors</h4>
       </header>
       <br />
       <div class="w3-row">
@@ -308,6 +326,499 @@
       </footer>
     </div>
   </div>
+
+  <div id="clientSettingsContainer" class="w3-modal">
+    <div class="w3-modal-content">
+      <header class="w3-container w3-black centered">
+        <a href="javascript:void(0);" onclick="document.getElementById( 'clientSettingsContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
+        <h4 id="modalHeader" class="bolded">Client Settings</h4>
+      </header>
+      <br />
+      <div class="w3-row w3-center">
+        <div id="clientSettingsBar" class="w3-bar w3-round w3-border w3-center">
+          <a href="javascript:void(0);" id="userSettingsBtn" class="w3-bar-item w3-button w3-black" title="User">
+            <i class="fa fa-address-card w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">User</span>
+          </a>
+          <a href="javascript:void(0);" id="dlSettingsBtn" class="w3-bar-item w3-button" title="Downloads">
+            <i class="fa fa-download w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">DLs</span>
+          </a>
+          <a href="javascript:void(0);" id="friendsSettingsBtn" class="w3-bar-item w3-button" title="Friends">
+            <i class="fa fa-users w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">Friends</span>
+          </a>
+          <a href="javascript:void(0);" id="overlaySettingsBtn" class="w3-bar-item w3-button" title="In-Game (Overlay)">
+            <i class="fa fa-chrome w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">Overlay</span>
+          </a>
+          <a href="javascript:void(0);" id="audioSettingsBtn" class="w3-bar-item w3-button" title="Music">
+            <i class="fa fa-headphones w3-hide-medium w3-hide-large"></i>
+            <i class="fa fa-microphone w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">Audio</span>
+          </a>
+          <a href="javascript:void(0);" id="interfaceSettingsBtn" class="w3-bar-item w3-button" title="Interface">
+            <i class="fa fa-window-maximize w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">Interface</span>
+          </a>
+        </div>
+      </div>
+
+      <!--
+      <div class="w3-row w3-center">
+        <div id="clientSettingsBar" class="w3-bar w3-round w3-border">
+          <a href="javascript:void(0);" id="taskbarSettingsBtn" class="w3-bar-item w3-button" title="Interface -> Taskbar Preferences">
+            <i class="fa fa-list-ul w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">Taskbar</span>
+          </a>
+          <a href="javascript:void(0);" id="streamingSettingsBtn" class="w3-bar-item w3-button" title="In-Home Streaming">
+            <i class="fa fa-home w3-hide-medium w3-hide-large"></i>
+            <span class="w3-hide-small">In-Home Streaming</span>
+          </a>
+            <a href="javascript:void(0);" id="broadcastingSettingsBtn" class="w3-bar-item w3-button" title="Broadcasting">
+              <i class="fa fa-eye w3-hide-medium w3-hide-large"></i>
+              <span class="w3-hide-small">Broadcasting</span>
+            </a>
+        </div>
+      </div>
+
+      <div id="streamingSettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <span>Streaming Settings</span>
+        <br />
+      </div>
+      -->
+
+      <div id="userSettingsTab" class="w3-white w3-center csTab">
+        <label for="usDontSave" title="Account -> Don't save account credentials on this computer">
+          <input type="checkbox" id="usDontSave" class="w3-check" />
+          <span>Don't save personal info on this PC</span>
+        </label>
+        <br />
+        <label for="usEnableCloud" title="Cloud -> Enable Steam Cloud synchronization for games which support it">
+          <input type="checkbox" id="usEnableCloud" class="w3-check" />
+          Enable Steam Cloud..
+        </label>
+        <br />
+        <label for="usOpenScreenshot" title="Cloud -> Open the screenshot uploader after closing a game if screenshots were taken">
+          <input type="checkbox" id="usOpenScreenshot" class="w3-check" />
+          <span>Open the screenshot uploader..</span>
+        </label>
+        <br />
+        <br />
+      </div>
+
+      <div id="dlSettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <label for="dsAutoUpdateLimit" title="Downloads -> Only auto-update games between">
+          <input type="checkbox" id="dsAutoUpdateLimit" class="w3-check" />
+          Only auto-update games between..
+        </label>
+        <br />
+        <label title="Downloads -> Only auto-update games between [start]">Start: </label>
+        <select id="dsAutoUpdateLimitMin" style="width:5em;margin-top:4px">
+          <option>12 AM</option>
+          <option>1 AM</option>
+          <option>2 AM</option>
+          <option>3 AM</option>
+          <option>4 AM</option>
+          <option>5 AM</option>
+          <option>6 AM</option>
+          <option>7 AM</option>
+          <option>8 AM</option>
+          <option>9 AM</option>
+          <option>10 AM</option>
+          <option>11 AM</option>
+          <option>12 PM</option>
+          <option>1 PM</option>
+          <option>2 PM</option>
+          <option>3 PM</option>
+          <option>4 PM</option>
+          <option>5 PM</option>
+          <option>6 PM</option>
+          <option>7 PM</option>
+          <option>8 PM</option>
+          <option>9 PM</option>
+          <option>10 PM</option>
+          <option>11 PM</option>
+        </select>
+        <br />
+        <label title="Downloads -> Only auto-update games between [end]">End: </label>
+        <select id="dsAutoUpdateLimitMax" style="width:5em;margin-top:4px">
+          <option>12 AM</option>
+          <option>1 AM</option>
+          <option>2 AM</option>
+          <option>3 AM</option>
+          <option>4 AM</option>
+          <option>5 AM</option>
+          <option>6 AM</option>
+          <option>7 AM</option>
+          <option>8 AM</option>
+          <option>9 AM</option>
+          <option>10 AM</option>
+          <option>11 AM</option>
+          <option>12 PM</option>
+          <option>1 PM</option>
+          <option>2 PM</option>
+          <option>3 PM</option>
+          <option>4 PM</option>
+          <option>5 PM</option>
+          <option>6 PM</option>
+          <option>7 PM</option>
+          <option>8 PM</option>
+          <option>9 PM</option>
+          <option>10 PM</option>
+          <option>11 PM</option>
+        </select>
+        <br />
+        <label title="Downloads -> Limit bandwidth to">Bandwidth limit: </label>
+        <select id="dsBandwidthLimit" style="width:5em;margin-top:4px">
+          <option value="0">None</option>
+          <option value="128">16 KB/s</option>
+          <option value="256">32 KB/s</option>
+          <option value="384">48 KB/s</option>
+          <option value="512">64 KB/s</option>
+          <option value="768">96 KB/s</option>
+          <option value="1024">128 KB/s</option>
+          <option value="1536">192 KB/s</option>
+          <option value="2048">256 KB/s</option>
+          <option value="3072">384 KB/s</option>
+          <option value="4096">512 KB/s</option>
+          <option value="6144">768 KB/s</option>
+          <option value="8000">1000 KB/s (1 MB/s)</option>
+          <option value="12000">1.5 MB/s</option>
+          <option value="16000">2 MB/s</option>
+          <option value"24000">3 MB/s</option>
+          <option value="40000">5 MB/s</option>
+          <option value="56000">7 MB/s</option>
+          <option value="80000">10 MB/s</option>
+          <option value="200000">25 MB/s</option>
+        </select>
+        <br />
+        <label for="dsAllowDuringGameplay" title="Downloads -> Allow downloads during gameplay">
+          <input type="checkbox" id="dsAllowDuringGameplay" class="w3-check" />
+          Allow downloads during gameplay
+        </label>
+        <br />
+        <label for="dsStreamingThrottle" title="Downloads -> Throttle downloads while streaming">
+          <input type="checkbox" id="dsStreamingThrottle" class="w3-check" />
+          Throttle downloads while streaming
+        </label>
+        <br />
+        <label for="dsRatesAsBits" title="Downloads -> Display download rates as bits per second">
+          <input type="checkbox" id="dsRatesAsBits" class="w3-check" />
+          Display rates as bits per second..
+        </label>
+        <br />
+        <br />
+      </div>
+
+      <div id="friendsSettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <label for="fsAutoSign" title="Friends -> Automatically sign into Friends when I start Steam">
+          <input type="checkbox" id="fsAutoSign" class="w3-check" />
+          Automatically sign into Friends..
+        </label>
+        <br />
+        <label for="fsTimestamps" title="Friends -> Display timestamps in chat log">
+          <input type="checkbox" id="fsTimestamps" class="w3-check" />
+          Show timestamps in chat log
+        </label>
+        <br />
+        <label for="fsNewWindow" title="Friends -> Always open a new chat window rather than a tab">
+          <input type="checkbox" id="fsNewWindow" class="w3-check" />
+          Don't use chat tabs..
+        </label>
+        <br />
+        <section>
+          <label>Friend joins game -></label>
+          <label for="fsJoinNotification" title="Friends -> When any friend joins a game -> Display a notification">
+            <input type="checkbox" id="fsJoinNotification" class="w3-check" />
+            Notification
+          </label>
+          <label for="fsJoinSound" title="Friends -> When any friend joins a game -> Play a sound">
+            <input type="checkbox" id="fsJoinSound" class="w3-check" />
+            Sound
+          </label>
+        </section>
+        <section>
+          <label>Friend comes online -></label>
+          <label for="fsOnlineNotification" title="Friends -> When any friend comes online -> Display a notification">
+            <input type="checkbox" id="fsOnlineNotification" class="w3-check" />
+            Notification
+          </label>
+          <label for="fsOnlineSound" title="Friends -> When any friend comes online -> Play a sound">
+            <input type="checkbox" id="fsOnlineSound" class="w3-check" />
+            Sound
+          </label>
+        </section>
+        <section>
+          <label>Receive Message ->
+          <label for="fsMessageNotification" title="Friends -> When I receive a message -> Display a notification">
+            <input type="checkbox" id="fsMessageNotification" class="w3-check" />
+            Notification
+          </label>
+          <label for="fsMessageSound" title="Friends -> When I receive a message -> Play a sound">
+            <input type="checkbox" id="fsMessageSound" class="w3-check" />
+            Sound
+          </label>
+        </section>
+        <section>
+          <label>Group event -></label>
+          <label for="fsGroupNotification" title="Friends -> For group events and announcements -> Display a notification">
+            <input type="checkbox" id="fsGroupNotification" class="w3-check" />
+            Notification
+          </label>
+          <label for="fsGroupSound" title="Friends -> For group events and announcements -> Play a sound">
+            <input type="checkbox" id="fsGroupSound" class="w3-check" />
+            Sound
+          </label>
+          <br />
+        </section>
+        <section>
+          <label for="fsFlashWindow" title="Friends -> Flash window when I receive a message">Message -> Flash: </label>
+          <select id="fsFlashWindow" style="width:12.5em;margin-top:4px" title="Friends -> Flash window when I receive a message">
+            <option>Always</option>
+            <option>Only when minimized</option>
+            <option>Never</option>
+          </select>
+        </section>
+        <section>
+          <label for="fsOverlay" title="Show Friends window in overlay (Steam will do this if you had it open)">
+            <input type="checkbox" id="fsOverlay" class="w3-check" />
+            Show Friends window in Overlay..
+          </label>
+          <br />
+          <label for="fsShowOnStart" title="Open Friends window on startup (Steam will do this if you had it open)">
+            <input type="checkbox" id="fsShowOnStart" class="w3-check" />
+            Open Friends on startup..
+          </label>
+          <br />
+          <label for="fsState" title="Friends -> Status">Friends -> Status: </label>
+          <select id="fsState" style="width:10.5em;margin-top:4px" title="Friends -> Status">
+            <option value="0">Offline</option>
+            <option value="1">Online</option>
+            <option value="2">Busy</option>
+            <option value="3">Away</option>
+            <option value="5">Looking to Trade</option>
+            <option value="6">Looking to Play</option>
+          </select>
+        </section>
+        <br />
+      </div>
+
+      <div id="audioSettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <label for="asScanSteam" title="Music -> Scan Steam folders at startup">
+          <input type="checkbox" id="asScanSteam" class="w3-check" />
+          Scan Steam folders at startup
+        </label>
+        <br />
+        <label for="asScanFolders" title="Music -> Scan at startup">
+          <input type="checkbox" id="asScanFolders" class="w3-check" />
+          Scan custom folders at startup
+        </label>
+        <br />
+        <label for="asScanLog" title="Music -> Save scanning activity log">
+          <input type="checkbox" id="asScanLog" class="w3-check" />
+          Save log of scan
+        </label>
+        <br />
+        <label title="Music -> Volume">Music Volume: <span id="asMusicVolumeValue"></span>%</label>
+        <br />
+        <input id="asMusicVolume" type="range" min="0" max="255" step="1" value="128" onchange="updateVolume( this.id, this.value )" title="Music -> Volume" />
+        <br />
+        <label for="asPauseForApp" title="Music -> Pause music -> When starting an application">
+          <input type="checkbox" id="asPauseForApp" class="w3-check" />
+          Pause when starting an app through Steam..
+        </label>
+        <br />
+        <label for="asPauseForChat" title="Music -> Pause music -> When voice chatting">
+          <input type="checkbox" id="asPauseForChat" class="w3-check" />
+          Pause when voice chatting..
+        </label>
+        <br />
+        <label for="osScreenshotUncompressed" title="Music -> Display a notification -> When a new track begins">
+          <input type="checkbox" id="osScreenshotUncompressed" class="w3-check" />
+          <span>Display notification when new track begins..</span>
+        </label>
+        <br />
+        <hr class="splitter" />
+        <label title="Voice -> Receieve volume">Voice Receive volume: <span id="asVoiceVolumeValue"></span>%</label>
+        <br />
+        <input id="asVoiceVolume" type="range" min="0" max="255" step="1" value="128" onchange="updateVolume( this.id, this.value )" title="Voice -> Receive Volume" />
+        <br />
+        <label for="asAutoVoice" title="Voice -> Automatically transmit voice when I speak">
+          <input type="radio" id="asAutoVoice" name="autoVoice" />
+          Auto transmit voice..
+        </label>
+        <br />
+        <label for="asPushTalk" title="Voice -> Use a push to talk key to transmit voice">
+          <input type="radio" id="asPushTalk" name="autoVoice" />
+          Use "push-to-talk"..
+        </label>
+        <br />
+        <label for="asPTKey" title="Voice -> Use a push to talk key to transmit voice -> [key]">Push to talk key: </label>
+        <input type="text" id="asPTKey" style="width:10.5em" disabled value="Support in progress" title="Voice -> Use a push to talk key to transmit voice -> [key]" />
+        <br />
+        <br />
+      </div>
+
+      <div id="overlaySettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <label for="osEnableOverlay" title="In-Game -> Enable the Steam Overlay while in-game">
+          <input type="checkbox" id="osEnableOverlay" class="w3-check" />
+          <span>Enable the Steam Overlay..</span>
+        </label>
+        <br />
+        <label title="In-Game -> Overlay shortcut keys">Overlay shortcut: </label>
+        <input type="text" id="osOverlayKeys" style="width:10.5em" value="" data-keys="" title="In-Game -> Overlay shortcut keys" />
+        <br />
+        <label title="Web Browser -> Web browser home page">Home page: </label>
+        <input type="url" id="osHomePage" style="width:auto" title="Web Browser -> Web browser home page" />
+        <br />
+        <label title="In-Game -> In-game server browser -> Max pings/minute">Max pings/minute..: </label>
+        <select id="osOverlayFPSCorner" style="width:7.1em;margin-top:4px" title="In-Game -> In-game server browser -> Max pings/minute">
+          <option>Automatic (5000)</option>
+          <option>5000</option>
+          <option>3000</option>
+          <option>1500</option>
+          <option>1000</option>
+          <option>500</option>
+          <option>250</option>
+        </select>
+        <section>
+          <hr class="splitter" />
+          <label>Screenshot taken -></label>
+          <br />
+          <label for="osScreenshotNotification" title="In-Game -> When a screenshot is taken -> Display a notification">
+            <input type="checkbox" id="osScreenshotNotification" class="w3-check" />
+            Notification
+          </label>
+          <label for="osScreenshotSound" title="In-Game -> When a screenshot is taken -> Display a notification">
+            <input type="checkbox" id="osScreenshotSound" class="w3-check" />
+            Sound
+          </label>
+          <br />
+          <label for="osScreenshotUncompressed" title="In-Game -> When a screenshot is taken -> Save an uncompressed copy">
+            <input type="checkbox" id="osScreenshotUncompressed" class="w3-check" />
+            <span>Save uncompressed copy..</span>
+          </label>
+          <br />
+          <label title="In-Game -> Screenshot shortcut keys">Screenshot shortcut: </label>
+          <input type="text" id="osScreenshotKeys" style="width:10.5em" title="In-Game -> Screenshot shortcut keys" />
+          <br />
+        </section>
+        <hr class="splitter" />
+        <label>FPS Counter</label>
+        <br />
+        <label title="In-Game -> In-game FPS counter -> [location]">Location: </label>
+        <select id="osOverlayFPSCorner" style="width:9em">
+          <option>Off</option>
+          <option>Top-left</option>
+          <option>Top-right</option>
+          <option>Bottom-right</option>
+          <option>Bottom-left</option>
+        </select>
+        <br />
+        <label for="osOverlayFPSContrast" title="In-Game -> In-game FPS counter -> High contrast color">
+          <input type="checkbox" id="osOverlayFPSContrast" class="w3-check" />
+          <span>Use a high contrast color</span>
+        </label>
+        <br />
+        <br />
+      </div>
+
+      <div id="interfaceSettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <label title="Interface -> Select the language you wish Steam to use..">Language: </label>
+        <select id="isLanguage" style="width:7.1em;margin-top:4px" title="Interface -> Select the language you wish Steam to use..">
+          <option value="bulgarian">Bulgarian</option>
+          <option value="czech">Czech</option>
+          <option value="danish">Danish</option>
+          <option value="dutch">Dutch</option>
+          <option value="english">English</option>
+          <option value="finnish">Finnish</option>
+          <option value="french">French</option>
+          <option value="german">German</option>
+          <option value="greek">Greek</option>
+          <option value="hungarian">Hungarian</option>
+          <option value="italian">Italian</option>
+          <option value="japanese">Japanese</option>
+          <option value="koreana">Korean</option>
+          <option value="norwegian">Norwegian</option>
+          <option value="polish">Polish</option>
+          <option value="portuguese">Portuguese</option>
+          <option value="brazilian">Portuguese-Brazil</option>
+          <option value="russian">Russian</option>
+          <option value="romanian">Romanian</option>
+          <option value="schinese">Simplified Chinese</option>
+          <option value="spanish">Spanish</option>
+          <option value="swedish">Swedish</option>
+          <option value="tchinese">Traditional Chinese</option>
+          <option value="thai">Thai</option>
+          <option value="turkish">Turkish</option>
+          <option value="ukrainian">Ukrainian</option>
+        </select>
+        <br />
+        <label title="Interface -> Favorite window">Favorite window: </label>
+        <select id="isFavoriteWindow" style="width:7.1em;margin-top:4px" title="Interface -> Favorite window">
+          <option value="#app_store">Store</option>
+          <option value="#app_games">Library</option>
+          <option value="#app_news">News</option>
+          <option value="#app_friends">Friends</option>
+          <option value="#steam_menu_friend_activity">Friend Activity</option>
+          <option value="#steam_menu_community_home">Community</option>
+          <option value="#app_servers">Servers</option>
+        </select>
+        <br />
+        <label for="isAddressBar" title="Interface -> Display Steam URL address bar when available">
+          <input type="checkbox" id="isAddressBar" class="w3-check" />
+          Show address bar..
+        </label>
+        <br />
+        <label for="isNotifyNews" title="Interface -> Notify me about additions or changes to my games, new releases, and upcoming releases">
+          <input type="checkbox" id="isNotifyNews" class="w3-check" />
+          Show news on start..
+        </label>
+        <br />
+        <label for="isRunOnStart" title="Interface -> Run Steam when my computer starts">
+          <input type="checkbox" id="isRunOnStart" class="w3-check" />
+          Run Steam when my computer starts
+        </label>
+        <br />
+        <label for="isStartInBP" title="Interface -> Start Steam in Big Picture mode">
+          <input type="checkbox" id="isStartInBP" class="w3-check" />
+          Start Steam in Big Picture mode
+        </label>
+        <br />
+        <label for="usWantOffline" title="Start Steam in offline mode">
+          <input type="checkbox" id="usWantOffline" class="w3-check" />
+          <span>Start Steam in offline mode</span>
+        </label>
+        <br />
+        <label for="usSkipWarning" title="Skip warning about starting Steam in offline mode">
+          <input type="checkbox" id="usSkipWarning" class="w3-check" />
+          <span>Skip "offline mode" warning</span>
+        </label>
+        <br />
+        <br />
+      </div>
+
+      <!--
+        <div id="broadcastingSettingsTab" class="csTab" style="display:none">
+        <span>Broadcasting Settings</span>
+        <br />
+      </div>
+        <div id="taskbarSettingsTab" class="csTab" style="display:none">
+        <span>Taskbar Settings</span>
+        <br />
+      </div>
+      -->
+
+      <footer class="w3-center w3-padding w3-black">
+        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Backup settings for selected options">Backup</button>
+        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Restore settings for selected options">Restore</button>
+        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Reset to Steam's current settings">Reset</button>
+        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Save selected settings">Save</button>
+      </footer>
+    </div>
+  </div>
+
   <!-- Insert this line above script imports -->
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
   <!-- normal script imports etc  -->
@@ -323,7 +834,6 @@
     var overlayTimer, debug = false;
 
     window.addEventListener( "DOMContentLoaded", function() {
-      osInit();
       initBadges();
       loadSettings();
     });
@@ -332,11 +842,17 @@
 
     window.addEventListener( "click", function() {
       var lo_modal = document.getElementById( "launchOptionsContainer" ),
-          mu_modal = document.getElementById( "contributorContainer" );
-      if( event.target === lo_modal )
+          mu_modal = document.getElementById( "contributorContainer" ),
+          cs_modal = document.getElementById( "clientSettingsContainer" );
+      if( event.target === lo_modal ) {
         toggleLaunchOptions();
-      else if( event.target === mu_modal )
+      }
+      else if( event.target === mu_modal ) {
         toggleContributors();
+      }
+      else if( event.target === cs_modal ) {
+        toggleClientSettings();
+      }
     });
 
     /* Setup ignoring of tabbing while status overlay is active,
@@ -345,12 +861,16 @@
     window.addEventListener( "keyup", function( event ) {
       if( event.which === 9 ) {
         var loc = document.getElementById( "launchOptionsContainer" ),
-            mc = document.getElementById( "contributorContainer" );
+            mc = document.getElementById( "contributorContainer" ),
+            cc = document.getElementById( "clientSettingsContainer" );
         if( loc.style.display === "block" ) {
           modalTabbing( event, loc );
         }
         else if( mc.style.display === "block" ) {
           modalTabbing( event, mc );
+        }
+        else if( cc.style.display === "block" ) {
+          modalTabbing( event, cc );
         }
       }
       else if( event.which === 27 ) {
@@ -360,6 +880,9 @@
           toggleLaunchOptions();
         else if( document.getElementById( "contributorContainer" ).style.display === "block" )
           toggleContributors();
+        else if( document.getElementById( "clientSettingsContainer" ).style.display === "block" ) {
+          toggleClientSettings();
+        }
       }
     });
 
@@ -389,6 +912,7 @@
       applyRVSettings( document.getElementById( "bgSettingsList" ), true );
     });
 
+    /* Removed because the force is not strong with this one...
     document.getElementById( "clearForce" ).addEventListener( "click", function() {
       var fd = document.getElementById( "forceDownload" );
       fd.value = "";
@@ -398,6 +922,7 @@
     document.getElementById( "addForce" ).addEventListener( "click", function() {
       addForcedDownload( $( "#forceDownload" ).val());
     });
+    */
 
     document.getElementById( "resetLaunchOptions" ).addEventListener( "click", resetLaunchOpts );
 
@@ -426,9 +951,172 @@
       openAboutTab( event, "theWarning" );
     });
 
+    $( "#showClientSettings" ).on( "click", function( event ) {
+      toggleClientSettings();
+    });
+
+    $( "#userSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#dlSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#friendsSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#audioSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#overlaySettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#interfaceSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#osOverlayKeys" ).keydown( function( event ) {
+      handleKeyPress( event );
+    });
+
+    $( "#osScreenshotKeys" ).keydown( function( event ) {
+      handleKeyPress( event );
+    });
+
+    function handleKeyPress( event ) {
+      var sk = ( event.shiftKey ? "Shift" : "" );
+      var ck = ( event.ctrlKey ? "Ctrl" : "" );
+      var ak = ( event.altKey ? "Alt" : "" );
+      var mk = ( event.metaKey ? "Win" : "" );
+      var key = ( event.key && event.key !== "Meta" && event.key !== "Shift" && event.key !== "Control" && event.key !== "Alt" ? event.key : "" ) || "";
+      var valveKey;
+      var value = [];
+
+       if( key !== "" ) {
+         valveKey = toValveKeyCode( key );
+       }
+
+       if( new RegExp( /[a-z]/ ).test( key )) {
+         key = key.toUpperCase();
+       }
+
+      [ ck, ak, sk, mk ].forEach( function( item ) {
+        if( item !== "" ) {
+          value.push( item );
+        }
+      });
+      if( key ) {
+        $( "#" + event.currentTarget.id ).val(( value.length > 0 ? value.join( "+" ) + "+" : "" ) + ( key !== "" ? key : "" ));
+        if( valveKey !== undefined ) {
+          document.getElementById( event.currentTarget.id ).setAttribute( "data-keys", value.join( "\t" ) + "\t" + valveKey );
+        }
+      }
+      event.preventDefault();
+    }
+
+    String.prototype.toCapitalCase = function( string ) {
+      return string.charAt( 0 ).toUpperCase() + string.slice( 1 ).toLowerCase();
+    }
+
+    /*
+
+    $( "#streamingSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#broadcastingSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+
+    $( "#taskbarSettingsBtn" ).click( function( event ) {
+      showClientSettingsTab( event.currentTarget );
+    });
+    */
+
+    function toValveKeyCode( key ) {
+      if( key === "[" ) {
+        return "KEY_LBRACKET";
+      }
+      else if( key === "]" ) {
+        return "KEY_RBRACKET";
+      }
+      else if( key === " " ) {
+        return "KEY_SPACE";
+      }
+      else if( key === "/" ) {
+        return "KEY_SLASH";
+      }
+      else if( key === "\\" ) {
+        return "KEY_BACKSLASH";
+      }
+      else if( key === "," ) {
+        return "KEY_COMMA";
+      }
+      else if( key === "." ) {
+        return "KEY_PERIOD";
+      }
+      else if( key === ";" ) {
+        return "KEY_SEMICOLON";
+      }
+      else if( key === "'" ) {
+        return "KEY_APOSTROPHE";
+      }
+      else if( key === "-" ) {
+        return "KEY_MINUS";
+      }
+      else if( key === "=" ) {
+        return "KEY_NONE";
+        /*
+          if( os.platform().indexOf( "darwin" ) !== -1 ) {
+            retVal = "None";
+          }
+        */
+      }
+      else if( key === "`" ) {
+        return "KEY_BACKQUOTE";
+      }
+      else if( key === "ArrowUp" ) {
+        return "KEY_UP";
+      }
+      else if( key === "ArrowDown" ) {
+        return "KEY_DOWN";
+      }
+      else if( key === "ArrowLeft" ) {
+        return "KEY_LEFT";
+      }
+      else if( key === "ArrowRight" ) {
+        return "KEY_RIGHT";
+      }
+      else {
+        return "KEY_" + key.toUpperCase();
+      }
+    }
+
+    function showClientSettingsTab( btn ) {
+      btn.classList.add( "w3-black" );
+      var tab = document.getElementById( btn.id.substring( 0, btn.id.indexOf( "Btn" )) + "Tab" );
+      var allTabs = document.getElementsByClassName( "csTab" );
+      tab.style.display = "block";
+      for( var i = 0; i < allTabs.length; i++ ) {
+        var item = allTabs[ i ];
+        if( item.id !== tab.id ) {
+          item.style.display = "none";
+          document.getElementById( item.id.substring( 0, item.id.indexOf( "Tab" )) + "Btn"  ).classList.remove( "w3-black" );
+        }
+      }
+    }
+
+    function updateVolume( elid, val ) {
+      $( "#" + elid + "Value" ).html( Math.floor( val / 255 * 100 ));
+    }
+
     document.getElementById( "VMain" ).click();
 
-    window.setTimeout( "handleResize()", 100 );
+    window.setTimeout( "handleResize();updateVolume( 'asMusicVolume', " + document.getElementById( "asMusicVolume" ).value + ");updateVolume( 'asVoiceVolume', " + document.getElementById( "asVoiceVolume" ).value + ")", 100 );
   --></script>
 </body>
 </html>

@@ -21,12 +21,8 @@
   cursor: default;
 }
 
-select[disabled] {
+*[disabled] {
   border: 2px solid red;
-}
-
-input[type="checkbox" disabled] {
-  color: red;
 }
 
 #bgImage {
@@ -57,7 +53,7 @@ body {
   height: 100%;
 }
 
-input, select, option, button, a, textarea, label {
+input, select, option, button, a, textarea, label /*[for], a i, a label, a span, label[for] span*/ {
   cursor: pointer;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -89,22 +85,6 @@ a:focus, button:focus {
   outline: #00BFFF solid 2px;
 }
 
-.border-right-black {
-  border-right: 1px solid black;
-}
-
-.border-right-white {
-  border-right: 1px solid white;
-}
-
-.border-left-black {
-  border-left: 1px solid black;
-}
-
-.border-left-white {
-  border-left: 1px solid white;
-}
-
 .centered {
   text-align: center;
 }
@@ -126,14 +106,6 @@ a:focus, button:focus {
   height: 1px;
 }
 
-.aboutSplitter {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  height: 1px;
-  width: 90%;
-}
-
 .status-container {
   margin-top: 4px;
   margin-bottom: 4px;
@@ -144,45 +116,12 @@ a:focus, button:focus {
   margin-top: 4px;
 }
 
-.controls-container {
-  margin-top: 4px;
-  line-height: 150%;
-}
-
 .bolded {
   font-weight: bold;
 }
 
-.icon {
-  margin-top: 6px;
-  margin-left: 14px;
-}
-
-.taller {
-  position: relative;
-  top: -0.05em;
-  left: 0.5em;
-  font-size: x-large;
-}
-
-.headerBold {
-  font-weight: bolder;
-}
-
-.headerItalic {
-  font-style: italic;
-}
-
-.vertCenter {
-  vertical-align: middle;
-}
-
 .appView {
   margin-top: 48px;
-}
-
-.modalHeader {
-  margin-left: 2em;
 }
 
 .closeModal {
@@ -194,15 +133,13 @@ a:focus, button:focus {
   text-decoration: none;
 }
 
+div.w3-modal {
+  padding-top: 50px;
+}
+
 #menuToggle {
   border-right: 2px solid black;
   border-bottom: 2px solid black;
-}
-
-#closeModal:focus {
-  background: white;
-  text: black;
-  outline: #00BFFF solid 2px;
 }
 
 #blacklistView, #clientView, #settingsView, #helpView, #aboutView, #debugView {
@@ -232,30 +169,13 @@ a:focus, button:focus {
   margin-bottom: 8px;
 }
 
-#lastCleanTime, #lastRunLabel {
-  margin-top: 16px;
-  margin-bottom: 8px;
-}
-
 #launchOptions {
-  margin-top: 4px;
+  margin-top: 12px;
   margin-bottom: 8px;
-}
-
-#launchOptionsList {
-  width: 100%;
-  list-style-type: none;
-  line-height: 2em;
-  margin-top: -1em;
 }
 
 #launchBtn {
-  margin-top: 4px;
   margin-bottom: 8px;
-}
-
-#launchOptionsList label {
-  cursor: pointer;
 }
 
 #skinList {
@@ -273,16 +193,6 @@ a:focus, button:focus {
   margin-top: 4px;
 }
 
-#bpmModeList {
-  width: auto;
-}
-
-#hamburger {
-  position: absolute;
-  top: -8px;
-  left: 1px;
-}
-
 #VMenu {
   list-style-type: none;
 }
@@ -290,6 +200,7 @@ a:focus, button:focus {
 #VMenu a {
   text-decoration: none;
   text-align: center;
+  cursor: pointer;
 }
 
 #VMenu a:hover {
@@ -301,19 +212,8 @@ a:focus, button:focus {
   margin-bottom: 8px;
 }
 
-#steamInstallations {
-  width: 10em;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  vertical-align: sub;
-}
-
 #settingsControlsContainer {
   margin-bottom: 16px;
-}
-
-#appSettingsControlsContainer {
-  margin-top: 16px;
 }
 
 #autoLoadContainer {
@@ -340,10 +240,6 @@ label[for="cbOfflineFix"] {
   margin-top: 8px;
 }
 
-#linkSettings {
-  width: 5em;
-}
-
 #bgSettingsList {
   width: 6em;
   margin-top: 8px;
@@ -353,16 +249,6 @@ label[for="cbOfflineFix"] {
 #bgSettingsSolidContainer {
   margin-top: 8px;
   margin-bottom: 8px;
-}
-
-#bgSettingsGradientContainer {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-
-#bgSettingsGradient {
-  width: 100%;
-  resize: none;
 }
 
 #bgSettingsImageContainer {
@@ -378,10 +264,6 @@ label[for="cbOfflineFix"] {
 
 #bgSettingsSolid {
   width: 5em;
-}
-
-#validDir {
-  margin-top: 4px;
 }
 
 #aboutView {
@@ -400,11 +282,6 @@ label[for="cbOfflineFix"] {
 #aboutFooter {
   margin-bottom: 8px;
   -webkit-app-region: drag;
-}
-
-#madeWith {
-  margin-left: -8px;
-  margin-right: 16px;
 }
 
 .love {
@@ -430,10 +307,6 @@ label[for="cbOfflineFix"] {
 }
 
 @media only screen and (max-width: 600px) {
-  #launchOptionsListRight {
-    margin-top: -32px;
-  }
-
   #VMenu {
     border-left: 1px solid black;
     border-right: 1px solid black;
@@ -453,10 +326,6 @@ label[for="cbOfflineFix"] {
 
   #menuToggle[ data-state="true" ] {
     width: 100%;
-  }
-
-  #menuToggle[ data-state="false" ] {
-    width: 10%;
   }
 
   #VSettings {
@@ -494,10 +363,6 @@ label[for="cbOfflineFix"] {
 
   #VMenu a:focus {
     border-bottom: 2px solid #00BFFF;
-  }
-
-  #aboutSeparator {
-    display: none;
   }
 
   #aboutFooter {

@@ -4,16 +4,15 @@
 
 'use strict';
 
-const electron = require('electron')
-const remote = require('electron').remote
-const app = remote.require('electron').app
-const path = require('path')
-const ipc = require('electron').ipcRenderer
-const vdf = require('simple-vdf2')
-const Config = require('electron-config')
-const config = new Config()
+const electron = require('electron');
+const remote = require('electron').remote;
+const app = remote.require('electron').app;
+const path = require('path');
+const ipc = require('electron').ipcRenderer;
 const os = require('os')
-const eol = os.EOL
+const vdf = require('simple-vdf2');
+const Config = require('electron-config');
+const config = new Config();
 
 var apps,
     blacklist = {},
@@ -22,8 +21,6 @@ var apps,
     defaultSizeB,
     logger = require('electron-log'),
     logPath = path.join( app.getPath( "userData" ), "log.txt" ),
-    timer,
-    arch = process.env.PROCESSOR_ARCHITECTURE,
     platform = process.platform,
     steamPath;
 
@@ -34,14 +31,122 @@ logger.transports.file.streamConfig = { flags: "a" };
 
 logger.info( "---------------- Begin New ----------------" );
 
+/*
+ * Code from or based on:
+ * http://stackoverflow.com/a/34458994/7665043
+ */
+
+function rgbExtract(s) {
+  var match = /^\s*rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\)\s*$/.exec(s);
+  if (match === null) {
+    return null;
+  }
+  return { r: parseInt(match[1], 10),
+           g: parseInt(match[2], 10),
+           b: parseInt(match[3], 10) };
+}
+
+function isWhiteish( col ) {
+  col = rgbExtract( col );
+  if( col === null ) {
+    return false;
+  }
+  if( col.r > 140 && col.g > 140 && col.b > 140 ) {
+    return true;
+  }
+}
+
+function toggleMenu() {
+  var x, items = $( "#VMenu a " ),
+  m = document.getElementById( "menuToggle" ),
+  state = m[ "data-state" ];
+  for( x = 0; x < items.length; x += 1 ) {
+    if( items[ x ] !== m ) {
+      if( ! state ) {
+        items[ x ].classList.add( "w3-hide" );
+      }
+      else {
+        items[ x ].classList.remove( "w3-hide" );
+      }
+    }
+  }
+
+  if( state ) {
+    m.innerHTML = "&times;";
+    document.getElementById( "VMenu" ).classList.add( "w3-white" );
+  }
+  else {
+    m.innerHTML = "&#9776;";
+    document.getElementById( "VMenu" ).classList.remove( "w3-white" );
+  }
+
+  m[ "data-state" ] = ( !state );
+}
+
+function toggleLaunchOptions() {
+  var lo = document.getElementById( "launchOptionsContainer" );
+  if( lo.style.display === "block" ) {
+    lo.style.display = "none";
+  }
+  else {
+    lo.style.display = "block";
+    document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
+    document.getElementById( "lo_bpm" ).checked = settings.launchOptions.bpm;
+    document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
+  }
+
+  var el = document.body;
+  if( isWhiteish( el.style.color )) {
+    lo.style.color = "#555555";
+  }
+  else {
+    lo.style.color = "";
+  }
+}
+
+function toggleContributors() {
+  var mm = document.getElementById( "contributorContainer" );
+  if( mm.style.display === "block" ) {
+    mm.style.display = "none";
+  }
+  else {
+    mm.style.display = "block";
+  }
+  var el = document.body;
+  if( isWhiteish( el.style.color )) {
+    mm.style.color = "#555555";
+  }
+  else {
+    mm.style.color = "";
+  }
+}
+
+function toggleClientSettings() {
+  var mm = document.getElementById( "clientSettingsContainer" );
+  if( mm.style.display === "block" ) {
+    mm.style.display = "none";
+  }
+  else {
+    mm.style.display = "block";
+  }
+
+  var el = document.body;
+  if( isWhiteish( el.style.color )) {
+    mm.style.color = "#555555";
+  }
+  else {
+    mm.style.color = "";
+  }
+}
+
 function openView( evt, viewName ) {
   var i, x, tablinks;
   x = document.getElementsByClassName( "appView" );
-  for( i = 0; i < x.length; i++ ) {
+  for( i = 0; i < x.length; i += 1 ) {
     x[ i ].style.display = "none";
   }
   tablinks = document.getElementsByClassName( "tablink" );
-  for( i = 0; i < tablinks.length; i++ ) {
+  for( i = 0; i < tablinks.length; i += 1 ) {
     tablinks[ i ].classList.add( "w3-white" );
     tablinks[ i ].classList.remove( "w3-black" );
     tablinks[ i ].style.border="";
@@ -59,92 +164,6 @@ function openView( evt, viewName ) {
   if( window.innerWidth < 601 ) {
     toggleMenu();
   }
-}
-
-function toggleMenu() {
-  var x, items = $( "#VMenu a " ),
-  m = document.getElementById( "menuToggle" ),
-  state = m[ "data-state" ];
-  for( x = 0; x < items.length; x++ ) {
-    if( items[ x ] !== m )
-      if( ! state ) {
-        items[ x ].classList.add( "w3-hide" );
-      }
-      else {
-        items[ x ].classList.remove( "w3-hide" );
-      }
-  }
-
-  if( state ) {
-    m.innerHTML = "&times;";
-    document.getElementById( "VMenu" ).classList.add( "w3-white" );
-  }
-  else {
-    m.innerHTML = "&#9776;";
-    document.getElementById( "VMenu" ).classList.remove( "w3-white" );
-  }
-
-  m[ "data-state" ] = ( !state );
-}
-
-function toggleLaunchOptions() {
-  var lo = document.getElementById( "launchOptionsContainer" ),
-      settings = config.get( "settings" );
-  if( lo.style.display === "block" )
-    lo.style.display = "none";
-  else {
-    lo.style.display = "block";
-    document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
-    document.getElementById( "lo_bpm" ).checked = settings.launchOptions.bpm;
-    document.getElementById( "lo_nothing" ).checked = settings.launchOptions.nothing;
-    document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
-  }
-
-  var el = document.getElementById( "theBody" );
-  if( isWhiteish( el.style.color )) {
-    lo.style.color = "#555555";
-  }
-  else {
-    lo.style.color = "";
-  }
-}
-
-function toggleContributors() {
-  var mm = document.getElementById( "contributorContainer" );
-  if( mm.style.display === "block" )
-    mm.style.display = "none";
-  else
-    mm.style.display = "block";
-
-  var el = document.getElementById( "theBody" );
-  if( isWhiteish( el.style.color )) {
-    mm.style.color = "#555555";
-  }
-  else {
-    mm.style.color = "";
-  }
-}
-
-function isWhiteish( col ) {
-  col = rgbExtract( col );
-  if( col === null ) return false;
-  if( col[ 'r' ] > 140 && col[ 'g' ] > 140 && col[ 'b' ] > 140 )
-  return true;
-}
-
-/*
- * Code from:
- * http://stackoverflow.com/a/34458994/7665043
- */
-
-function rgbExtract(s) {
-  var match = /^\s*rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\)\s*$/.exec(s);
-  if (match === null) {
-    return null;
-  }
-  return { r: parseInt(match[1], 10),
-           g: parseInt(match[2], 10),
-           b: parseInt(match[3], 10) };
 }
 
 function handleResize() {
@@ -172,21 +191,22 @@ function handleResize() {
 
 function chooseInstall() {
   var folder = ipc.sendSync( "getDirectory" );
-  var sp = folder.toLowerCase().split( path.sep );
-  if( folder === "undefined" ) return logger.info( "No directory was selected." );
+  if( folder === "undefined" ) {
+    return logger.info( "No directory was selected." );
+  }
 
   if( process.platform !== "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "config", "loginusers.vdf" ))) {
     alert( "The selected Steam installation is invalid." );
-    logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
+    return logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
   }
   else if ( process.platform === "linux" && ! ipc.sendSync( "fileExists", path.join( folder, "steam", "config", "loginusers.vdf" ))) {
     alert( "The selected Steam installation is invalid." );
-    logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
+    return logger.info( "The selected Steam installation is invalid (no /config/loginusers.vdf)." );
   }
   else {
-    document.getElementById( "installLocation" ).innerHTML = folder;
-    loadSteamApps( folder );
     steamPath = folder;
+    document.getElementById( "installLocation" ).innerHTML = steamPath;
+    loadSteamApps( folder );
     loadSteamSkins();
   }
 }
@@ -224,19 +244,20 @@ function loadSteamApps( loc ) {
       apps = [];
       libs.push( path.join( loc, "steamapps" ));
       l = Object.keys( file );
-      for( var x = 0; x < l.length; x++ ) {
+      for( x = 0; x < l.length; x += 1 ) {
         if( l[ x ] !== "TimeNextStatsReport" && l[ x ] !== "ContentStatsID" ) {
-          if( ipc.sendSync( "fileExists", file[ l[ x ]]))
+          if( ipc.sendSync( "fileExists", file[ l[ x ]])) {
             libs.push( file[ l[ x ]]);
+          }
           else {
             return alert( "Steam Library Folder \"" + file[ l[ x ]] + "\" does not exist." );
           }
         }
       }
 
-      for( x = 0; x < libs.length; x++ ) {
+      for( x = 0; x < libs.length; x += 1 ) {
         l = ipc.sendSync( "getFileList", libs[ x ]);
-        for( y = 0; y < l.length; y++ ) {
+        for( y = 0; y < l.length; y += 1 ) {
           if( path.parse( l[ y ]).ext === ".acf" ) {
             loading = vdf.parse( ipc.sendSync( "readFile", path.join( libs[ x ], l [ y ]))).AppState;
             if( Object.keys( blacklist ).includes( loading.appid ) === false ) {
@@ -264,14 +285,16 @@ function sortAppList() {
 
   // Case-insensitive, descending order, A-Z.
   apps.sort( function compare( a, b ) {
-    if( a.name.toUpperCase() < b.name.toUpperCase())
+    if( a.name.toUpperCase() < b.name.toUpperCase()) {
       return -1;
-    else if( a.name.toUpperCase() > b.name.toUpperCase())
+    }
+    else if( a.name.toUpperCase() > b.name.toUpperCase()) {
       return 1;
+    }
     return 0;
   });
 
-  for( var x = 0; x < apps.length; x++ ) {
+  for( var x = 0; x < apps.length; x += 1 ) {
     opt = document.createElement( "option" );
     opt.appendChild( document.createTextNode( apps[ x ].name ));
     opt.value = apps[ x ].appid + "|" + apps[ x ].name + "|" + apps[ x ].state + "|" + apps[ x ].aub + "|" + apps[ x ].path;
@@ -281,15 +304,18 @@ function sortAppList() {
 
 function changeSelection( list ) {
   var selected = [], i, val, total = 0, ready = 0, needUpdate = 0, useless = 0, totalEl, readyEl, updateEl, uselessEl;
-  for( i = 0; i < list.length; i++ ) {
+  for( i = 0; i < list.length; i += 1 ) {
     if( list[ i ].selected ) {
       val = list[ i ].value.split( "|" )[ 2 ];
-      if( val === "6" )
+      if( val === "6" ) {
         needUpdate += 1;
-      else if( val === "4" )
+      }
+      else if( val === "4" ) {
         ready += 1;
-      else
+      }
+      else {
         useless += 1;
+      }
       total += 1;
       document.getElementById( "autoUpdateBehaviorList" ).selectedIndex = list[ i ].value.split( "|" )[ 3 ];
     }
@@ -312,9 +338,18 @@ function loadSettings() {
       autoLoad: false,
       autoLoadValue: "...",
       launchOptions: {
+        dev: false,
         console: false,
+        tcp: false,
+        silent: false,
+        no_bpm: false,
+        no_console: false,
         bpm: false,
-        nothing: true,
+        windowed: false,
+        bpm480p: false,
+        bpm720p: false,
+        fulldesktopres: false,
+        bpm_default: true,
         exit_rv: false
       }
     };
@@ -323,18 +358,28 @@ function loadSettings() {
   else {
     logger.info( "Loading settings from config." );
     settings = config.get( "settings" );
-    if( ! ( settings.hasOwnProperty( "launchOptions"))) {
+    if( settings.launchOptions === undefined || settings.launchOptions.no_console === undefined ) {
       settings.launchOptions = {
+        dev: false,
         console: false,
+        tcp: false,
+        silent: false,
+        no_bpm: false,
+        no_console: false,
         bpm: false,
-        nothing: true,
+        windowed: false,
+        bpm480p: false,
+        bpm720p: false,
+        fulldesktopres: false,
+        bpm_default: true,
         exit_rv: false
       };
-      logger.info( "Upgraded settings to v1.2.2 (add launchOptions + lo_nothing)." );
+      logger.info( "Upgraded settings to v2.0.0 (more launchOptions + cow bell)." );
     }
     value = parseInt( settings.bg );
-    if( process.platform === "win32" && value === 2 )
+    if( process.platform === "win32" && value === 2 ) {
       settings.bgValue = JSON.parse( settings.bgValue );
+    }
     if( value === 1 ) {
       document.getElementById( "bgSettingsSolid" ).value = settings.bgValue;
     }
@@ -391,14 +436,16 @@ function loadBlacklist() {
   blacklistKeys = Object.keys( blacklist );
 
   blacklistKeys.sort( function compare( a, b ) {
-    if( blacklist[ a ].toUpperCase() < blacklist[ b ].toUpperCase())
+    if( blacklist[ a ].toUpperCase() < blacklist[ b ].toUpperCase()) {
       return -1;
-    else if( blacklist[ a ].toUpperCase() > blacklist[ b ].toUpperCase())
+    }
+    else if( blacklist[ a ].toUpperCase() > blacklist[ b ].toUpperCase()) {
       return 1;
+    }
     return 0;
   });
 
-  for( i = 0; i < blacklistKeys.length; i++ ) {
+  for( i = 0; i < blacklistKeys.length; i += 1 ) {
     opt = document.createElement( "option" );
     opt.appendChild( document.createTextNode( blacklist[ blacklistKeys[ i ]] ));
     opt.value = blacklistKeys[ i ];
@@ -409,7 +456,7 @@ function loadBlacklist() {
 function addToBlacklist( list ) {
   if( steamPath !== undefined ) {
     var selected = [], i, val, sel, keys, opt, ignoring = [];
-    for( i = 0; i < list.length; i++ ) {
+    for( i = 0; i < list.length; i += 1 ) {
       val = list[ i ].value.split( "|" );
       if( list[ i ].selected ) {
         if( val[ 0 ] in blacklist ) {
@@ -429,7 +476,7 @@ function addToBlacklist( list ) {
 
     keys = Object.keys( selected );
 
-    for( i = 0; i < keys.length; i++ ) {
+    for( i = 0; i < keys.length; i += 1 ) {
       blacklist[ keys[ i ]] = selected[ keys[ i ]];
     }
 
@@ -446,7 +493,7 @@ function removeFromBlacklist() {
   if( steamPath !== undefined ) {
     var selected = [], i, val, sel;
     sel = document.getElementById( "blackList" );
-    for( i = 0; i < sel.length; i++ ) {
+    for( i = 0; i < sel.length; i += 1 ) {
       val = sel[ i ].value;
       if( sel[ i ].selected ) {
         if( val === "250820" ) { // Keep SteamVR on the blacklist.
@@ -493,7 +540,7 @@ function changeBGSelection( list ) {
         "Solid",
         "Image"
       ];
-  for( i = 0; i < bgs.length; i++ ) {
+  for( i = 0; i < bgs.length; i += 1 ) {
     if( bgs[ i ] !== val ) {
       document.getElementById( "bgSettings" + bgs[ i ] + "Container" ).classList.add( "w3-hide" );
     }
@@ -531,7 +578,7 @@ function addForcedDownload( app ) {
   if( steamPath === undefined ) {
     alert( "Set a valid Steam install path first!" );
   }
-  else if( isNaN( app )) {
+  else if( Number.isNaN( app )) {
     alert( "Enter a valid appid for an app to force download first." );
   }
   else {
@@ -541,7 +588,7 @@ function addForcedDownload( app ) {
     ow = temp[ 1 ];
     if( fing.AppState.installdir !== undefined ) {
       document.getElementById( "forceGameName" ).innerText = fing.AppState.installdir;
-      for( var i = 0; i < apps.length; i++ ) {
+      for( i = 0; i < apps.length; i += 1 ) {
         if( apps[ i ].name === fing.AppState.name ) {
           exists = true;
           apps[ i ] = {
@@ -578,15 +625,16 @@ function getAppInfo( appid ) {
   var name, overwrite, forcing;
 
   appid = parseInt( appid );
-  if( isNaN( appid )) {
+  if( Number.isNaN( appid )) {
     alert( "Enter a valid appid first." );
   }
   else {
-    name = scrapeAppName( appid )
+    name = scrapeAppName( appid );
 
     if( ipc.sendSync( "fileExists", path.join( steamPath, "steamapps", "appmanifest_" + appid + ".acf" )) === true ) {
-      if( confirm( "The appmanifest for that game already exists! Would you like to overwrite it?" ))
+      if( confirm( "The appmanifest for that game already exists! Would you like to overwrite it?" )) {
         overwrite = true;
+      }
     }
 
     if( overwrite !== false ) {
@@ -632,6 +680,9 @@ function scrapeAppName( appid ) {
     success: function( info ) {
       var n = JSON.parse( info )[ appid ].data.name;
       name = n;
+    },
+    fail: function( err ) {
+      throw new Error( "Error with $.ajax: ", err );
     }
   });
   return name;
@@ -640,22 +691,47 @@ function scrapeAppName( appid ) {
 function resetLaunchOpts() {
   if( settings === undefined ) {
     console.log( "Settings is undefined @ resetLaunchOpts..." );
-    settings = {};
+    settings = {
+      bg: "0",
+      bgValue: "...",
+      text: "0",
+      autoLoad: false,
+      autoLoadValue: "...",
+      launchOptions: undefined
+    };
   }
-  if( settings[ "launchOptions" ] === undefined )
-    settings[ "launchOptions" ] = {
+
+  if( settings.launchOptions === undefined ) {
+    settings.launchOptions = {
+      dev: false,
       console: false,
+      tcp: false,
+      silent: false,
+      no_bpm: false,
+      no_console: false,
       bpm: false,
-      nothing: true,
+      windowed: false,
+      bpm480p: false,
+      bpm720p: false,
+      fulldesktopres: false,
+      bpm_default: true,
       exit_rv: false
     };
+  }
 
-  var lb = document.getElementById( "lo_bpm" );
-
-  document.getElementById( "lo_console" ).checked = false;
-  document.getElementById( "lo_bpm" ).checked = false;
-  document.getElementById( "lo_nothing" ).checked = true;
-  document.getElementById( "lo_exit" ).checked = false;
+  document.getElementById( "lo_dev" ).checked = settings.launchOptions.dev;
+  document.getElementById( "lo_console" ).checked = settings.launchOptions.console;
+  document.getElementById( "lo_tcp" ).checked = settings.launchOptions.tcp;
+  document.getElementById( "lo_silent" ).checked = settings.launchOptions.silent;
+  document.getElementById( "lo_no_bpm" ).checked = settings.launchOptions.no_bpm;
+  document.getElementById( "lo_no_console" ).checked = settings.launchOptions.no_console;
+  document.getElementById( "lo_bpm" ).checked = settings.launchOptions.bpm;
+  document.getElementById( "lo_windowed" ).checked = settings.launchOptions.windowed;
+  document.getElementById( "lo_480p" ).checked = settings.launchOptions.bpm480p;
+  document.getElementById( "lo_720p" ).checked = settings.launchOptions.bpm720p;
+  document.getElementById( "lo_fulldesktopres" ).checked = settings.launchOptions.fulldesktopres;
+  document.getElementById( "lo_bpm_default" ).checked = settings.launchOptions.bpm_default;
+  document.getElementById( "lo_exit" ).checked = settings.launchOptions.exit_rv;
 }
 
 function saveLaunchOpts() {
@@ -668,63 +744,146 @@ function saveLaunchOpts() {
       text: "0",
       autoLoad: false,
       autoLoadValue: "...",
-      launchOptions: {
-        console: false,
-        bpm: false,
-        nothing: true,
-        exit_rv: false
-      }
+      launchOptions: undefined
     };
   }
 
-  if( settings.hasOwnProperty( "launchOptions" ) === false ) {
-    settings[ "launchOptions" ] = {};
+  if( settings.launchOptions === undefined || settings.launchOptions.no_console === undefined ) {
+    settings.launchOptions = {
+      dev: false,
+      console: false,
+      tcp: false,
+      silent: false,
+      no_bpm: false,
+      no_console: false,
+      bpm: false,
+      windowed: false,
+      bpm480p: false,
+      bpm720p: false,
+      fulldesktopres: false,
+      bpm_default: true,
+      exit_rv: false
+    };
   }
 
+  settings.launchOptions.dev = document.getElementById( "lo_dev" ).checked;
   settings.launchOptions.console = document.getElementById( "lo_console" ).checked;
+  settings.launchOptions.tcp = document.getElementById( "lo_tcp" ).checked;
+  settings.launchOptions.silent = document.getElementById( "lo_silent" ).checked;
+  settings.launchOptions.no_bpm = document.getElementById( "lo_no_bpm" ).checked;
+  settings.launchOptions.no_console = document.getElementById( "lo_no_console" ).checked;
   settings.launchOptions.bpm = document.getElementById( "lo_bpm" ).checked;
-  settings.launchOptions.nothing = document.getElementById( "lo_nothing" ).checked;
+  settings.launchOptions.windowed = document.getElementById( "lo_windowed" ).checked;
+  settings.launchOptions.bpm480p = document.getElementById( "lo_480p" ).checked;
+  settings.launchOptions.bpm720p = document.getElementById( "lo_720p" ).checked;
+  settings.launchOptions.fulldesktopres = document.getElementById( "lo_fulldesktopres" ).checked;
+  settings.launchOptions.bpm_default = document.getElementById( "lo_bpm_default" ).checked;
   settings.launchOptions.exit_rv = document.getElementById( "lo_exit" ).checked;
 
-  config.set( "settings", settings)
-  console.log( "Launch options have been saved." );
-  console.log( "settings.launchOptions=" + settings.launchOptions.console + " & " + settings.launchOptions.bpm + " & " + settings.launchOptions.exit_rv );
+  config.set( "settings", settings );
+  console.info( "Launch options have been saved." );
   toggleLaunchOptions();
 }
 
 function launchSteamApp() {
-  var lb = document.getElementById( "lo_bpm" ),
-      opts = config.get( "settings" ).launchOptions,
-      arg = "",
-      skinSel = document.getElementById( "skinList" );
+  var opts = config.get( "settings" ).launchOptions,
+      args = [];
 
-  if( opts.console ) arg = "//open/console";
-  if( opts.bpm ) arg = "//open/bigpicture";
+  if( opts.tcp ) {
+    args.push( "-tcp" );
+  }
 
-  if( arg === "" )
-    arg = "//open/main";
+  if( opts.silent ) {
+    args.push( "-silent" );
+  }
 
-  var ll = document.getElementById( "launchLink" );
-      ll.href = "steam:" + arg;
-      ll.click();;
+  if( opts.no_console ) {
+    args.push( "-noconsole" );
+  }
+  else if( opts.dev ) {
+    args.push( "-dev" );
+  }
+  else if( opts.console ) {
+    args.push( "-console" );
+  }
 
-  if( document.getElementById( "lo_exit" ).checked ) {
+  if( opts.no_bpm ) {
+    args.push( "-nobigpicture" );
+  }
+  else if( opts.bpm ) {
+    args.push( "-bigpicture" );
+    if( opts.windowed ) {
+      args.push( "-windowed" );
+    }
+
+    if( opts.bpm480p ) {
+      args.push( "-480p" );
+    }
+    else if( opts.bpm720p ) {
+      args.push( "-720p" );
+    }
+    else if( opts.fulldesktopres ) {
+      args.push( "-fulldesktopres" );
+    }
+  }
+
+  console.info( args.join( " " ) + ( opts.exit_rv ? " & exitRV" : "" ));
+
+
+  try {
+    var exec = require('child_process').exec, stdout, stderr;
+    if( os.platform().indexOf( "darwin" ) !== -1 ) {
+      exec( "open -a Steam.app --args " + args.join( " " ), ( err, stdout, stderr ) => {
+        if( err ) {
+          console.error( `exec error: ${err}` );
+          return;
+        }
+      });
+      if( stdout !== undefined ) {
+        console.log( `stdOut: ${stdout}` );
+      }
+      if( stderr !== undefined ) {
+        console.log( `stdErr: ${stderr}` );
+      }
+    }
+    else if( os.platform().indexOf( "win32" ) !== -1 ) {
+      exec( path.join( steamPath, "Steam.exe" ) + ( args.length > 0 ? " " + args.join( " " ) : "" ), ( err, stdout, stderr ) => {
+        if( err ) {
+          console.error( `exec error: ${err}` );
+          return;
+        }
+      });
+      if( stdout !== undefined ) {
+        console.log( `stdOut: ${stdout}` );
+      }
+      if( stderr !== undefined ) {
+        console.log( `stdErr: ${stderr}` );
+      }
+    }
+    else if( os.platform().indexOf( "linux" ) !== -1 ) {
+      exec( "steam " + ( args.length > 0 ? " " + args.join( " " ) : "" ), ( err, stdout, stderr ) => {
+        if( err ) {
+          console.error( `exec error: ${err}` );
+          return;
+        }
+      });
+      if( stdout !== undefined ) {
+        console.log( `stdOut: ${stdout}` );
+      }
+      if( stderr !== undefined ) {
+        console.log( `stdErr: ${stderr}` );
+      }
+    }
+  }
+  catch( err ) {
+    alert( err );
+    console.error( err );
+  }
+
+  if( opts.exit_rv ) {
     app.quit();
   }
 }
-/*  Replacement, if needed...
-    var exec = require('child_process').exec, stdout, stderr;
-    exec( "open -a Steam.app --args " + args.join( " " ), ( err, stdout, stderr ) => {
-      if( err ) {
-        console.error( `exec error: ${err}` );
-        return;
-      }
-    });
-    if( stdout !== undefined )
-      console.log( `stdOut: ${stdout}` );
-    if( stderr !== undefined )
-    console.log( `stdErr: ${stderr}` );
-*/
 
 function loadSteamSkins() {
   var skins, skinPath, sel, opt;
@@ -732,17 +891,20 @@ function loadSteamSkins() {
   if( platform === "darwin" ) {
     skinPath = path.join( steamPath, "Steam.AppBundle/Steam/Contents/MacOS/skins" );
   }
-  else
+  else {
     skinPath = path.join( steamPath, "skins" );
+  }
 
-  if( ipc.sendSync( "fileExists", skinPath ) === false )
+  if( ipc.sendSync( "fileExists", skinPath ) === false ) {
     alert( "Couldn't find the skins folder of your Steam installation." );
+  }
   else {
     skins = ipc.sendSync( "getFileList", skinPath );
     var tmpSkins = [];
     skins.forEach( function( item ) {
-      if( item.indexOf( "." ) === -1 )
+      if( item.indexOf( "." ) === -1 ) {
         tmpSkins.push( item );
+      }
     });
     skins = Array.from( tmpSkins );
     sel = document.getElementById( "skinList" );
@@ -820,25 +982,28 @@ function applySteamAppSettings() {
   if( steamPath !== undefined ) {
     var list = document.getElementById( "gameList" ),
         selected = [], i;
-    settings[ "aub" ] = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
-    settings[ "fix" ] = document.getElementById( "cbOfflineFix" ).checked;
-    for( i = 0; i < list.length; i++ ) {
+    settings.aub = document.getElementById( "autoUpdateBehaviorList" ).selectedIndex;
+    settings.fix = document.getElementById( "cbOfflineFix" ).checked;
+    for( i = 0; i < list.length; i += 1 ) {
       if( list[ i ].selected ) {
         selected.push( i );
       }
     }
 
-    for( i = 0; i < selected.length; i++ ) {
-      var file = list[ selected[ i ]].value.split( "|" )[ 4 ];
+    var file, data;
+    for( i = 0; i < selected.length; i += 1 ) {
+      file = list[ selected[ i ]].value.split( "|" )[ 4 ];
       if( ipc.sendSync( "fileExists", file ) === false ) {
         alert( "The file related to the app " + list[ selected[ i ]].value.split( "|" )[ 1 ] + " was not found." );
       }
       else {
-        var data = vdf.parse( ipc.sendSync( "readFile", file ));
-        if( settings.fix && data.AppState.StateFlags === "6" )
+        data = vdf.parse( ipc.sendSync( "readFile", file ));
+        if( settings.fix && data.AppState.StateFlags === "6" ) {
           data.AppState.StateFlags = "4";
-        if( data.AppState.AutoUpdateBehavior !== settings.aub )
+        }
+        if( data.AppState.AutoUpdateBehavior !== settings.aub ) {
           data.AppState.AutoUpdateBehavior = settings.aub;
+        }
         ipc.sendSync( "writeFile", file, vdf.stringify( data, true ));
         list[ selected[ i ]].value = data.AppState.appid + "|" + data.AppState.name + "|" + data.AppState.StateFlags + "|" + data.AppState.AutoUpdateBehavior + "|" + file;
       }
@@ -864,7 +1029,7 @@ function applyRVSettings( list, doSave ) {
   if( bg === "Solid" ) {
     el = document.getElementById( "bgSettingsSolid" );
     value = el.value;
-    document.getElementById( "theBody" ).style = "background: " + value;
+    document.body.style = "background: " + value;
     settings.bgValue = value;
     el = document.getElementById( "bgImage" );
     el.style.backgroundImage = "";
@@ -872,7 +1037,9 @@ function applyRVSettings( list, doSave ) {
   else if( bg === "Image" ) {
     el = document.getElementById( "bgImage" );
     value = el[ "data-location" ];
-    if( value === undefined ) value = "...";
+    if( value === undefined ) {
+      value = "...";
+    }
     if( value !== "..." ) {
       if( process.platform === "win32" ) {
         value = JSON.stringify( value.substring( value.indexOf( "file:///" )));
@@ -883,7 +1050,7 @@ function applyRVSettings( list, doSave ) {
   }
   else if( bg === "Default" ) {
     settings.bgValue = "";
-    document.getElementById( "theBody" ).style[ "background" ] = "";
+    document.body.style.background = "";
     document.getElementById( "bgImage" ).style.backgroundImage = "";
   }
 
@@ -892,14 +1059,15 @@ function applyRVSettings( list, doSave ) {
 
   settings.text = value;
 
-  el = document.getElementById( "theBody" );
+  el = document.body;
   el.style.color = value;
 
   el = document.getElementById( "aboutView" );
   el.style.color = value;
 
-  if( doSave )
+  if( doSave ) {
     config.set( "settings", settings );
+  }
 }
 
 function applyUserSettings( auto, loc ) {
@@ -926,8 +1094,8 @@ function modalTabbing( event, modal ) {
   }
 
   /*redirect last tab to first input*/
-  lastInput.addEventListener('keydown', function (e) {
-     if ((e.which === 9 && !e.shiftKey)) {
+  lastInput.addEventListener('keydown', function ( e ) {
+     if( e.which === 9 && ! e.shiftKey ) {
          e.preventDefault();
          firstInput.focus();
      }
@@ -935,7 +1103,7 @@ function modalTabbing( event, modal ) {
 
   /*redirect first shift+tab to last input*/
   firstInput.addEventListener('keydown', function (e) {
-      if ((e.which === 9 && e.shiftKey)) {
+      if( e.which === 9 && e.shiftKey ) {
           e.preventDefault();
           lastInput.focus();
       }
@@ -950,10 +1118,12 @@ function openAboutTab( event, which ) {
 
   isActive = ( what.classList.contains( "w3-hide" ) && ! what.classList.contains( "active" ));
   tabs.forEach( function( t ) {
-    if( t.classList.contains( "w3-hide" ) === false )
+    if( t.classList.contains( "w3-hide" ) === false ) {
       t.classList.add( "w3-hide" );
-    if( t.classList.contains( "active" ) === true )
+    }
+    if( t.classList.contains( "active" ) === true ) {
       t.classList.remove( "active" );
+    }
   });
 
   if( isActive ) {
@@ -972,11 +1142,11 @@ function changeHowTab( event ) {
       run = document.getElementById( "poweredBy" );
 
   if( el.classList.contains( "poweredBy" )) {
-    made.style.display = "block"
+    made.style.display = "block";
     run.style.display = "none";
   }
   else {
-    made.style.display = "none"
+    made.style.display = "none";
     run.style.display = "block";
     $( "#theHow" ).focus().blur();
   }
@@ -986,20 +1156,28 @@ function changeHowTab( event ) {
  * http://stackoverflow.com/questions/979256/sorting-an-array-of-javascript-objects
  */
 function sortBy( field, reverse, primer ) {
-  var key = primer ?
-      function( x ) { return primer( x[ field ])} :
-      function( x ) { return x[ field ]};
+  var key = primer
+      ?
+      function( x ) {
+        return primer( x[ field ]);
+      }
+      :
+      function( x ) {
+        return x[ field ];
+      };
    reverse = !reverse ? 1 : -1;
    return function( a, b ) {
-     return a = key( a ), b = key( b ), reverse * (( a > b ) - ( b > a ));
-   }
+     return [ a = key( a ), b = key( b ), reverse * (( a > b ) - ( b > a ))];
+   };
 }
 
+/*
 function osInit() {
   if( process.platform === "darwin" ) {
-//    document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
+     document.getElementById( "bgImage" ).style[ "-webkit-app-region" ] = "drag";
   }
 }
+*/
 
 function initBadges() {
   var builtWithBadges = [
@@ -1085,28 +1263,21 @@ function initBadges() {
   elPowered = document.getElementById( "poweredBy" ).getElementsByClassName( "badger-container" )[ 0 ],
   i;
 
-  for( i = 0; i < builtWithBadges.length; i++ ) {
+  for( i = 0; i < builtWithBadges.length; i += 1 ) {
     elBuilt.appendChild( craftBadge( builtWithBadges[ i ]));
   }
 
-  for( i = 0; i < poweredByBadges.length; i++ ) {
+  for( i = 0; i < poweredByBadges.length; i += 1 ) {
     elPowered.appendChild( craftBadge( poweredByBadges[ i ]));
   }
 }
-
-process.on('uncaughtException', (err) => {
-    logger.error('Whoops! There was an uncaught error', err);
-    // do a graceful shutdown,
-    // close the database connection etc.
-    process.exit( 1 );
-})
 
 function initFiltering() {
   /* Code based on
    *   http://www.lessanvaezi.com/filter-select-list-options/
    */
-   $.fn.filterByText = function(textbox, selectSingleMatch) {
-     return this.each(function() {
+   $.fn.filterByText = function( textbox, selectSingleMatch ) {
+     return this.each( function() {
        var select = this;
        var options = [];
        $(select).find('option').each(function() {
@@ -1114,7 +1285,7 @@ function initFiltering() {
        });
        $(select).data('options', options);
        $(textbox).bind('change keyup', function() {
-         var options = $(select).empty().scrollTop(0).data('options');
+         options = $(select).empty().scrollTop(0).data('options');
          var search = $.trim($(this).val());
          var regex = new RegExp(search,'gi');
 
@@ -1126,10 +1297,12 @@ function initFiltering() {
              );
            }
          });
-         if( textbox[ 0 ].id === "searchGames" )
+         if( textbox[ 0 ].id === "searchGames" ) {
            $( "#numberTotal" ).text( $(select).children().length );
-         else if( textbox[ 0 ].id === "searchBlacklist" )
+         }
+         else if( textbox[ 0 ].id === "searchBlacklist" ) {
            $( "#blacklistTotal" ).text( $( select ).children().length );
+         }
        });
      });
    };
