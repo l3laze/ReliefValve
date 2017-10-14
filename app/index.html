@@ -26,77 +26,88 @@
   </div>
 
   <div id="mainView" class="appView">
-    <div id="gameContainer" class="w3-half w3-container view-container">
-      <div class="w3-container centered">
-        <div class="centered">
+    <div id="gameContainer" class="w3-container view-container">
+      <div class="w3-container w3-half w3-left centered">
+        <div class="w3-whole centered">
           <a href="javascript:void(0);" id="reloadSteamApps" onclick="refreshSteamApps(this)" title="Reload Steam apps."><i class="fa fa-refresh"></i></a>
           <label class="w3-large w3-content centered bolded">Steam Apps</label>
           <span id="numberTotal" class="w3-large w3-content w3-padding" title="Total number of apps loaded.">0</span>
+          <a id="switchToBlacklist" href="javascript:void(0);" title="Switch to Blacklist" onclick="this.blur();switchList( event )">
+            <i class="fa fa-exchange"></i>
+          </a>
         </div>
         <input type="search" class="search-bar" id="searchGames" placeholder="Search" />
         <select id="gameList" multiple class="w3-white">
         </select>
+        <div id="gameStatusContainer" class="w3-container centered status-container">
+          <span id="numberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Number of apps selected.">0</span>
+          <span id="numberReady" class="w3-tag w3-small w3-green w3-padding" title="Number of apps that are useable.">0</span>
+          <span id="numberFixable" class="w3-tag w3-small w3-yellow w3-padding" title="Number of apps that can be fixed for offline use.">0</span>
+          <span id="numberUseless" class="w3-tag w3-small w3-red w3-padding" title="Number of apps considered useless.">0</span>
+        </div>
       </div>
-      <div id="gameStatusContainer" class="w3-container centered status-container">
-        <span id="numberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Number of apps selected.">0</span>
-        <span id="numberReady" class="w3-tag w3-small w3-green w3-padding" title="Number of apps that are useable.">0</span>
-        <span id="numberFixable" class="w3-tag w3-small w3-yellow w3-padding" title="Number of apps that can be fixed for offline use.">0</span>
-        <span id="numberUseless" class="w3-tag w3-small w3-red w3-padding" title="Number of apps considered useless.">0</span>
-      </div>
-      <div class="w3-container">
-        <hr class="splitter w3-hide-small" />
-      </div>
-      <div class="w3-container centered">
-        <label class="w3-large bolded">Steam App Controls</label>
-        <select id="autoUpdateBehaviorList" class="w3-white">
-          <option value="0">Always keep this game up to date.</option>
-          <option value="1">Only update this game when I launch it.</option>
-          <option value="2">High priority - auto-update this game before others.</option>
-        </select>
-      </div>
-      <div class="w3-row w3-container centered">
-        <label for="cbOfflineFix"><input type="checkbox" id="cbOfflineFix" class="w3-check" /> Offline fix</label>
-      </div>
-      <div class="w3-container centered">
-        <a href="javascript:void(0)" id="steamAppApply" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply</a>
-        <a href="javascript:void(0);" id="blacklistAdd" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Add to Blacklist</a>
+      <div class="w3-container w3-half w3-right centered">
+        <div class="w3-container centered">
+          <label class="w3-large bolded">Steam App Controls</label>
+          <br />
+          <label>Automatic updates</label>
+          <select id="autoUpdateBehaviorList" class="w3-white">
+            <option value="0">Always keep this game up to date.</option>
+            <option value="1">Only update this game when I launch it.</option>
+            <option value="2">High priority - auto-update this game before others.</option>
+          </select>
+          <br />
+          <label>Background downloads</label>
+          <select id="allowBackgroundDLs" class="w3-white">
+            <option>Follow my global setting...</option>
+            <option>Always allow background downloads</option>
+            <option>Never allow background downloads</option>
+          </select>
+          <br />
+          <label for="enableCloud">
+            <input type="checkbox" id="enableCloud" class="w3-check" />
+            Enable Steam Cloud...
+          </label>
+        </div>
+        <div class="w3-row w3-container centered">
+          <label for="cbOfflineFix"><input type="checkbox" id="cbOfflineFix" class="w3-check" /> Offline fix</label>
+        </div>
+        <div class="w3-container centered">
+          <a href="javascript:void(0)" id="steamAppApply" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply Settings</a>
+          <a href="javascript:void(0);" id="blacklistAdd" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Add to Blacklist</a>
+        </div>
       </div>
     </div>
-    <div id="blacklistContainer" class="w3-half w3-container centered view-container">
-      <div class="w3-container centered">
-        <div class="centered">
+    <div id="blacklistContainer" class="w3-container view-container">
+      <div class="w3-container w3-half w3-left centered">
+        <div class="w3-whole centered">
           <label class="w3-large w3-content centered bolded">Blacklist</label>
           <span id="blacklistTotal" class="w3-large w3-content w3-padding" title="Total number of apps on the blacklist.">0</span>
+          <a id="switchToGames" href="javascript:void(0);" title="Switch to Steam Apps" onclick="this.blur();switchList( event )">
+            <i class="fa fa-exchange"></i>
+          </a>
         </div>
-        <input type="search" class="search-bar" id="searchBlacklist" placeholder="Search"/>
+        <input type="search" class="search-bar" id="searchBlacklist" placeholder="Search" />
         <select id="blackList" multiple class="w3-white">
         </select>
+        <div id="blacklistStatusContainer" class="w3-container centered status-container">
+          <span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Number of blacklisted apps selected.">0</span>
+        </div>
       </div>
-      <div id="blacklistStatusContainer" class="w3-container centered status-container">
-        <span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Total number of blacklisted apps selected.">0</span>
-      </div>
-      <div id="blacklistControlsContainer" class="w3-container view-container">
-        <hr class="splitter w3-hide-small" />
-        <label class="w3-large bolded">Blacklist Controls</label>
-        <br />
-        <a href="javascript:void(0);" id="blacklistRemove" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Remove Selected</a>
-        <a href="javascript:void(0);" id="blacklistReset" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Reset Blacklist</a>
+      <div class="w3-container w3-half w3-right centered">
+        <div class="w3-container centered">
+          <label class="w3-large bolded">Blacklist Controls</label>
+        </div>
+        <div class="w3-container centered">
+          <a href="javascript:void(0);" id="blacklistRemove" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Remove Selected</a>
+          <a href="javascript:void(0);" id="blacklistReset" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Reset Blacklist</a>
+        </div>
       </div>
     </div>
   </div>
 
   <div id="settingsView" class="appView">
     <div class="w3-half centered">
-      <label class="w3-large bolded">Steam Location</label><br />
-      <label id="installLocation">...</label>
-      <br />
-      <a href="javascript:void(0)" id="chooseSteam" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Choose</a>
-      <br />
-      <div id="autoLoadContainer">
-        <label for="autoLoad"><input type="checkbox" id="autoLoad" class="w3-check" data-location="" /> Auto-load User</label>
-        <br />
-        <button id="applyUserSettings" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply</button>
-      </div>
       <div id="settingsControlsContainer" class="w3-container view-container">
         <div id="bgSettingsContainer" class="w3-container">
           <hr class="splitter" />
@@ -144,6 +155,20 @@
       -->
       <div class="w3-container centered">
         <label class="w3-large w3-content centered bolded">Client Options</label>
+        <br />
+        <label>Steam Location: </label>
+        <br />
+        <span id="installLocation">...</span>
+        <br />
+        <br />
+        <a href="javascript:void(0)" id="chooseSteam" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Choose</a>
+        <br />
+        <label>User: <span id="currentUser">...</span></label>
+        <br />
+        <select id="userList" class="w3-white" style="width:10em" onchange="$('#currentUser').html(this.options[this.selectedIndex].text)">
+          <option>l3l_aze</option>
+          <option>tmshvr</option>
+        </select>
         <br />
         <button id="showClientSettings" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Client Settings</button>
         <br />
@@ -196,14 +221,6 @@
         </div>
         <hr class="splitter" />
         <div class="w3-container centered">
-          <label class="w3-large w3-content centered bolded">Steam Skin</label>
-          <br />
-          <select id="skinList" class="w3-white">
-            <option>&lt;Default&gt;</option>
-            <option>&lt;Random&gt;</option>
-          </select>
-          <br />
-          <button id="applySkinSetting" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round w3-margin">Apply</button>
         </div>
       </div>
       <br />
@@ -297,12 +314,6 @@
   </div>
 
   <div id="bgImage" data-location=""></div>
-
-  <div id="scrapingDiv" style="display:none"></div>
-
-  <a id="launchLink" href="javascript:void(0);" style="display:none" tabindex="-1">Super-secret hidden link</a>
-
-  <div id="bg_overlay"></div>
 
   <div id="contributorContainer" class="w3-modal centered">
     <div class="w3-modal-content">
@@ -725,8 +736,14 @@
       </div>
 
       <div id="interfaceSettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <label title="Interface -> Favorite window">Skin: </label>
+        <select id="isSkinList" class="w3-white" style="width:10em">
+          <option>&lt;Default&gt;</option>
+          <option>&lt;Random&gt;</option>
+        </select>
+        <br />
         <label title="Interface -> Select the language you wish Steam to use..">Language: </label>
-        <select id="isLanguage" style="width:7.1em;margin-top:4px" title="Interface -> Select the language you wish Steam to use..">
+        <select id="isLanguage" style="width:7.1em;margin-top:4px" class="w3-white" title="Interface -> Select the language you wish Steam to use..">
           <option value="bulgarian">Bulgarian</option>
           <option value="czech">Czech</option>
           <option value="danish">Danish</option>
@@ -930,15 +947,6 @@
 
     document.getElementById( "launchBtn" ).addEventListener( "click", launchSteamApp );
 
-    document.getElementById( "applySkinSetting" ).addEventListener( "click", function() {
-      var sl = document.getElementById( "skinList" );
-      applySkinSetting( sl.options[ sl.selectedIndex ].text, sl.options );
-    });
-
-    document.getElementById( "applyUserSettings" ).addEventListener( "click", function() {
-      applyUserSettings( document.getElementById( "autoLoad" ).checked, document.getElementById( "installLocation" ).innerHTML );
-    });
-
     $( "#theWhat" ).on( "click", function( event ) {
       openAboutTab( event,  "theWhat" );
     });
@@ -986,6 +994,19 @@
     $( "#osScreenshotKeys" ).keydown( function( event ) {
       handleKeyPress( event );
     });
+
+    function switchList( event ) {
+      if( event.currentTarget.id === "switchToBlacklist" ) {
+        $( "#gameContainer" ).css( "display", "none" );
+        $( "#blacklistContainer" ).css( "display", "block" );
+        $( "#exitRV" ).focus().blur();
+      }
+      else {
+        $( "#gameContainer" ).css( "display", "block" );
+        $( "#blacklistContainer" ).css( "display", "none" );
+        $( "#reloadSteamApps" ).focus().blur();
+      }
+    }
 
     function handleKeyPress( event ) {
       var sk = ( event.shiftKey ? "Shift" : "" );

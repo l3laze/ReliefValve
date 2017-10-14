@@ -169,7 +169,7 @@ function openView( evt, viewName ) {
 function handleResize() {
   var gList = document.getElementById( "gameList" ),
       bList = document.getElementById( "blackList" ),
-      defSize = 15;
+      defSize = 24;
 
   if( defaultSizeG === undefined ) {
     defaultSizeG = defSize;
@@ -181,7 +181,7 @@ function handleResize() {
 
   if( window.innerWidth < 601 ) {
     gList.size = 4;
-    bList.size = 3;
+    bList.size = 4;
   }
   else if( window.innerWidth > 600 ) {
     gList.size = defaultSizeG;
@@ -206,6 +206,7 @@ function chooseInstall() {
   else {
     steamPath = folder;
     document.getElementById( "installLocation" ).innerHTML = steamPath;
+    document.getElementById( "locContainer" ).title = steamPath;
     loadSteamApps( folder );
     loadSteamSkins();
   }
@@ -397,9 +398,10 @@ function loadSettings() {
     }
     document.getElementById( "bgSettingsList" ).selectedIndex = value;
     document.getElementById( "textSettingsColor" ).value = settings.text;
-    el = document.getElementById( "autoLoad" );
+/*    el = document.getElementById( "autoLoad" );
     el.checked = settings.autoLoad;
     el[ "data-location" ] = settings.autoLoadValue;
+*/
     if( settings.autoLoadValue !== "..." && settings.autoLoad ) {
       loadBlacklist();
       loadSteamApps( settings.autoLoadValue );
@@ -907,7 +909,7 @@ function loadSteamSkins() {
       }
     });
     skins = Array.from( tmpSkins );
-    sel = document.getElementById( "skinList" );
+    sel = document.getElementById( "isSkinList" );
     skins.forEach( function( item ) {
       opt = document.createElement( "option" );
       opt.appendChild( document.createTextNode( item ));
