@@ -1,0 +1,10 @@
+help = [
+  {
+    title: "Section Title 1",
+    text: "Help Text 1." ,
+  },
+  {
+    title: "Section Title 2",
+    text: "Help text 2."
+  }
+];

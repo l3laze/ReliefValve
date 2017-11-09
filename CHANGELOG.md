@@ -1,9 +1,5 @@
-# 2.0.0
-  - CHANGE: Removed "Force Download" because AFAIK it's not functioning as expected.
-  - CHANGE: Added support to modify Steam client settings.
-  - CHANGE: Added more launch options :D
-  - CHANGE: Removed use of "Steam Browser Protocol", now open Steam through the app directly; allows use of more command line options.
-  - FIX: 
+# 2.0.0-alpha
+  - Nearly-complete rebuild.
 
 # 1.2.2
   - FIX: Updated code to handle new Linux Steam folder configuration (almost no difference..they moved some stuff into .steam/steam...lol).

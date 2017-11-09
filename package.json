@@ -1,6 +1,6 @@
 {
   "name": "ReliefValve",
-  "version": "v1.2.2",
+  "version": "v2.0.0-alpha",
   "author": "l3l_aze <l3l_aze@yahoo.com>",
   "license": "MIT",
   "copyright": "Copyright © 2017 ${author}",
@@ -60,13 +60,12 @@
     "dist-32": "build --ia32",
     "dist-64": "build --x64",
     "dist-32_64": "build --ia32 --x64",
-    "purify-w3": "purifycss app/node_modules/w3-css/w3.css app/index.html -i -m true -o app/node_modules/w3-css/pure-w3.css",
-    "purify-fa": "purifycss app/node_modules/font-awesome/css/font-awesome.min.css app/index.html -i -w .fa-file:before -m true -o app/node_modules/font-awesome/css/pure-font-awesome.min.css",
-    "purify-rv": "purifycss app/reliefValve.css app/index.html -i -r -m true -o app/pure-relievValve.css",
-    "purify": "yarn purify-w3 && yarn purify-fa && yarn purify-rv"
+    "purify-w3": "purifycss ./node_modules/w3-css/w3.css ./index.html -i -m true -o ./node_modules/w3-css/pure-w3.css",
+    "purify-fa": "purifycss ./node_modules/font-awesome/css/font-awesome.min.css ./index.html -i -w .fa-file:before -m true -o ./node_modules/font-awesome/css/pure-font-awesome.min.css",
+    "purify": "yarn purify-w3 && yarn purify-fa"
   },
   "devDependencies": {
-    "electron": "^1.7.8",
+    "electron": "^1.7.9",
     "electron-builder": "19.32.2",
     "purify-css": "^1.2.5"
   }

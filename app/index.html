@@ -1,374 +1,359 @@
 <!DOCTYPE html>
-<html lang="en" id="theHTML">
+<html lang="en">
 <head>
-  <meta name="charset" content="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="Tom Shaver">
-  <title>ReliefValve</title>
-  <link rel="shortcut icon" type="image/x-icon" href="resources/favicon.ico" />
-  <link rel="stylesheet" href="node_modules/w3-css/pure-w3.css" />
-  <link rel="stylesheet" href="node_modules/badger.js/badger.css" />
-  <link rel="stylesheet" href="node_modules/font-awesome/css/pure-font-awesome.min.css" />
-  <link rel="stylesheet" href="reliefValve.css" />
+  <link rel="stylesheet" href="node_modules/w3-css/w3.css" />
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="client.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <title>SteamConfig - Testing</title>
 </head>
-<body>
+<body class="bgImage">
 
-  <div id="VMenu" class="w3-bar w3-show w3-white w3-right w3-margin-bottom w3-top">
-    <a href="javascript:void(0);" id="menuToggle" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="toggleMenu()" data-state="true">&times;</a>
-    <a href="javascript:void(0);" id="VMain" class="tablink w3-black w3-hover-gray w3-bar-item" onclick="openView( event, 'mainView' )">Main</a>
-    <a href="javascript:void(0);" id="VSettings" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'settingsView' )">Settings</a>
-    <a href="javascript:void(0);" id="VClient" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'clientView' )">Client</a>
-    <a href="javascript:void(0);" id="VHelp" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'helpView' )">Help</a>
-    <a href="javascript:void(0);" id="VAbout" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="openView( event, 'aboutView' )">About</a>
-    <a href="javascript:void(0);" id="VExit" class="tablink w3-white w3-hover-gray w3-bar-item" onclick="app.quit()">Exit</a>
-  </div>
+  <header id="menu" class="w3-top w3-center">
+    <ul class="menu-items" style="display:inline-block">
+      <li>
+        <button id="menuData" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Data</button>
+      </li>
+      <li>
+        <button id="menuClient" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Client</button>
+      </li>
+      <li>
+        <button id="menuSettings" class="w3-button w3-ripple w3-gray w3-hover-gray focus-outline borderless-sides theme-primary">Settings</button>
+      </li>
+      <li>
+        <button id="menuHelp" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Help</button>
+      </li>
+      <li>
+        <button id="menuAbout" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">About</button>
+      </li>
+      <li>
+        <button id="menuExit" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Exit</button>
+      </li>
+    </ul>
+  </header>
 
-  <div id="mainView" class="appView">
-    <div id="gameContainer" class="w3-container view-container">
-      <div class="w3-container w3-half w3-left centered">
-        <div class="w3-whole centered">
-          <a href="javascript:void(0);" id="reloadSteamApps" onclick="refreshSteamApps(this)" title="Reload Steam apps."><i class="fa fa-refresh"></i></a>
-          <label class="w3-large w3-content centered bolded">Steam Apps</label>
-          <span id="numberTotal" class="w3-large w3-content w3-padding" title="Total number of apps loaded.">0</span>
-          <a id="switchToBlacklist" href="javascript:void(0);" title="Switch to Blacklist" onclick="this.blur();switchList( event )">
-            <i class="fa fa-exchange"></i>
-          </a>
-        </div>
-        <input type="search" class="search-bar" id="searchGames" placeholder="Search" />
-        <select id="gameList" multiple class="w3-white">
+  <br />
+  <br />
+
+  <div id="containerData" class="w3-container w3-center aTab" style="display: none">
+    <ul id="otherMenu" class="w3-displaytop menu-items" style="display:inline-block;margin-top:-0.3em">
+      <li>
+        <button id="submenuUsers" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Users</button>
+      </li>
+      <li>
+        <button id="submenuLibraries" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Libraries</button>
+      </li>
+      <li>
+        <button id="submenuApps" class="w3-button w3-ripple w3-gray w3-hover-gray focus-outline borderless-sides theme-primary">Apps</button>
+      </li>
+      <li>
+        <button id="submenuBlacklist" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Blacklist</button>
+      </li>
+    </ul>
+
+    <div id="dataUsers" class="w3-container w3-center dTab" style="display:none">
+      <div class="w3-half w3-left">
+        <b>Users - <span id="numUsers">0</span></b>
+        <br />
+        <input type="search" id="searchUsers" class="w3-card-4 full-width" placeholder="Search" />
+        <select id="userList" class="w3-card-4 full-width" size="5">
+          <option>AThirtyOneCharacterUserNameHere</option>
+          <option>AMediumLengthUserName</option>
+          <option>ALilName</option>
+          <option>A</option>
         </select>
-        <div id="gameStatusContainer" class="w3-container centered status-container">
-          <span id="numberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Number of apps selected.">0</span>
-          <span id="numberReady" class="w3-tag w3-small w3-green w3-padding" title="Number of apps that are useable.">0</span>
-          <span id="numberFixable" class="w3-tag w3-small w3-yellow w3-padding" title="Number of apps that can be fixed for offline use.">0</span>
-          <span id="numberUseless" class="w3-tag w3-small w3-red w3-padding" title="Number of apps considered useless.">0</span>
-        </div>
+        <br />
+        <br />
+        <b class="w3-large w3-slim">Steam Autologin User</b>
+        <br />
+        <label>Current</label>
+        <br />
+        <span id="autologinUser">N/A</span>
+        <br />
+        <br />
+        <button id="setAutologinUser" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Set Steam User</button>
+        <br class="w3-hide-medium w3-hide-large" />
+        <br class="w3-hide-medium w3-hide-large" />
       </div>
-      <div class="w3-container w3-half w3-right centered">
-        <div class="w3-container centered">
-          <label class="w3-large bolded">Steam App Controls</label>
+      <div class="w3-half w3-right">
+        <label id="userAutoloadLabel" for="userAutoload"><input type="checkbox" id="userAutoload" class="w3-check" />Autoload user</label>
+        <br />
+        <br />
+        <b>Current Autoload User</b>
+        <br />
+        <span id="autoloadUser">N/A</span>
+        <br />
+        <br />
+        <button id="setAppUser" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Set User For RV</button>
+        <br />
+        <br />
+        <button id="addUserToBlacklist" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Add User To Blacklist</button>
+      </div>
+    </div>
+
+    <div id="dataLibraries" class="w3-container w3-center dTab" style="display:none">
+      <div class="w3-half w3-left">
+        <b>Library Folders - <span id="numLibs">0</span></b>
+        <br />
+        <input type="search" id="searchLibs" class="w3-card-4 full-width" placeholder="Search" />
+        <br />
+        <select id="libList" class="w3-card-4 full-width" multiple size="6"></select>
+        <br />
+        <br />
+        <button id="showLibs" class="w3-button w3-ripple w3-border focus-outline theme-primary">Load Selected Libraries</button>
+        <br />
+        <br />
+        <button id="addLibraryToBlacklist" class="w3-button w3-ripple w3-border focus-outline theme-primary">Add Selected To Blacklist</button>
+      </div>
+    </div>
+
+    <div id="dataApps" class="w3-container w3-center dTab">
+      <div class="w3-half w3-left">
+        <b id="numApps">Steam Apps - <span id="numApps">0</span></b>
+        <br />
+        <input type="search" id="searchSteamapps" class="w3-card-4 full-width" placeholder="Search" />
+        <br />
+        <select id="appList" class="w3-card-4 full-width" size="12" multiple></select>
+        <br />
+        <label id="appStatusOkay" class="w3-tag w3-green">0</label>
+        <label id="appStatusMaybe" class="w3-tag w3-yellow">0</label>
+        <label id="appStatusUseless" class="w3-tag w3-red">0</label>
+        <label id="appStatusTotal" class="w3-tag w3-blue">0</label>
+        <br class="w3-hide-medium w3-hide-large" />
+        <br class="w3-hide-medium w3-hide-large" />
+      </div>
+      <div class="w3-half w3-right">
+        <div id="displayPublicAppControls">
+          <button id="switchToPrivateAppControls" class="w3-button w3-small w3-ripple w3-border focus-outline theme-primary"><i class="fa fa-exchange"></i></button>
+          <b class="w3-large">Public App Controls</b>
           <br />
-          <label>Automatic updates</label>
-          <select id="autoUpdateBehaviorList" class="w3-white">
-            <option value="0">Always keep this game up to date.</option>
-            <option value="1">Only update this game when I launch it.</option>
-            <option value="2">High priority - auto-update this game before others.</option>
+          <label>App ID: <span id="steamappsAppid">N/A</span></label>
+          <br />
+          <label>State: <span id="steamappsState">&quest;&check;&cross;</span></label>
+          <br />
+          <label for="appFixState"><input type="checkbox" id="appFixState" class="w3-check" />Apply "offline fix"</label>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="$('#menuHelp').click();$('#helpList').prop('selectedIndex',5);$('#helpList').change()">?</a>
+          <br />
+          <label class="full-width t-o-e">Install Location: <span id="steamappsInstallDir" class="">N/A</span></label>
+          <label>Last Updated: <span id="steamappsLastUpdated">N/A</span></label>
+          <br />
+          <label>Size: ~<span id="steamappsSize">N/A</span></label>
+          <br />
+          <label>Downloaded: ~<span id="steamappsDownloadedAmount">N/A</span>/<span id="steamappsDownloadSize">N/A</span></label>
+          <br />
+          <label>Auto-updates: <span id="steamappsAUB">N/A</span></label>
+          <br />
+          <select id="setAUB">
+            <option>Always keep this game up to date</option>
+            <option>Only update this game when I launch it</option>
+            <option>High priority - auto-update this game before others</option>
           </select>
           <br />
-          <label>Background downloads</label>
-          <select id="allowBackgroundDLs" class="w3-white">
-            <option>Follow my global setting...</option>
-            <option>Always allow background downloads</option>
-            <option>Never allow background downloads</option>
-          </select>
+          <label>Allow other downloads: <span id="steamappsCanDL">N/A</span></label>
           <br />
-          <label for="enableCloud">
-            <input type="checkbox" id="enableCloud" class="w3-check" />
-            Enable Steam Cloud...
-          </label>
+          <label for="appDontAllowOtherDownloads"><input type="radio" id="appDontAllowOtherDownloads" name="appAOD" class="w3-check" />No</label>
+          <label for="appDoAllowOtherDownloads"><input type="radio" id="appDoAllowOtherDownloads" name="appAOD" class="w3-check" />Yes</label>
+          <br />
+          <label>Has Cloud Save files: </label>
+          <span id="steamappsSavefiles">N/A</span>
+          <br />
+          <a id="pcgwLink" href="javascript:void(0)">PCGamingWiki Article</a>
         </div>
-        <div class="w3-row w3-container centered">
-          <label for="cbOfflineFix"><input type="checkbox" id="cbOfflineFix" class="w3-check" /> Offline fix</label>
-        </div>
-        <div class="w3-container centered">
-          <a href="javascript:void(0)" id="steamAppApply" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply Settings</a>
-          <a href="javascript:void(0);" id="blacklistAdd" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Add to Blacklist</a>
+
+        <div id="displayPrivateAppControls" style="display:none">
+          <button id="switchToPublicAppControls" class="w3-button w3-small w3-ripple w3-border focus-outline theme-primary"><i class="fa fa-exchange"></i></button>
+          <b class="w3-large">Private App Controls</b>
+          <br />
+          <label>Categories - <span id="appCats" title="Total categories for selected app">0</span></label>
+          <input id="appCatsBox" type="text" class="full-width" title="Categories for selected app" />
+          <br />
+          <label>Controller Support: <span id="appController" title="Controller Support of selected app">N/A</span></label>
+          <br />
+          <label>Metacritic score: <span id="appMetacritic" title="Metacritic score of selected app">N/A</span></label>
+          <br />
+          <label>Developer: <span id="appDeveloper" title="Developer of selected app">N/A</span></label>
+          <br />
+          <label>Publisher: <span id="appPublisher" title="Publisher of selected app">N/A</span></label>
         </div>
       </div>
     </div>
-    <div id="blacklistContainer" class="w3-container view-container">
-      <div class="w3-container w3-half w3-left centered">
-        <div class="w3-whole centered">
-          <label class="w3-large w3-content centered bolded">Blacklist</label>
-          <span id="blacklistTotal" class="w3-large w3-content w3-padding" title="Total number of apps on the blacklist.">0</span>
-          <a id="switchToGames" href="javascript:void(0);" title="Switch to Steam Apps" onclick="this.blur();switchList( event )">
-            <i class="fa fa-exchange"></i>
-          </a>
-        </div>
-        <input type="search" class="search-bar" id="searchBlacklist" placeholder="Search" />
-        <select id="blackList" multiple class="w3-white">
-        </select>
-        <div id="blacklistStatusContainer" class="w3-container centered status-container">
-          <span id="blacklistNumberSelected" class="w3-tag w3-small w3-blue w3-padding" title="Number of blacklisted apps selected.">0</span>
-        </div>
-      </div>
-      <div class="w3-container w3-half w3-right centered">
-        <div class="w3-container centered">
-          <label class="w3-large bolded">Blacklist Controls</label>
-        </div>
-        <div class="w3-container centered">
-          <a href="javascript:void(0);" id="blacklistRemove" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Remove Selected</a>
-          <a href="javascript:void(0);" id="blacklistReset" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Reset Blacklist</a>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div id="settingsView" class="appView">
-    <div class="w3-half centered">
-      <div id="settingsControlsContainer" class="w3-container view-container">
-        <div id="bgSettingsContainer" class="w3-container">
-          <hr class="splitter" />
-          <label class="w3-large bolded">ReliefValve Settings</label>
-          <br />
-          <label>Background</label>
-          <select id="bgSettingsList" class="w3-white">
-            <option>Default</option>
-            <option>Solid</option>
-            <option>Image</option>
-          </select>
-          <div id="bgSettingsSolidContainer" class="w3-container w3-hide">
-            <label>Color</label>
-            <input id="bgSettingsSolid" type="color" value="#FFFFFF"/>
-          </div>
-          <div id="bgSettingsImageContainer" class="w3-container w3-hide">
-            <label id="bgSettingsImageCurrent" data-location="...">...</label>
-            <br />
-            <a href="javascript:void(0)" id="bgSettingsImageChoose" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Choose</a>
-          </div>
-        </div>
-        <div id="textSettingsContainer" class="w3-container">
-          <label>Text Color</label>
-          <input id="textSettingsColor" type="color" value="#FFFFFF" />
-        </div>
-        <a href="javascript:void(0);" id="applyAppSettings" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Apply Settings</a>
-      </div>
-    </div>
-  </div>
-
-  <div id="clientView" class="appView">
-    <div id="forceDownloadContainer" class="w3-half w3-container view-container">
-      <!--
-      <div id="forceContainer" class="w3-container centered">
-        <label class="w3-large w3-content centered bolded">Force Start Download</label>
+    <div id="dataBlacklist" class="w3-container w3-center dTab" style="display:none">
+      <div class="w3-half w3-left">
+        <b>User Blacklist - <span id="numUsersBlacklisted">0</span></b>
         <br />
-        <input type="text" id="forceDownload" class="search-bar centered" placeholder="Steam appid or Store URL" title="Enter the Steam store page URL or Steam appid of the app you want to force download." />
-        <br />
-        <label id="forceGameName">Game Name</label>
-        <br />
-        <a href="javascript:void(0)" id="clearForce" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Clear</a>
-        <a href="javascript:void(0)" id="addForce" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Add</a>
-        <hr class="splitter" />
-      </div>
-      -->
-      <div class="w3-container centered">
-        <label class="w3-large w3-content centered bolded">Client Options</label>
-        <br />
-        <label>Steam Location: </label>
-        <br />
-        <span id="installLocation">...</span>
-        <br />
-        <br />
-        <a href="javascript:void(0)" id="chooseSteam" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Choose</a>
-        <br />
-        <label>User: <span id="currentUser">...</span></label>
-        <br />
-        <select id="userList" class="w3-white" style="width:10em" onchange="$('#currentUser').html(this.options[this.selectedIndex].text)">
-          <option>l3l_aze</option>
-          <option>tmshvr</option>
+        <select id="userBlacklist" class="w3-card-4 full-width" size="3">
         </select>
         <br />
-        <button id="showClientSettings" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Client Settings</button>
+        <button id="userBlacklistRemove" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Remove Selected</button>
+        <hr />
+        <b>Library Blacklist - <span id="numLibrariesBlacklisted">0</span></b>
         <br />
-        <button id="launchOptions" onclick="toggleLaunchOptions()" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round">Launch Options</button>
+        <select id="libraryBlacklist" class="w3-card-4 full-width" size="3"></select>
         <br />
-        <button id="launchBtn" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Launch the Steam client.">Launch</button>
-        <div id="launchOptionsContainer" class="w3-modal">
-          <div class="w3-modal-content">
-            <header class="w3-container w3-black">
-              <a href="javascript:void(0);" onclick="document.getElementById( 'launchOptionsContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-text-black">&times;</a>
-              <h4 id="modalHeader" class="bolded">Launch Options</h4>
-            </header>
-            <br />
-            <div class="w3-container">
-              <div class="w3-half w3-left" style="width:50%">
-                <label for="lo_no_bpm" title="Disables BPM."><input type="checkbox" id="lo_no_bpm" class="w3-check" /> Disable BPM</label>
-                <br />
-                <label for="lo_no_console" title="Disables console."><input type="checkbox" id="lo_no_console" class="w3-check" /> Disable Console</label>
-                <br />
-                <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="checkbox" id="lo_console" class="w3-check" /> Console</label>
-                <br />
-                <label for="lo_dev" title="Enables Steam developer mode, meant to help with making Steam skins."><input type="checkbox" id="lo_dev" class="w3-check" /> Developer</label>
-                <br />
-                <label for="lo_tcp" title="Forces connection to Steam backend to be via TCP."><input type="checkbox" id="lo_tcp" class="w3-check" /> TCP</label>
-                <br />
-                <label for="lo_silent" title="Silent startup mode (will open Steam, but won't show window on startup)."><input type="checkbox" id="lo_silent" class="w3-check" /> Silent</label>
-              </div>
-              <div class="w3-half w3-right" style="width:50%">
-                <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="checkbox" id="lo_bpm" class="w3-check" /> Big Picture Mode</label>
-                <br />
-                <label for="lo_windowed" title="Run BPM in windowed mode rather than borderless fullscreen windowed."><input type="checkbox" id="lo_windowed" class="w3-check" /> Windowed</label>
-                <br />
-                <label for="lo_480p" title="480p mode for BPM."><input type="radio" id="lo_480p" name="lo_bpm_p" class="w3-radio" /> 480p</label>
-                <br />
-                <label for="lo_720p" title="720p mode for BPM."><input type="radio" id="lo_720p" name="lo_bpm_p" class="w3-radio" /> 720p</label>
-                <br />
-                <label for="lo_fulldesktopres" title="Full desktop resolution mode for BPM."><input type="radio" id="lo_fulldesktopres" name="lo_bpm_p" class="w3-radio" /> Desktop resolution</label>
-                <br />
-                <label for="lo_bpm_default" title="Default BPM resolution."><input type="radio" id="lo_bpm_default" name="lo_bpm_p" class="w3-radio" checked /> Default</label>
-              </div>
-              <br />
-              <label for="lo_exit" title="Close RV when starting Steam."><input type="checkbox" id="lo_exit" class="w3-check" /> Close RV</label>
-            </div>
-            <br />
-            <footer class="w3-container w3-black">
-              <button id="resetLaunchOptions" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Reset launch options to default.">Reset</button>
-              <button id="saveLaunchOptions" class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Save launch options.">Save</button>
-            </footer>
-          </div>
-        </div>
-        <hr class="splitter" />
-        <div class="w3-container centered">
-        </div>
+        <button id="libraryBlacklistRemove" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Remove Selected</button>
       </div>
+      <div class="w3-half w3-right">
+        <hr class="w3-hide-medium w3-hide-large" />
+        <b>App Blacklist - <span id="numAppsBlacklisted">0</span></b>
+        <br />
+        <select id="appBlacklist" class="w3-card-4 full-width" size="20">
+        </select>
+        <br />
+        <button id="appBlacklistRemove" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Remove Selected</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="containerClient" class="w3-container w3-center aTab" style="display: none">
+    <div class="w3-half w3-left">
+      <b class="w3-large">Steam Client Path</b>
       <br />
+      <label id="chosenPath">N/A</label>
+      <br />
+      <br />
+      <button id="choose" class="w3-button w3-ripple w3-border focus-outline theme-primary">Set Path</button>
+      <br />
+      <br />
+      <button id="load" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Load Steam</button>
+      <br />
+      <label id="loaded">Not loaded</label>
+      <br class="w3-hide-medium w3-hide-large" />
+      <br class="w3-hide-medium w3-hide-large" />
+    </div>
+    <div class="w3-half w3-right">
+      <button id="clientSettings" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Settings</button>
+      <br />
+      <br />
+      <button id="launchOptions" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Launch Options</button>
     </div>
   </div>
 
-  <div id="helpView" class="appView">
-    <div class="w3-half w3-container">
-      <p>
-        Go to "Settings" and press "Choose", then select
-          your Steam installation folder (where Steam
-          stores it's client data).
-      </p>
-      <hr class="splitter" />
-      <p>
-        Once you add a valid Steam installation the
-          apps you've installed via Steam will be
-          loaded into the "Steam Apps" list. Below
-          the list are controls for the apps auto-update
-          behavior and to apply an "offline fix".
-      </p>
-      <hr class="splitter" />
-      <p>
-        Next to the Steam Apps list is the Blacklist
-          - apps which will NOT be loaded. If you add
-          an app to the blacklist it will be ignored
-          for every Steam installation that is loaded
-          until it is removed again.
-      </p>
-    </div>
-    <div class="w3-half w3-container">
-      <hr class="splitter w3-hide-medium w3-hide-large" />
-      <p>
-        On the Client tab you can "force start" a
-        download for an app that's not compatible with
-        your system. There are also controls to launch
-        the Steam client with options straight from RV,
-        or change/randomize your Steam skin.
-      </p>
-    </div>
-  </div>
-
-  <div id="aboutView" class="appView">
-    <div class="w3-container w3-margin-bottom centered">
-      <button id="theWhat" class="w3-btn w3-border w3-hover-black w3-white w3-round">"What?"</button>
-      <button id="theHow" class="w3-btn w3-border w3-hover-black w3-white w3-round">"How?!"</button>
-    </div>
-    <div id="aboutContent" class="w3-container centered">
-      <div id="explainTheDefault" class="w3-container w3-margin-top">
-        <p>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</p>
-        <p>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></p>
-      </div>
-      <div id="explainTheWhat" class="w3-hide w3-margin-top">
-        <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
+  <div id="containerSettings" class="w3-container w3-center aTab">
+    <div class="w3-half w3-left">
+      <label>Background &nbsp;</label>
+      <select id="bgSettingsList" class="w3-white">
+        <option>Default</option>
+        <option>Solid</option>
+        <option>Image</option>
+      </select>
+      <br />
+      <br />
+      <div id="bgSettingsSolidContainer" class="w3-container" style="display:none">
+        <label>Color&nbsp;</label>
+        <input id="bgSettingsSolid" type="color" value="#FFFFFF"/>
         <br />
-        <ul id="featureList">
-          <li>
-            Manage auto-update settings for apps you've installed via the Steam client.
-          </li>
-          <li>
-            Apply an offline fix to make some games playable in offline mode.
-          </li>
-          <li>
-            Help force start a download for a game that's not compatible with your system.
-          </li>
-          <li>
-            Change the selected Steam skin to one you have installed; can also change to a random skin.
-          </li>
-        </ul>
+        <br />
       </div>
-      <div id="explainTheHow" class="w3-hide">
-        <div id="poweredBy" class="">
-          This app is <a href="#" onclick="changeHowTab(event);this.blur()" class="poweredBy">powered by &gt;</a> the following:
-          <br />
-          <div class="badger-container">
-            <!-- This will be generated -->
-          </div>
-        </div>
-        <div id="builtWith" class="">
-          This app is <a href="#" onclick="changeHowTab(event);this.blur()" class="builtWith">&lt; built with</a> the following:
-          <br />
-          <div class="badger-container">
-            <!-- This will be generated -->
-          </div>
-        </div>
+      <div id="bgSettingsImageContainer" class="w3-container" style="display:none">
+        <label>Chosen: <span id="bgSettingsImageCurrent" data-location="">N/A</span></label>
+        <br />
+        <br />
+        <button id="bgSettingsImageChoose" class="w3-button w3-hover-black w3-ripple w3-white w3-border">Choose</button>
+        <br />
+        <br />
       </div>
+      <label>Text Color&nbsp;</label>
+      <input id="textSettingsColor" type="color" value="#FFFFFF" />
     </div>
-    <div id="aboutFooter" class="w3-bottom centered">
-      <span id="madeWith">&lt;&gt; with <i class="fa fa-heart love"></i> by <a href="https://github.com/l3laze" title="https://github.com/l3laze">l3l_aze</a> & <a href="javascript:void(0);" onclick="toggleContributors()">contributors</a></span>
+    <div class="w3-half w3-right">
+      <br class="w3-hide-medium w3-hide-large" />
+      <br class="w3-hide-medium w3-hide-large" />
+      <label title="Tab to show when app starts">Startup Tab</label>
+      <br />
+      <select id="startupTab" title="Tab to show when app starts">
+        <option>Data</option>
+        <option>Data/Users</option>
+        <option>Data/Libraries</option>
+        <option>Data/Apps</option>
+        <option>Data/Blacklist</option>
+        <option>Client</option>
+        <option>Settings</option>
+      </select>
+      <br />
+      <br />
+      <button id="applyAppSettings" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Save Settings</button>
     </div>
   </div>
 
-  <div id="bgImage" data-location=""></div>
+  <div id="containerHelp" class="w3-container w3-center aTab" style="display: none">
+    <div class="w3-half w3-left">
+      <b>Help Pages</b>
+      <br />
+      <select id="helpList" size="4">
+        <optgroup label="Data -> Users">
+          <option>Something</option>
+          <option>Something Else</option>
+        </optgroup>
+        <optgroup label="Data -> Libraries">
+          <option>Something</option>
+          <option>Something Else</option>
+        </optgroup>
+        <optgroup label="Data -> Apps">
+          <option>Something</option>
+          <option>Something Else</option>
+        </optgroup>
+        <optgroup label="Data -> Blacklist">
+          <option>Something</option>
+          <option>Something Else</option>
+        </optgroup>
+        <optgroup label="Client">
+          <option>Something</option>
+          <option>Something Else</option>
+        </optgroup>
+        <optgroup label="Settings">
+          <option>Something</option>
+          <option>Something Else</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="w3-half w3-right">
+      <br />
+      <b id="helpTitle" class="w3-large">Select A Section</b>
+      <br />
+      <br />
+      <p id="helpText"></p>
+    </div>
+  </div>
 
-  <div id="contributorContainer" class="w3-modal centered">
-    <div class="w3-modal-content">
-      <header class="w3-container w3-black">
-        <a href="javascript:void(0);" onclick="document.getElementById( 'contributorContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
-        <h4 class="bolded">Contributors</h4>
+  <div id="containerAbout" class="w3-container w3-center aTab" style="display: none">
+  </div>
+
+  <footer class="w3-bottom w3-center w3-margin-bottom">
+    <span>&lt;&#47;&gt; with <i class="fa fa-heart w3-text-red"></i> by l3l_aze & <a href="javascript:void(0);">Contributors</a></span>
+  </footer>
+
+  <div id="clientSettingsModal" class="w3-modal">
+    <div class="w3-modal-content w3-center w3-card-4">
+      <header class="w3-container w3-center w3-margin-bottom theme-secondary">
+        <button onclick='$( "#clientSettingsModal" ).css( "display", "none" )' class="w3-display-topright w3-button w3-ripple w3-transparent focus-outline">&times;</button>
+        <h4>Client Settings</h4>
       </header>
-      <br />
-      <div class="w3-row">
-        <div class="w3-container w3-whole">
-          <ul id="contributors" class="w3-container w3-padding centered">
-            <li>
-              <span class="contributor-text"><a href="https://github.com/probonopd" title="https://github.com/probonopd">probonopd</a> - Bug reports, enhancement suggestions.</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <footer class="w3-container w3-black">
-        <br />
-        <br />
-      </footer>
-    </div>
-  </div>
 
-  <div id="clientSettingsContainer" class="w3-modal">
-    <div class="w3-modal-content">
-      <header class="w3-container w3-black centered">
-        <a href="javascript:void(0);" onclick="document.getElementById( 'clientSettingsContainer' ).style.display='none'" class="closeModal w3-right w3-closebtn w3-hover-white w3-hover-white w3-hover-text-black">&times;</a>
-        <h4 id="modalHeader" class="bolded">Client Settings</h4>
-      </header>
-      <br />
-      <div class="w3-row w3-center">
+      <div class="w3-row w3-center theme-primary">
         <div id="clientSettingsBar" class="w3-bar w3-round w3-border w3-center">
-          <a href="javascript:void(0);" id="userSettingsBtn" class="w3-bar-item w3-button w3-black" title="User">
+          <a href="javascript:void(0);" id="userSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-gray w3-hover-black focus-outline theme-primary" title="User">
             <i class="fa fa-address-card w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">User</span>
           </a>
-          <a href="javascript:void(0);" id="dlSettingsBtn" class="w3-bar-item w3-button" title="Downloads">
+          <a href="javascript:void(0);" id="dlSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Downloads">
             <i class="fa fa-download w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">DLs</span>
           </a>
-          <a href="javascript:void(0);" id="friendsSettingsBtn" class="w3-bar-item w3-button" title="Friends">
+          <a href="javascript:void(0);" id="friendsSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Friends">
             <i class="fa fa-users w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Friends</span>
           </a>
-          <a href="javascript:void(0);" id="overlaySettingsBtn" class="w3-bar-item w3-button" title="In-Game (Overlay)">
+          <a href="javascript:void(0);" id="overlaySettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="In-Game (Overlay)">
             <i class="fa fa-chrome w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Overlay</span>
           </a>
-          <a href="javascript:void(0);" id="audioSettingsBtn" class="w3-bar-item w3-button" title="Music">
+          <a href="javascript:void(0);" id="audioSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Music">
             <i class="fa fa-headphones w3-hide-medium w3-hide-large"></i>
             <i class="fa fa-microphone w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Audio</span>
           </a>
-          <a href="javascript:void(0);" id="interfaceSettingsBtn" class="w3-bar-item w3-button" title="Interface">
+          <a href="javascript:void(0);" id="interfaceSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Interface">
             <i class="fa fa-window-maximize w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Interface</span>
           </a>
@@ -405,6 +390,11 @@
           <span>Don't save personal info on this PC</span>
         </label>
         <br />
+        <label for="usRememberPassword" title="Login dialog -> Remember password">
+          <input type="checkbox" id="usRememberPassword" class="w3-check" />
+          Remember password for login dialog
+        </label>
+        <br />
         <label for="usEnableCloud" title="Cloud -> Enable Steam Cloud synchronization for games which support it">
           <input type="checkbox" id="usEnableCloud" class="w3-check" />
           Enable Steam Cloud..
@@ -413,6 +403,21 @@
         <label for="usOpenScreenshot" title="Cloud -> Open the screenshot uploader after closing a game if screenshots were taken">
           <input type="checkbox" id="usOpenScreenshot" class="w3-check" />
           <span>Open the screenshot uploader..</span>
+        </label>
+        <br />
+        <label for="usWantsOffline" title="Start Steam in offline mode">
+          <input type="checkbox" id="usWantsOffline" class="w3-check" />
+          <span>Start Steam in offline mode</span>
+        </label>
+        <br />
+        <label for="usSkipWarning" title="Skip warning about starting Steam in offline mode">
+          <input type="checkbox" id="usSkipWarning" class="w3-check" />
+          <span>Skip "offline mode" warning</span>
+        </label>
+        <br />
+        <label for="usDesktopAuth" title="Web Browser -> Allow desktop Web browsers to automatically log into Steam sites">
+          <input type="checkbox" id="usDesktopAuth" class="w3-check" />
+          Authorize desktop web browsers..
         </label>
         <br />
         <br />
@@ -425,7 +430,7 @@
         </label>
         <br />
         <label title="Downloads -> Only auto-update games between [start]">Start: </label>
-        <select id="dsAutoUpdateLimitMin" style="width:5em;margin-top:4px">
+        <select id="dsAutoUpdateLimitMin" class="w3-white" style="width:5em;margin-top:4px">
           <option>12 AM</option>
           <option>1 AM</option>
           <option>2 AM</option>
@@ -453,7 +458,7 @@
         </select>
         <br />
         <label title="Downloads -> Only auto-update games between [end]">End: </label>
-        <select id="dsAutoUpdateLimitMax" style="width:5em;margin-top:4px">
+        <select id="dsAutoUpdateLimitMax" class="w3-white" style="width:5em;margin-top:4px">
           <option>12 AM</option>
           <option>1 AM</option>
           <option>2 AM</option>
@@ -481,8 +486,8 @@
         </select>
         <br />
         <label title="Downloads -> Limit bandwidth to">Bandwidth limit: </label>
-        <select id="dsBandwidthLimit" style="width:5em;margin-top:4px">
-          <option value="0">None</option>
+        <select id="dsBandwidthLimit" class="w3-white" style="width:5em;margin-top:4px">
+          <option value="0">Automatic</option>
           <option value="128">16 KB/s</option>
           <option value="256">32 KB/s</option>
           <option value="384">48 KB/s</option>
@@ -497,7 +502,7 @@
           <option value="8000">1000 KB/s (1 MB/s)</option>
           <option value="12000">1.5 MB/s</option>
           <option value="16000">2 MB/s</option>
-          <option value"24000">3 MB/s</option>
+          <option value="24000">3 MB/s</option>
           <option value="40000">5 MB/s</option>
           <option value="56000">7 MB/s</option>
           <option value="80000">10 MB/s</option>
@@ -523,9 +528,19 @@
       </div>
 
       <div id="friendsSettingsTab" class="w3-white w3-center csTab" style="display:none">
+        <label for="fsShowOnStart" title="Open Friends window on startup (Steam will do this if you had it open)">
+          <input type="checkbox" id="fsShowOnStart" class="w3-check" />
+          Open Friends on startup..
+        </label>
+        <br />
         <label for="fsAutoSign" title="Friends -> Automatically sign into Friends when I start Steam">
           <input type="checkbox" id="fsAutoSign" class="w3-check" />
           Automatically sign into Friends..
+        </label>
+        <br />
+        <label for="fsOverlay" title="Show Friends window in overlay (Steam will do this if you had it open)">
+          <input type="checkbox" id="fsOverlay" class="w3-check" />
+          Show Friends window in Overlay..
         </label>
         <br />
         <label for="fsTimestamps" title="Friends -> Display timestamps in chat log">
@@ -561,7 +576,7 @@
           </label>
         </section>
         <section>
-          <label>Receive Message ->
+          <label>Receive Message -></label>
           <label for="fsMessageNotification" title="Friends -> When I receive a message -> Display a notification">
             <input type="checkbox" id="fsMessageNotification" class="w3-check" />
             Notification
@@ -585,25 +600,15 @@
         </section>
         <section>
           <label for="fsFlashWindow" title="Friends -> Flash window when I receive a message">Message -> Flash: </label>
-          <select id="fsFlashWindow" style="width:12.5em;margin-top:4px" title="Friends -> Flash window when I receive a message">
+          <select id="fsFlashWindow" class="w3-white" style="width:12.5em;margin-top:4px" title="Friends -> Flash window when I receive a message">
             <option>Always</option>
             <option>Only when minimized</option>
             <option>Never</option>
           </select>
         </section>
         <section>
-          <label for="fsOverlay" title="Show Friends window in overlay (Steam will do this if you had it open)">
-            <input type="checkbox" id="fsOverlay" class="w3-check" />
-            Show Friends window in Overlay..
-          </label>
-          <br />
-          <label for="fsShowOnStart" title="Open Friends window on startup (Steam will do this if you had it open)">
-            <input type="checkbox" id="fsShowOnStart" class="w3-check" />
-            Open Friends on startup..
-          </label>
-          <br />
           <label for="fsState" title="Friends -> Status">Friends -> Status: </label>
-          <select id="fsState" style="width:10.5em;margin-top:4px" title="Friends -> Status">
+          <select id="fsState" class="w3-white" style="width:10.5em;margin-top:4px" title="Friends -> Status">
             <option value="0">Offline</option>
             <option value="1">Online</option>
             <option value="2">Busy</option>
@@ -612,62 +617,6 @@
             <option value="6">Looking to Play</option>
           </select>
         </section>
-        <br />
-      </div>
-
-      <div id="audioSettingsTab" class="w3-white w3-center csTab" style="display:none">
-        <label for="asScanSteam" title="Music -> Scan Steam folders at startup">
-          <input type="checkbox" id="asScanSteam" class="w3-check" />
-          Scan Steam folders at startup
-        </label>
-        <br />
-        <label for="asScanFolders" title="Music -> Scan at startup">
-          <input type="checkbox" id="asScanFolders" class="w3-check" />
-          Scan custom folders at startup
-        </label>
-        <br />
-        <label for="asScanLog" title="Music -> Save scanning activity log">
-          <input type="checkbox" id="asScanLog" class="w3-check" />
-          Save log of scan
-        </label>
-        <br />
-        <label title="Music -> Volume">Music Volume: <span id="asMusicVolumeValue"></span>%</label>
-        <br />
-        <input id="asMusicVolume" type="range" min="0" max="255" step="1" value="128" onchange="updateVolume( this.id, this.value )" title="Music -> Volume" />
-        <br />
-        <label for="asPauseForApp" title="Music -> Pause music -> When starting an application">
-          <input type="checkbox" id="asPauseForApp" class="w3-check" />
-          Pause when starting an app through Steam..
-        </label>
-        <br />
-        <label for="asPauseForChat" title="Music -> Pause music -> When voice chatting">
-          <input type="checkbox" id="asPauseForChat" class="w3-check" />
-          Pause when voice chatting..
-        </label>
-        <br />
-        <label for="osScreenshotUncompressed" title="Music -> Display a notification -> When a new track begins">
-          <input type="checkbox" id="osScreenshotUncompressed" class="w3-check" />
-          <span>Display notification when new track begins..</span>
-        </label>
-        <br />
-        <hr class="splitter" />
-        <label title="Voice -> Receieve volume">Voice Receive volume: <span id="asVoiceVolumeValue"></span>%</label>
-        <br />
-        <input id="asVoiceVolume" type="range" min="0" max="255" step="1" value="128" onchange="updateVolume( this.id, this.value )" title="Voice -> Receive Volume" />
-        <br />
-        <label for="asAutoVoice" title="Voice -> Automatically transmit voice when I speak">
-          <input type="radio" id="asAutoVoice" name="autoVoice" />
-          Auto transmit voice..
-        </label>
-        <br />
-        <label for="asPushTalk" title="Voice -> Use a push to talk key to transmit voice">
-          <input type="radio" id="asPushTalk" name="autoVoice" />
-          Use "push-to-talk"..
-        </label>
-        <br />
-        <label for="asPTKey" title="Voice -> Use a push to talk key to transmit voice -> [key]">Push to talk key: </label>
-        <input type="text" id="asPTKey" style="width:10.5em" disabled value="Support in progress" title="Voice -> Use a push to talk key to transmit voice -> [key]" />
-        <br />
         <br />
       </div>
 
@@ -684,7 +633,7 @@
         <input type="url" id="osHomePage" style="width:auto" title="Web Browser -> Web browser home page" />
         <br />
         <label title="In-Game -> In-game server browser -> Max pings/minute">Max pings/minute..: </label>
-        <select id="osOverlayFPSCorner" style="width:7.1em;margin-top:4px" title="In-Game -> In-game server browser -> Max pings/minute">
+        <select id="osMaxPings" class="w3-white" style="width:7.1em;margin-top:4px" title="In-Game -> In-game server browser -> Max pings/minute">
           <option>Automatic (5000)</option>
           <option>5000</option>
           <option>3000</option>
@@ -693,33 +642,31 @@
           <option>500</option>
           <option>250</option>
         </select>
+        <br />
         <section>
-          <hr class="splitter" />
+          <label title="In-Game -> Screenshot shortcut keys">Screenshot shortcut: </label>
+          <input type="text" id="osScreenshotKeys" style="width:10.5em" title="In-Game -> Screenshot shortcut keys" />
+          <br />
           <label>Screenshot taken -></label>
           <br />
           <label for="osScreenshotNotification" title="In-Game -> When a screenshot is taken -> Display a notification">
             <input type="checkbox" id="osScreenshotNotification" class="w3-check" />
             Notification
           </label>
-          <label for="osScreenshotSound" title="In-Game -> When a screenshot is taken -> Display a notification">
+          <label for="osScreenshotSound" title="In-Game -> When a screenshot is taken -> Play a sound">
             <input type="checkbox" id="osScreenshotSound" class="w3-check" />
             Sound
           </label>
           <br />
-          <label for="osScreenshotUncompressed" title="In-Game -> When a screenshot is taken -> Save an uncompressed copy">
-            <input type="checkbox" id="osScreenshotUncompressed" class="w3-check" />
-            <span>Save uncompressed copy..</span>
+          <label for="osScreenshotOriginal" title="In-Game -> When a screenshot is taken -> Save an uncompressed copy">
+            <input type="checkbox" id="osScreenshotOriginal" class="w3-check" />
+            Save an uncompressed copy
           </label>
-          <br />
-          <label title="In-Game -> Screenshot shortcut keys">Screenshot shortcut: </label>
-          <input type="text" id="osScreenshotKeys" style="width:10.5em" title="In-Game -> Screenshot shortcut keys" />
-          <br />
         </section>
-        <hr class="splitter" />
         <label>FPS Counter</label>
         <br />
         <label title="In-Game -> In-game FPS counter -> [location]">Location: </label>
-        <select id="osOverlayFPSCorner" style="width:9em">
+        <select id="osOverlayFPSCorner" class="w3-white" style="width:9em">
           <option>Off</option>
           <option>Top-left</option>
           <option>Top-right</option>
@@ -727,23 +674,79 @@
           <option>Bottom-left</option>
         </select>
         <br />
-        <label for="osOverlayFPSContrast" title="In-Game -> In-game FPS counter -> High contrast color">
-          <input type="checkbox" id="osOverlayFPSContrast" class="w3-check" />
-          <span>Use a high contrast color</span>
+        <label for="osOverlayContrastFPS" title="In-Game -> In-game FPS counter -> High contrast color">
+          <input type="checkbox" id="osOverlayContrastFPS" class="w3-check" />
+          Use a high contrast color
         </label>
         <br />
         <br />
       </div>
 
+      <div id="audioSettingsTab" class="w3-white w3-center csTab" style="display:none">
+              <label for="asScanSteam" title="Music -> Scan Steam folders at startup">
+                <input type="checkbox" id="asScanSteam" class="w3-check" />
+                Scan Steam folders at startup
+              </label>
+              <br />
+              <label for="asScanFolders" title="Music -> Scan at startup">
+                <input type="checkbox" id="asScanFolders" class="w3-check" />
+                Scan custom folders at startup
+              </label>
+              <br />
+              <label for="asScanLog" title="Music -> Save scanning activity log">
+                <input type="checkbox" id="asScanLog" class="w3-check" />
+                Save log of scan
+              </label>
+              <br />
+              <label title="Music -> Volume">Music Volume: <span id="asMusicVolumeValue"></span>%</label>
+              <br />
+              <input id="asMusicVolume" type="range" min="0" max="255" step="1" value="128" onchange="updateVolume( this.id, this.value )" title="Music -> Volume" />
+              <br />
+              <label for="asPauseForApp" title="Music -> Pause music -> When starting an application">
+                <input type="checkbox" id="asPauseForApp" class="w3-check" />
+                Pause when starting an app through Steam..
+              </label>
+              <br />
+              <label for="asPauseForChat" title="Music -> Pause music -> When voice chatting">
+                <input type="checkbox" id="asPauseForChat" class="w3-check" />
+                Pause when voice chatting..
+              </label>
+              <br />
+              <label for="osScreenshotUncompressed" title="Music -> Display a notification -> When a new track begins">
+                <input type="checkbox" id="osScreenshotUncompressed" class="w3-check" />
+                <span>Display notification when new track begins..</span>
+              </label>
+              <br />
+              <label title="Voice -> Receieve volume">Voice Receive volume: <span id="asVoiceVolumeValue"></span>%</label>
+              <br />
+              <input id="asVoiceVolume" type="range" min="0" max="255" step="1" value="128" title="Voice -> Receive Volume" />
+              <br />
+              <label for="asAutoVoice" title="Voice -> Automatically transmit voice when I speak">
+                <input type="radio" id="asAutoVoice" name="autoVoice" value="false" />
+                Auto transmit voice..
+              </label>
+              <br />
+              <label for="asPushTalk" title="Voice -> Use a push to talk key to transmit voice">
+                <input type="radio" id="asPushTalk" name="autoVoice" value="true" />
+                Use "push-to-talk"..
+              </label>
+              <br />
+              <label for="asPTKey" title="Voice -> Use a push to talk key to transmit voice -> [key]">Push to talk key: </label>
+              <input type="text" id="asPTKey" style="width:10.5em" disabled value="Support in progress" title="Voice -> Use a push to talk key to transmit voice -> [key]" />
+              <br />
+              <br />
+            </div>
+
       <div id="interfaceSettingsTab" class="w3-white w3-center csTab" style="display:none">
-        <label title="Interface -> Favorite window">Skin: </label>
+        <label title="Interface -> Select the skin you wish Steam to use">Skin: </label>
+        <br />
         <select id="isSkinList" class="w3-white" style="width:10em">
           <option>&lt;Default&gt;</option>
           <option>&lt;Random&gt;</option>
         </select>
         <br />
         <label title="Interface -> Select the language you wish Steam to use..">Language: </label>
-        <select id="isLanguage" style="width:7.1em;margin-top:4px" class="w3-white" title="Interface -> Select the language you wish Steam to use..">
+        <select id="isLanguage" class="w3-white" style="width:7.1em;margin-top:4px" title="Interface -> Select the language you wish Steam to use..">
           <option value="bulgarian">Bulgarian</option>
           <option value="czech">Czech</option>
           <option value="danish">Danish</option>
@@ -773,7 +776,7 @@
         </select>
         <br />
         <label title="Interface -> Favorite window">Favorite window: </label>
-        <select id="isFavoriteWindow" style="width:7.1em;margin-top:4px" title="Interface -> Favorite window">
+        <select id="isFavoriteWindow" class="w3-white" style="width:7.1em;margin-top:4px" title="Interface -> Favorite window">
           <option value="#app_store">Store</option>
           <option value="#app_games">Library</option>
           <option value="#app_news">News</option>
@@ -792,25 +795,17 @@
           <input type="checkbox" id="isNotifyNews" class="w3-check" />
           Show news on start..
         </label>
-        <br />
-        <label for="isRunOnStart" title="Interface -> Run Steam when my computer starts">
-          <input type="checkbox" id="isRunOnStart" class="w3-check" />
-          Run Steam when my computer starts
-        </label>
+        <!--
+          <br />
+          <label for="isRunOnStart" title="Interface -> Run Steam when my computer starts">
+            <input type="checkbox" id="isRunOnStart" class="w3-check" />
+            Run Steam when my computer starts
+          </label>
+        -->
         <br />
         <label for="isStartInBP" title="Interface -> Start Steam in Big Picture mode">
           <input type="checkbox" id="isStartInBP" class="w3-check" />
           Start Steam in Big Picture mode
-        </label>
-        <br />
-        <label for="usWantOffline" title="Start Steam in offline mode">
-          <input type="checkbox" id="usWantOffline" class="w3-check" />
-          <span>Start Steam in offline mode</span>
-        </label>
-        <br />
-        <label for="usSkipWarning" title="Skip warning about starting Steam in offline mode">
-          <input type="checkbox" id="usSkipWarning" class="w3-check" />
-          <span>Skip "offline mode" warning</span>
         </label>
         <br />
         <br />
@@ -820,18 +815,105 @@
         <div id="broadcastingSettingsTab" class="csTab" style="display:none">
         <span>Broadcasting Settings</span>
         <br />
-      </div>
-        <div id="taskbarSettingsTab" class="csTab" style="display:none">
-        <span>Taskbar Settings</span>
-        <br />
-      </div>
+        </div>
+          <div id="taskbarSettingsTab" class="csTab" style="display:none">
+          <span>Taskbar Settings</span>
+          <br />
+        </div>
       -->
 
+      <footer class="w3-center w3-padding theme-secondary">
+        <button class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Reset to Steam's current settings">Reset</button>
+        <button class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Save selected settings">Save</button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="launchOptionsModal" class="w3-modal">
+    <div class="w3-modal-content w3-center w3-card-4">
+      <header class="w3-container w3-center w3-margin-bottom theme-secondary">
+        <button onclick='$( "#launchOptionsModal" ).css( "display", "none" )' class="w3-display-topright w3-button w3-ripple w3-black w3-hover-white focus-outline">&times;</button>
+        <h4>Launch Options</h4>
+      </header>
+      <div class="w3-container w3-center theme-primary">
+        <div class="w3-half w3-left" style="width:50%">
+          <label for="lo_no_bpm" title="Disables BPM."><input type="checkbox" id="lo_no_bpm" class="w3-check" /> Disable BPM</label>
+          <br />
+          <label for="lo_no_console" title="Disables console."><input type="checkbox" id="lo_no_console" class="w3-check" /> Disable Console</label>
+          <br />
+          <label for="lo_console" title="Enables the Steam Console tab; for use with console commands, meant for debugging."><input type="checkbox" id="lo_console" class="w3-check" /> Console</label>
+          <br />
+          <label for="lo_dev" title="Enables Steam developer mode, meant to help with making Steam skins."><input type="checkbox" id="lo_dev" class="w3-check" /> Developer</label>
+          <br />
+          <label for="lo_tcp" title="Forces connection to Steam backend to be via TCP."><input type="checkbox" id="lo_tcp" class="w3-check" /> TCP</label>
+          <br />
+          <label for="lo_silent" title="Silent startup mode (will open Steam, but won't show window on startup)."><input type="checkbox" id="lo_silent" class="w3-check" /> Silent</label>
+        </div>
+        <div class="w3-half w3-right" style="width:50%">
+          <label for="lo_bpm" title="Start Steam in Big Picture Mode."><input type="checkbox" id="lo_bpm" class="w3-check" /> Big Picture Mode</label>
+          <br />
+          <label for="lo_windowed" title="Run BPM in windowed mode rather than borderless fullscreen windowed."><input type="checkbox" id="lo_windowed" class="w3-check" /> Windowed</label>
+          <br />
+          <label for="lo_480p" title="480p mode for BPM."><input type="radio" id="lo_480p" name="lo_bpm_p" class="w3-radio" /> 480p</label>
+          <br />
+          <label for="lo_720p" title="720p mode for BPM."><input type="radio" id="lo_720p" name="lo_bpm_p" class="w3-radio" /> 720p</label>
+          <br />
+          <label for="lo_fulldesktopres" title="Full desktop resolution mode for BPM."><input type="radio" id="lo_fulldesktopres" name="lo_bpm_p" class="w3-radio" /> Desktop resolution</label>
+          <br />
+          <label for="lo_bpm_default" title="Default BPM resolution."><input type="radio" id="lo_bpm_default" name="lo_bpm_p" class="w3-radio" checked /> Default</label>
+        </div>
+        <br />
+        <label for="lo_exit" title="Close RV when starting Steam."><input type="checkbox" id="lo_exit" class="w3-check" /> Close RV</label>
+      </div>
+      <br />
       <footer class="w3-center w3-padding w3-black">
-        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Backup settings for selected options">Backup</button>
-        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Restore settings for selected options">Restore</button>
-        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Reset to Steam's current settings">Reset</button>
-        <button class="w3-button w3-hover-black w3-ripple w3-white w3-border w3-round" title="Save selected settings">Save</button>
+        <button id="noLaunchOptions" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Deselect all launch options.">Deselect All</button>
+        <button id="resetLaunchOptions" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Reset launch options to default.">Reset</button>
+        <button id="saveLaunchOptions" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Save launch options.">Save</button>
+        <button id="launchBtn" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Launch the Steam client.">Launch</button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="modalBackups" class="w3-modal">
+    <div class="w3-modal-content w3-center w3-card-4">
+      <header class="w3-container w3-black w3-padding">
+        <button id="closemodalBackups" class="w3-display-topright w3-button w3-ripple w3-black w3-hover-white focus-outline">&times;</button>
+        <h3>Launch Options</h3>
+      </header>
+      <div class="w3-container w3-padding w3-center">
+        <section>
+          <button id="doBackup" class="w3-button w3-ripple w3-border w3-round w3-black w3-hover-white focus-outline">Backup</button>
+          <button id="doRestore" class="w3-button w3-ripple w3-border w3-round w3-black w3-hover-white focus-outline">Restore</button>
+        </section>
+      </div>
+      <footer class="w3-container w3-black w3-padding">
+        <br />
+        <button id="cancelmodalBackups" class="w3-button w3-ripple w3-border w3-round w3-black w3-hover-white focus-outline">Cancel</button>
+        <button id="okaymodalBackups" class="w3-button w3-ripple w3-border w3-round w3-black w3-hover-white focus-outline">Okay</button>
+        <br />
+      </footer>
+    </div>
+  </div>
+
+  <div id="modalProgress" class="w3-modal">
+    <div class="w3-modal-content w3-center w3-card-4">
+      <header class="w3-container w3-padding theme-secondary">
+        <!--
+          <button id="closeSelf" class="w3-display-topright w3-button w3-ripple w3-black w3-hover-white focus-outline">&times;</button>
+        -->
+        <h3>Loading...</h3>
+      </header>
+      <div class="w3-container w3-padding w3-center theme-primary">
+        <section>
+          <span id="loadingText">Loading data; please wait.</span>
+          <br />
+          <label>Progress: <span id="progress"></span>%</label>
+        </section>
+      </div>
+      <footer class="w3-container w3-padding theme-secondary">
+        <br />
+        <br />
       </footer>
     </div>
   </div>
@@ -840,304 +922,11 @@
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
   <!-- normal script imports etc  -->
 
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/badger.js/badger.js"></script>
-    <script src="renderer.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./testClient.js"></script>
+    <script src="./help.json"></script>
 
   <!-- Insert this line after script imports -->
   <script>if (window.module) module = window.module;</script>
-
-  <script type="text/javascript"><!--
-    var overlayTimer, debug = false;
-
-    window.addEventListener( "DOMContentLoaded", function() {
-      initBadges();
-      loadSettings();
-    });
-
-    window.addEventListener( "resize", handleResize );
-
-    window.addEventListener( "click", function() {
-      var lo_modal = document.getElementById( "launchOptionsContainer" ),
-          mu_modal = document.getElementById( "contributorContainer" ),
-          cs_modal = document.getElementById( "clientSettingsContainer" );
-      if( event.target === lo_modal ) {
-        toggleLaunchOptions();
-      }
-      else if( event.target === mu_modal ) {
-        toggleContributors();
-      }
-      else if( event.target === cs_modal ) {
-        toggleClientSettings();
-      }
-    });
-
-    /* Setup ignoring of tabbing while status overlay is active,
-     *   and using Esc to close the menu.
-     */
-    window.addEventListener( "keyup", function( event ) {
-      if( event.which === 9 ) {
-        var loc = document.getElementById( "launchOptionsContainer" ),
-            mc = document.getElementById( "contributorContainer" ),
-            cc = document.getElementById( "clientSettingsContainer" );
-        if( loc.style.display === "block" ) {
-          modalTabbing( event, loc );
-        }
-        else if( mc.style.display === "block" ) {
-          modalTabbing( event, mc );
-        }
-        else if( cc.style.display === "block" ) {
-          modalTabbing( event, cc );
-        }
-      }
-      else if( event.which === 27 ) {
-        if( window.innerWidth < 601 && document.getElementById( "menuToggle" )[ "data-state" ] !== true )
-          toggleMenu();
-        else if( document.getElementById( "launchOptionsContainer" ).style.display === "block" )
-          toggleLaunchOptions();
-        else if( document.getElementById( "contributorContainer" ).style.display === "block" )
-          toggleContributors();
-        else if( document.getElementById( "clientSettingsContainer" ).style.display === "block" ) {
-          toggleClientSettings();
-        }
-      }
-    });
-
-    document.getElementById( "gameList" ).addEventListener( "change", function( event ) {
-      changeSelection( event.target );
-    });
-
-    document.getElementById( "bgSettingsList" ).addEventListener( "change", function( event ) {
-      changeBGSelection( event.target );
-    });
-
-    document.getElementById( "bgSettingsImageChoose" ).addEventListener( "click", chooseBGImage );
-
-    document.getElementById( "chooseSteam" ).addEventListener( "click", chooseInstall );
-
-    document.getElementById( "steamAppApply" ).addEventListener( "click", applySteamAppSettings );
-
-    document.getElementById( "blacklistAdd" ).addEventListener( "click", function( event ) {
-      addToBlacklist( document.getElementById( "gameList" ));
-    });
-
-    document.getElementById( "blacklistRemove" ).addEventListener( "click", removeFromBlacklist );
-
-    document.getElementById( "blacklistReset" ).addEventListener( "click", resetBlacklist );
-
-    document.getElementById( "applyAppSettings" ).addEventListener( "click", function() {
-      applyRVSettings( document.getElementById( "bgSettingsList" ), true );
-    });
-
-    /* Removed because the force is not strong with this one...
-    document.getElementById( "clearForce" ).addEventListener( "click", function() {
-      var fd = document.getElementById( "forceDownload" );
-      fd.value = "";
-      fd.focus();
-    });
-
-    document.getElementById( "addForce" ).addEventListener( "click", function() {
-      addForcedDownload( $( "#forceDownload" ).val());
-    });
-    */
-
-    document.getElementById( "resetLaunchOptions" ).addEventListener( "click", resetLaunchOpts );
-
-    document.getElementById( "saveLaunchOptions" ).addEventListener( "click", saveLaunchOpts );
-
-    document.getElementById( "launchBtn" ).addEventListener( "click", launchSteamApp );
-
-    $( "#theWhat" ).on( "click", function( event ) {
-      openAboutTab( event,  "theWhat" );
-    });
-
-    $( "#theHow" ).on( "click", function( event ) {
-      openAboutTab( event, "theHow" );
-    });
-
-    $( "#theWarning" ).on( "click", function( event ) {
-      openAboutTab( event, "theWarning" );
-    });
-
-    $( "#showClientSettings" ).on( "click", function( event ) {
-      toggleClientSettings();
-    });
-
-    $( "#userSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#dlSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#friendsSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#audioSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#overlaySettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#interfaceSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#osOverlayKeys" ).keydown( function( event ) {
-      handleKeyPress( event );
-    });
-
-    $( "#osScreenshotKeys" ).keydown( function( event ) {
-      handleKeyPress( event );
-    });
-
-    function switchList( event ) {
-      if( event.currentTarget.id === "switchToBlacklist" ) {
-        $( "#gameContainer" ).css( "display", "none" );
-        $( "#blacklistContainer" ).css( "display", "block" );
-        $( "#exitRV" ).focus().blur();
-      }
-      else {
-        $( "#gameContainer" ).css( "display", "block" );
-        $( "#blacklistContainer" ).css( "display", "none" );
-        $( "#reloadSteamApps" ).focus().blur();
-      }
-    }
-
-    function handleKeyPress( event ) {
-      var sk = ( event.shiftKey ? "Shift" : "" );
-      var ck = ( event.ctrlKey ? "Ctrl" : "" );
-      var ak = ( event.altKey ? "Alt" : "" );
-      var mk = ( event.metaKey ? "Win" : "" );
-      var key = ( event.key && event.key !== "Meta" && event.key !== "Shift" && event.key !== "Control" && event.key !== "Alt" ? event.key : "" ) || "";
-      var valveKey;
-      var value = [];
-
-       if( key !== "" ) {
-         valveKey = toValveKeyCode( key );
-       }
-
-       if( new RegExp( /[a-z]/ ).test( key )) {
-         key = key.toUpperCase();
-       }
-
-      [ ck, ak, sk, mk ].forEach( function( item ) {
-        if( item !== "" ) {
-          value.push( item );
-        }
-      });
-      if( key ) {
-        $( "#" + event.currentTarget.id ).val(( value.length > 0 ? value.join( "+" ) + "+" : "" ) + ( key !== "" ? key : "" ));
-        if( valveKey !== undefined ) {
-          document.getElementById( event.currentTarget.id ).setAttribute( "data-keys", value.join( "\t" ) + "\t" + valveKey );
-        }
-      }
-      event.preventDefault();
-    }
-
-    String.prototype.toCapitalCase = function( string ) {
-      return string.charAt( 0 ).toUpperCase() + string.slice( 1 ).toLowerCase();
-    }
-
-    /*
-
-    $( "#streamingSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#broadcastingSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-
-    $( "#taskbarSettingsBtn" ).click( function( event ) {
-      showClientSettingsTab( event.currentTarget );
-    });
-    */
-
-    function toValveKeyCode( key ) {
-      if( key === "[" ) {
-        return "KEY_LBRACKET";
-      }
-      else if( key === "]" ) {
-        return "KEY_RBRACKET";
-      }
-      else if( key === " " ) {
-        return "KEY_SPACE";
-      }
-      else if( key === "/" ) {
-        return "KEY_SLASH";
-      }
-      else if( key === "\\" ) {
-        return "KEY_BACKSLASH";
-      }
-      else if( key === "," ) {
-        return "KEY_COMMA";
-      }
-      else if( key === "." ) {
-        return "KEY_PERIOD";
-      }
-      else if( key === ";" ) {
-        return "KEY_SEMICOLON";
-      }
-      else if( key === "'" ) {
-        return "KEY_APOSTROPHE";
-      }
-      else if( key === "-" ) {
-        return "KEY_MINUS";
-      }
-      else if( key === "=" ) {
-        return "KEY_NONE";
-        /*
-          if( os.platform().indexOf( "darwin" ) !== -1 ) {
-            retVal = "None";
-          }
-        */
-      }
-      else if( key === "`" ) {
-        return "KEY_BACKQUOTE";
-      }
-      else if( key === "ArrowUp" ) {
-        return "KEY_UP";
-      }
-      else if( key === "ArrowDown" ) {
-        return "KEY_DOWN";
-      }
-      else if( key === "ArrowLeft" ) {
-        return "KEY_LEFT";
-      }
-      else if( key === "ArrowRight" ) {
-        return "KEY_RIGHT";
-      }
-      else {
-        return "KEY_" + key.toUpperCase();
-      }
-    }
-
-    function showClientSettingsTab( btn ) {
-      btn.classList.add( "w3-black" );
-      var tab = document.getElementById( btn.id.substring( 0, btn.id.indexOf( "Btn" )) + "Tab" );
-      var allTabs = document.getElementsByClassName( "csTab" );
-      tab.style.display = "block";
-      for( var i = 0; i < allTabs.length; i++ ) {
-        var item = allTabs[ i ];
-        if( item.id !== tab.id ) {
-          item.style.display = "none";
-          document.getElementById( item.id.substring( 0, item.id.indexOf( "Tab" )) + "Btn"  ).classList.remove( "w3-black" );
-        }
-      }
-    }
-
-    function updateVolume( elid, val ) {
-      $( "#" + elid + "Value" ).html( Math.floor( val / 255 * 100 ));
-    }
-
-    document.getElementById( "VMain" ).click();
-
-    window.setTimeout( "handleResize();updateVolume( 'asMusicVolume', " + document.getElementById( "asMusicVolume" ).value + ");updateVolume( 'asVoiceVolume', " + document.getElementById( "asVoiceVolume" ).value + ")", 100 );
-  --></script>
 </body>
 </html>

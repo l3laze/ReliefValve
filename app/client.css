@@ -1,0 +1,171 @@
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -webkit-app-region: no-drag;
+  cursor: default;
+}
+
+html {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  transform: translate3d(0);
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  animation: fadein 0.5s;
+  -webkit-app-region: drag;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  background: white;
+  color: black;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+label[for], input, select, option, a, button {
+  cursor: pointer;
+}
+
+select option {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+label.t-o-e {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: auto;
+  display: block;
+  overflow: hidden;
+}
+
+button.w3-small {
+  cursor: pointer;
+  vertical-align: top;
+  padding-top: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+select::-webkit-scrollbar {
+  background: #FFF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000;
+}
+
+#menuToggle {
+  padding-top: 0;
+  padding-bottom: 1px;
+  margin-top: -2px;
+  margin-bottom: 0;
+}
+
+#switchToBlacklist {
+  margin-bottom: 4px;
+}
+
+#switchToAppsList {
+  margin-bottom: 4px;
+}
+
+#switchToPublicAppControls {
+  margin-bottom: 4px;
+}
+
+#switchToPrivateAppControls {
+  margin-bottom: 4px;
+}
+
+#setAUB {
+  width: 12em;
+  overflow: hidden;
+  text-overflow: ellipsis:
+}
+
+#friendsStatus {
+  width: 8.5em;
+}
+
+#helpList {
+  width: 17em;
+}
+
+.bgImage {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.menu-items {
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  list-style: none;
+  list-style-position: inside;
+}
+
+.menu-items li {
+  float: left;
+}
+
+.w3-modal {
+  padding-top: 40px;
+}
+
+.borderless-sides {
+  border: 1px solid #ccc;
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+
+.focus-outline:focus {
+  outline: #00BFFF solid 3px;
+}
+
+.top-marg {
+  margin-top: 1em;
+}
+
+.full-width {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.t-o-e {
+  text-overflow: ellipsis;
+}
+
+@media only screen and ( max-width: 600px ) {
+  #helpList {
+    width: 25em;
+  }
+}
+
+@media only screen and ( min-width: 601px ) {
+}
+
+@media only screen and ( max-width: 800px ) {
+  #btnSharedConfig, #btnLocalConfig, #btnSteamapps {
+    margin-top: 8px;
+  }
+}
+
+@media only screen and ( min-width: 801px ) {
+  .hide-med {
+    display: none;
+  }
+}
