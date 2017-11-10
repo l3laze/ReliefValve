@@ -64,7 +64,7 @@
         </select>
         <br />
         <br />
-        <b class="w3-large w3-slim">Steam Autologin User</b>
+        <b>Steam Autologin User</b>
         <br />
         <label>Current</label>
         <br />
@@ -76,12 +76,16 @@
         <br class="w3-hide-medium w3-hide-large" />
       </div>
       <div class="w3-half w3-right">
+        <b>RV User - Autoload User</b>
+        <br />
+        <span>
+          <span id="currentUser">N/A</span>
+          -
+          <span id="autoloadUser">N/A</span>
+        </span>
+        <br />
+        <br />
         <label id="userAutoloadLabel" for="userAutoload"><input type="checkbox" id="userAutoload" class="w3-check" />Autoload user</label>
-        <br />
-        <br />
-        <b>Current Autoload User</b>
-        <br />
-        <span id="autoloadUser">N/A</span>
         <br />
         <br />
         <button id="setAppUser" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Set User For RV</button>
@@ -97,7 +101,8 @@
         <br />
         <input type="search" id="searchLibs" class="w3-card-4 full-width" placeholder="Search" />
         <br />
-        <select id="libList" class="w3-card-4 full-width" multiple size="6"></select>
+        <select id="libList" class="w3-card-4 full-width" multiple size="6">
+        </select>
         <br />
         <br />
         <button id="showLibs" class="w3-button w3-ripple w3-border focus-outline theme-primary">Load Selected Libraries</button>
@@ -109,7 +114,7 @@
 
     <div id="dataApps" class="w3-container w3-center dTab">
       <div class="w3-half w3-left">
-        <b id="numApps">Steam Apps - <span id="numApps">0</span></b>
+        <b>Steam Apps - <span id="numApps">0</span></b>
         <br />
         <input type="search" id="searchSteamapps" class="w3-card-4 full-width" placeholder="Search" />
         <br />
@@ -188,7 +193,8 @@
         <hr />
         <b>Library Blacklist - <span id="numLibrariesBlacklisted">0</span></b>
         <br />
-        <select id="libraryBlacklist" class="w3-card-4 full-width" size="3"></select>
+        <select id="libraryBlacklist" class="w3-card-4 full-width" size="3">
+        </select>
         <br />
         <button id="libraryBlacklistRemove" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Remove Selected</button>
       </div>
@@ -273,6 +279,9 @@
       <br />
       <br />
       <button id="applyAppSettings" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Save Settings</button>
+      <br />
+      <br />
+      <button id="removeAutoload" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Remove Autoload Settings</button>
     </div>
   </div>
 
@@ -712,8 +721,8 @@
                 Pause when voice chatting..
               </label>
               <br />
-              <label for="osScreenshotUncompressed" title="Music -> Display a notification -> When a new track begins">
-                <input type="checkbox" id="osScreenshotUncompressed" class="w3-check" />
+              <label for="asNewTrack" title="Music -> Display a notification -> When a new track begins">
+                <input type="checkbox" id="asNewTrack" class="w3-check" />
                 <span>Display notification when new track begins..</span>
               </label>
               <br />

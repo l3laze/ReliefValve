@@ -11,7 +11,7 @@ function SteamConfig( blacklisted ) {
   };
 
   this.steamPath = "";
-  this.currentUser = 0;
+  this.currentUser = -1;
   this.skins = [];
   this.settings = {
     config: {},
@@ -32,9 +32,6 @@ function SteamConfig( blacklisted ) {
   if( blacklisted !== undefined ) {
     var blKeys = Object.keys( defaultBlacklist );
     var baKeys = Object.keys( blacklisted.apps );
-
-    console.info( blKeys );
-    console.info( baKeys );
 
     for( var i = 0; i < blKeys.length; i++ ) {
       if( baKeys.includes( blKeys[ i ]) === false ) {
@@ -397,8 +394,14 @@ SteamConfig.prototype.loadSharedConfig = async function loadSharedConfig( steam 
 
   this.settings.sharedconfig = undefined;
 
+  console.info( steam );
+  console.info( this.steamPath );
+  console.info( this.currentUser );
+  console.info( this.settings.loginusers );
+  console.info( this.settings.loginusers[ this.currentUser ]);
+
   try {
-    var scPath = path.join( this.steamPath, "userdata", this.currentUser.id3, "7", "remote", "sharedconfig.vdf" );
+    var scPath = path.join( steam, "userdata", this.settings.loginusers[ this.currentUser ].id3, "7", "remote", "sharedconfig.vdf" );
     orig = "" + await fs.readFileAsync( scPath );
     data = await loadTextVDF( scPath );
     apps = data.UserRoamingConfigStore.Software.Valve.Steam.Apps;
@@ -573,7 +576,7 @@ SteamConfig.prototype.loadCommonData = async function loadSteamCommonData( steam
   progressCallback( 5 );
 };
 
-SteamConfig.prototype.loadUserData = async function loadSteamPrivateData( steam, progressCallback, alone ) {
+SteamConfig.prototype.loadUserData = async function loadUserData( steam, progressCallback, alone ) {
   var half = 0;
 
   if( alone ) {
@@ -615,15 +618,15 @@ SteamConfig.prototype.loadSteam = async function loadSteam( steamPath, progressC
 };
 
 SteamConfig.prototype.setUser = function setUser( accountName ) {
-  this.currentUser = undefined;
+  this.currentUser = -1;
 
   for( var i = 0; i < this.settings.loginusers.length; i++ ) {
     if( this.settings.loginusers[ i ].accountName === accountName ) {
-      this.currentUser = this.settings.loginusers[ i ];
+      this.currentUser = i;
     }
   }
 
-  if( this.currentUser === undefined ) {
+  if( this.currentUser === -1 ) {
     throw new Error( `Invalid user: ${ accountName }.` );
   }
 };

@@ -276,24 +276,35 @@ function analyzeDLAndPlay( val ) {
 function updateCommonDataUI() {
   $( "#chosenPath" ).html( client.steamPath );
 
-  genList( document.getElementById( "loginUsersList" ), client.getUserNames());
-  genList( document.getElementById( "autoloadUserList" ), client.getUserNames());
+  genList( document.getElementById( "userList" ), client.getUserNames());
 
-  $( "#numUsers" ).html( document.getElementById( "loginUsersList" ).options.length );
-  $( "#currentUser" ).html(( client.currentUser ? client.currentUser.accountName : "N/A" ));
-  $( "#autologinUser" ).html( client.settings.registry.alUser );
+  $( "#numUsers" ).html( document.getElementById( "userList" ).options.length );
+  $( "#autologinUser" ).html( client.settings.registry.autologinUser );
 
-  $( "#usDontSave" ).attr( "checked", ( client.settings.config.forgetMe === "1" ? true : false ));
-  $( "#usDesktopAuth" ).attr( "checked", ( client.settings.config.authBrowserFromClient === "1" ? true : false ));
+  $( "#usDontSave" ).attr( "checked", ( client.settings.config.dontSavePersonalInfo === "1" ? true : false ));
+  $( "#usDesktopAuth" ).attr( "checked", ( client.settings.config.clientBrowserAuth === "1" ? true : false ));
 
-  $( "#dsAutoUpdateLimit" ).attr( "checked", ( client.settings.config.limitAUToRange === "1" ? true : false ));
-  $( "#dsAllowDuringGameplay").attr( "checked", ( client.settings.config.dlAndPlay === "1" ? true : false ));
-  $( "#dsStreamingThrottle").attr( "checked", ( client.settings.config.throttleDLWhileStreaming === "1" ? true : false ));
+  $( "#dsAutoUpdateLimit" ).attr( "checked", ( client.settings.config.autoUpdateRangeEnabled === "1" ? true : false ));
+  $( "#dsAllowDuringGameplay").attr( "checked", ( client.settings.config.allowDownloadsDuringGameplay === "1" ? true : false ));
+  $( "#dsStreamingThrottle").attr( "checked", ( client.settings.config.streamingThrottleEnabled === "1" ? true : false ));
   document.getElementById( "dsAutoUpdateLimitMin" ).selectedIndex = client.settings.config.autoUpdateRangeStart;
   document.getElementById( "dsAutoUpdateLimitMax" ).selectedIndex = client.settings.config.autoUpdateRangeEnd;
-  document.getElementById( "dsBandwidthLimit" ).selectedIndex = client.settings.config.maxDL;
+  document.getElementById( "dsBandwidthLimit" ).selectedIndex = client.settings.config.downloadThrottleKbps;
 
-  var pings = client.settings.config.maxPings;
+  $( "#asScanSteam" ).attr( "checked", ( client.settings.config.searchSteamFoldersForMusic === "1" ? true : false ));
+  $( "#asScanFolders" ).attr( "checked", ( client.settings.config.searchForMusicAtStartup === "1" ? true : false ));
+  $( "#asScanLog" ).attr( "checked", ( client.settings.config.logSearchForMusic === "1" ? true : false ));
+  $( "#asScanLog" ).attr( "checked", ( client.settings.config.logSearchForMusic === "1" ? true : false ));
+  $( "#asMusicVolume" ).attr( "value", client.settings.config.musicVolume );
+  // $( "#asMusicVolume" ).change();
+  $( "#asPauseForApp" ).attr( "checked", ( client.settings.config.pauseOnAppLaunch === "1" ? true : false ));
+  $( "#asPauseForChat" ).attr( "checked", ( client.settings.config.pauseOnVoiceChat === "1" ? true : false ));
+  $( "#asNewTrack" ).attr( "checked", ( client.settings.config.nowPlayingNotification === "1" ? true : false ));
+
+  $( "#asMusicVolume" ).val( client.settings.localconfig.vrVol );
+  updateVolume( "music", client.settings.localconfig.vrVol );
+
+  var pings = client.settings.config.maxServerBrowserPingsPerMin;
   var mp = document.getElementById( "osMaxPings" );
   for( var i = 0; i < mp.options.length; i++ ) {
     if( mp.options[ i ].value === pings ) {
@@ -326,6 +337,9 @@ function updateCommonDataUI() {
     }
   }
 
+  genList( document.getElementById( "libList" ), client.settings.libraryfolders );
+  $( "#numLibs" ).html( client.settings.libraryfolders.length );
+
   var appKeys = Object.keys( client.settings.steamapps );
   var appNames = client.getAppNames();
   var al = document.getElementById( "appList" );
@@ -333,16 +347,14 @@ function updateCommonDataUI() {
   genList( al, appNames, appKeys );
   $( "#numApps" ).html( document.getElementById( "appList" ).options.length );
 
-  genList( document.getElementById( "blacklist" ), client.getBlacklistedAppNames());
-  $( "#numBlacklisted" ).html( document.getElementById( "blacklist" ).options.length );
+  genList( document.getElementById( "appBlacklist" ), client.getBlacklistedAppNames());
+  $( "#numAppsBlacklisted" ).html( document.getElementById( "appBlacklist" ).options.length );
 
-  genList( document.getElementById( "libList" ), client.settings.libraryfolders );
-  $( "#numLibs" ).html( document.getElementById( "libList" ).options.length );
+  genList( document.getElementById( "libraryBlacklist" ), client.blacklist.libs );
+  $( "#numLibrariesBlacklisted" ).html( document.getElementById( "libraryBlacklist" ).options.length );
 
-  genList( document.getElementById( "autoloadUserList" ), client.getUserNames());
-
-  $( "#asMusicVolume" ).val( client.settings.localconfig.vrVol );
-  updateVolume( "music", client.settings.localconfig.vrVol );
+  genList( document.getElementById( "userBlacklist" ), client.blacklist.users );
+  $( "#numUsersBlacklisted" ).html( document.getElementById( "userBlacklist" ).options.length );
 
   if( config.has( "autoload" )) {
     var al = config.get( "autoload" );
@@ -365,10 +377,13 @@ function updateCommonDataUI() {
 }
 
 function updateUserDataUI() {
-  $( "#usRememberPassword" ).attr( "checked", ( client.currentUser.rememberPassword === "1" ? true : false ));
-  $( "#usWantsOffline" ).attr( "checked", ( client.currentUser.wantsOffline === "1" ? true : false ));
-  $( "#usSkipWarning" ).attr( "checked", ( client.currentUser.skipWarning === "1" ? true : false ));
-  $( "#userDisplayName" ).html( `${ client.settings.loginusers[ getUserIndex( client.currentUser.accountName )].displayName }` );
+  console.info( client );
+
+  $( "#usRememberPassword" ).attr( "checked", ( client.settings.loginusers[ client.currentUser ].rememberPassword === "1" ? true : false ));
+  $( "#usWantsOffline" ).attr( "checked", ( client.settings.loginusers[ client.currentUser ].wantsOfflineMode === "1" ? true : false ));
+  $( "#usSkipWarning" ).attr( "checked", ( client.settings.loginusers[ client.currentUser ].skipOfflineWarning === "1" ? true : false ));
+  $( "#userDisplayName" ).html( `${ client.settings.loginusers[ client.currentUser ].displayName }` );
+  $( "#currentUser" ).html(( client.currentUser ? client.settings.loginusers[ client.currentUser ].accountName : "N/A" ));
 
   var fw = document.getElementById( "isFavoriteWindow" );
 
@@ -381,51 +396,50 @@ function updateUserDataUI() {
 
   var frs = document.getElementById( "fsState" );
   for( var i = 0; i < frs.options.length; i++ ) {
-    if( frs.options[ i ].value === client.settings.localconfig.status ) {
+    if( frs.options[ i ].value === client.settings.localconfig.friendsStatus ) {
       frs.selectedIndex = i;
       break;
     }
   }
 
-  updateVolume( "receive", client.settings.localconfig.vrVol );
-  $( "#asVoiceVolume" ).val( client.settings.localconfig.vrVol );
+  updateVolume( "receive", client.settings.localconfig.voiceReceiveVolume );
+  $( "#asVoiceVolume" ).val( client.settings.localconfig.voiceReceiveVolume );
 
-  $( "#isNotifyNews" ).attr( "checked", ( client.settings.localconfig.showNewsOnStart === "1" ? true : false ));
-  $( "#isAddressBar" ).attr( "checked", ( client.settings.localconfig.navBar === "1" ? true : false ));
+  $( "#isNotifyNews" ).attr( "checked", ( client.settings.localconfig.showNewsOnStartup === "1" ? true : false ));
+  $( "#isAddressBar" ).attr( "checked", ( client.settings.localconfig.addressBar === "1" ? true : false ));
 
-  $( "#fsJoinNotification" ).attr( "checked", ( client.settings.localconfig.joinToast === "1" ? true : false ));
-  $( "#fsJoinSound" ).attr( "checked", ( client.settings.localconfig.joinSound === "1" ? true : false ));
-  $( "#fsOnlineNotification" ).attr( "checked", ( client.settings.localconfig.onlineToast === "1" ? true : false ));
-  $( "#fsOnlineSound" ).attr( "checked", ( client.settings.localconfig.onlineSound === "1" ? true : false ));
-  $( "#fsMessageNotification" ).attr( "checked", ( client.settings.localconfig.messageToast === "1" ? true : false ));
+  $( "#fsJoinNotification" ).attr( "checked", ( client.settings.localconfig.joinsGameNotification === "1" ? true : false ));
+  $( "#fsJoinSound" ).attr( "checked", ( client.settings.localconfig.joinsGameSound === "1" ? true : false ));
+  $( "#fsOnlineNotification" ).attr( "checked", ( client.settings.localconfig.comesOnlineNotification === "1" ? true : false ));
+  $( "#fsOnlineSound" ).attr( "checked", ( client.settings.localconfig.comesOnlineSound === "1" ? true : false ));
+  $( "#fsMessageNotification" ).attr( "checked", ( client.settings.localconfig.messageNotification === "1" ? true : false ));
   $( "#fsMessageSound" ).attr( "checked", ( client.settings.localconfig.messageSound === "1" ? true : false ));
-  $( "#fsGroupNotification" ).attr( "checked", ( client.settings.localconfig.groupToast === "1" ? true : false ));
-  $( "#fsGroupSound" ).attr( "checked", ( client.settings.localconfig.groupSound === "1" ? true : false ));
-  $( "#fsOverlay" ).attr( "checked", ( client.settings.localconfig.olFriends === "1" ? true : false ));
-  $( "#fsShowOnStart" ).attr( "checked", ( client.settings.localconfig.showFriendsOnStart === "1" ? true : false ));
-  $( "#fsAutoSign" ).attr( "checked", ( client.settings.localconfig.autoSignInFriends === "1" ? true : false ));
-  document.getElementById( "fsFlashWindow" ).selectedIndex = client.settings.localconfig.flashWin;
+  $( "#fsGroupNotification" ).attr( "checked", ( client.settings.localconfig.groupEventNotification === "1" ? true : false ));
+  $( "#fsGroupSound" ).attr( "checked", ( client.settings.localconfig.groupEventSound === "1" ? true : false ));
+  $( "#fsOverlay" ).attr( "checked", ( client.settings.localconfig.showFriendsInOverlay === "1" ? true : false ));
+  $( "#fsShowOnStart" ).attr( "checked", ( client.settings.localconfig.showFriendsOnStartup === "1" ? true : false ));
+  $( "#fsAutoSign" ).attr( "checked", ( client.settings.localconfig.autoSignIntoFriends === "1" ? true : false ));
+  document.getElementById( "fsFlashWindow" ).selectedIndex = client.settings.localconfig.flashWindowForNewMessage;
 
   $( "#osEnableOverlay" ).attr( "checked" , ( client.settings.localconfig.enableOverlay === "1" ? true : false ));
-  $( "#osScreenshotNotification" ).attr( "checked", ( client.settings.localconfig.overlaySSToast === "1" ? true : false ));
-  $( "#osScreenshotSound" ).attr( "checked", ( client.settings.localconfig.overlaySSSound === "1" ? true : false ));
-  $( "#osScreenshotOriginal" ).attr( "checked", ( client.settings.localconfig.overlaySSUncompressed === "1" ? true : false ));
-  $( "#osScreenshotKeys" ).val( client.settings.localconfig.overlaySSKey );
-  $( "#osOverlayKeys" ).val( client.settings.localconfig.overlayKeys );
-  $( "#osHomePage" ).val( client.settings.localconfig.overlayHome );
-  $( "#osOverlayContrastFPS" ).attr( "checked", ( client.settings.localconfig.overlayFPSContrast === "1" ? true : false ));
-  document.getElementById( "osOverlayFPSCorner" ).selectedIndex = client.settings.localconfig.overlayFPSCorner;
+  $( "#osScreenshotNotification" ).attr( "checked", ( client.settings.localconfig.screenshotNotification === "1" ? true : false ));
+  $( "#osScreenshotSound" ).attr( "checked", ( client.settings.localconfig.screenshotSound === "1" ? true : false ));
+  $( "#osScreenshotOriginal" ).attr( "checked", ( client.settings.localconfig.saveUncompressedScreenshot === "1" ? true : false ));
+  $( "#osScreenshotKeys" ).val( client.settings.localconfig.screenshotShortcut );
+  $( "#osOverlayKeys" ).val( client.settings.localconfig.overlayShortcut );
+  $( "#osHomePage" ).val( client.settings.localconfig.overlayHomepage );
+  $( "#osOverlayContrastFPS" ).attr( "checked", ( client.settings.localconfig.fpsCounterContrast === "1" ? true : false ));
+  document.getElementById( "osOverlayFPSCorner" ).selectedIndex = client.settings.localconfig.fpsCounterPosition;
 
-  $( "#asPushTalk" ).attr( "checked", ( client.settings.localconfig.usePTT === "1" ? true : false ));
-  $( "input[ name='autoVoice' ][ value='" + !!+client.settings.localconfig.usePTT + "' ]" ).attr( "checked", true );
-  $( "#asPTKey" ).html( client.settings.localconfig.pttKey );
+  $( "input[ name='autoVoice' ][ value='" + !!+client.settings.localconfig.usePushToTalk + "' ]" ).attr( "checked", true );
+  $( "#asPTKey" ).html( client.settings.localconfig.pushToTalkKey );
 
-  $( "#dsRatesAsBits" ).attr( "checked", ( client.settings.localconfig.displayAsBits === "1" ? true : false ));
+  $( "#dsRatesAsBits" ).attr( "checked", ( client.settings.localconfig.displayRatesAsBits === "1" ? true : false ));
 }
 
 function updateUI() {
   updateCommonDataUI();
-  if( client.currentUser !== undefined && JSON.stringify( client.currentUser ) !== "{}" ) {
+  if( client.currentUser !== undefined ) {
     updateUserDataUI();
   }
   $( "#loaded" ).html( "Loaded" );
@@ -762,8 +776,9 @@ function handleResize() {
 }
 
 function initEventHandlers() {
-  $( "#choose" ).click( function() {
-    var chosen = dialog.showOpenDialog({
+  $( "#choose" ).click( async function choosePath () {
+
+    var chosen = await dialog.showOpenDialog({
       title: "Select your Steam installation folder",
       properties: [ 'openDirectory' ],
       defaultPath: client.getDefaultLocation()
@@ -799,6 +814,8 @@ function initEventHandlers() {
       console.info( "Loading Steam..." );
 
       $( "#loadingText" ).html( "Loading; please wait." );
+
+      client.currentUser = undefined;
 
       await client.loadSteam( client.steamPath, proCallback );
     }
@@ -1192,23 +1209,19 @@ function initEventHandlers() {
   });
 
   $( "#setAppUser" ).click( async function setSelectedUser() {
-    if( client === undefined ) {
+    if( client.steamPath === undefined ) {
       alert( "Set the path to Steam first." );
     }
     else {
       var ul = document.getElementById( "userList" );
-      var user = client.settings.loginusers[ getUserIndex( ul.options[ ul.selectedIndex ].text )];
+      var user = client.settings.loginusers[ ul.selectedIndex ];
       modal = document.getElementById( "modalProgress" );
 
-      if( client.steamPath === undefined ) {
-
-      }
-
-      if( user !== undefined ) {
+      if( user !== -1 ) {
         modal.style.display = "block";
         $( "#loadingText" ).html( "Loading data; please wait." );
         client.setUser( user.accountName );
-        await client.loadSteamPrivateData( client.steamPath, proCallback, true );
+        await client.loadUserData( client.steamPath, proCallback, true );
         updateUserDataUI();
       }
     }
@@ -1331,19 +1344,23 @@ function init() {
 
   loadAppConfig();
 
-  /*
-
-    if( config.has( "blacklist" )) {
-      console.info( "Have blacklist..." );
-      client = new SteamConfig.SteamConfig( config.get( "blacklist" ));
+  if( config.has( "blacklist" )) {
+    console.info( "Have blacklist..." );
+    var bl = config.get( "blacklist" );
+    if( Object.keys( bl ).includes( "apps" ) === false ) {
+      client = new SteamConfig.SteamConfig({
+        "apps": bl,
+        "libs": [],
+        "users": []
+      });
     }
-    else {
-      console.info( "Using default blacklist..." );
-      client = new SteamConfig.SteamConfig();
-    }
+  }
+  else {
+    console.info( "Using default blacklist..." );
+    client = new SteamConfig.SteamConfig();
+  }
 
-    loadAutoConfig();
-  */
+  loadAutoConfig();
 }
 
 window.addEventListener( "DOMContentLoaded", function() {
