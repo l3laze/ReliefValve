@@ -255,6 +255,7 @@ function analyzeState( state ) {
 }
 
 function analyzeAUB( val ) {
+  console.info( val );
   if( val === "0" ) {
     return "Automatically";
   }
@@ -363,7 +364,6 @@ function updateCommonDataUI() {
     }
     if( al.user ) {
       if( client.getUserNames().includes( al.user )) {
-        document.getElementById( "autoloadUserList" ).selectedIndex = getUserIndex( al.user );
         $( "#autoloadCurrent" ).html( al.user );
       }
       else {
@@ -377,8 +377,6 @@ function updateCommonDataUI() {
 }
 
 function updateUserDataUI() {
-  console.info( client );
-
   $( "#usRememberPassword" ).attr( "checked", ( client.settings.loginusers[ client.currentUser ].rememberPassword === "1" ? true : false ));
   $( "#usWantsOffline" ).attr( "checked", ( client.settings.loginusers[ client.currentUser ].wantsOfflineMode === "1" ? true : false ));
   $( "#usSkipWarning" ).attr( "checked", ( client.settings.loginusers[ client.currentUser ].skipOfflineWarning === "1" ? true : false ));
@@ -534,7 +532,6 @@ async function loadAutoConfig() {
       console.info( `Auto loading (with user) from ${ autoConfig.steam }` );
 
       $( "#loadingText" ).html( "Auto-loading; please wait." );
-
 
       client.steamPath = autoConfig.steam;
       await client.loadCommonData( autoConfig.steam, proCallback );
@@ -822,32 +819,6 @@ function initEventHandlers() {
     updateUI();
   });
 
-  $( "#offline" ).click( function() {
-    if( Client.currentUser === undefined ) {
-      alert( "You must set a user before you can set offline mode." );
-    }
-    else {
-      var mode = "0";
-      var skip = "0";
-      mode = ( document.getElementById( "wantsOffline" ).checked ? "1" : "0" );
-      skip = ( document.getElementById( "skipWarning" ).checked ? "1" : "0" );
-
-      Client.currentUser.wantsOffline = mode;
-      Client.currentUser.skipWarning = skip;
-      document.getElementById( "wantsOffline" ).checked = !!+mode;
-      document.getElementById( "skipWarning" ).checked = !!+skip;
-      $( "#offlineConfig" ).html( `Current: ${Client.currentUser.wantsOffline} & ${Client.currentUser.skipWarning}.` );
-    }
-  });
-
-  $( "#skinSet" ).click( function() {
-    var skins = document.getElementById( "skinList" );
-    var skin = skins.selectedIndex;
-    if( skin !== undefined ) {
-      $( "#currentSkin" ).html( skins.options[ skins.selectedIndex ].text );
-    }
-  });
-
   $( "#btnMain" ).click( function() {
     changeSettingsTab( "Main" );
   });
@@ -884,30 +855,30 @@ function initEventHandlers() {
     updateVolume( "music", event.currentTarget.value );
   });
 
-  $( "#overlayKeys" ).keydown( function( event ) {
+  $( "#osOverlayKeys" ).keydown( function( event ) {
     handleKeyPress( event );
   });
 
-  $( "#overlayKeys" ).keyup( function( event ) {
+  $( "#osOverlayKeys" ).keyup( function( event ) {
     event.stopPropagation();
     event.preventDefault();
   });
 
-  $( "#screenshotKeys" ).keydown( function( event ) {
+  $( "#osScreenshotKeys" ).keydown( function( event ) {
     handleKeyPress( event );
   });
 
-  $( "#screenshotKeys" ).keyup( function( event ) {
+  $( "#osScreenshotKeys" ).keyup( function( event ) {
     event.stopPropagation();
     event.preventDefault();
   });
 
-  $( "#pttKey" ).keydown( function( event ) {
+  $( "#asPTKey" ).keydown( function( event ) {
     event.stopPropagation();
     event.preventDefault();
   });
 
-  $( "#pttKey" ).keyup( function( event ) {
+  $( "#asPTKey" ).keyup( function( event ) {
     event.stopPropagation();
     event.preventDefault();
     event.currentTarget.value = `Random: ${ Math.floor( Math.random() * 100 )}`;
@@ -924,15 +895,20 @@ function initEventHandlers() {
     $( "#steamappsInstallDir" ).html( client.settings.steamapps[ appid ].installDir );
     $( "#steamappsSize" ).html( `${ Measure.toStringByteSize( client.settings.steamapps[ appid ].sizeInBytes )}` );
     $( "#steamappsDownloadedAmount" ).html( `${ Measure.toStringByteSize( client.settings.steamapps[ appid ].bytesDownloaded )}` );
-    $( "#steamappsDownloadSize" ).html( `${ Measure.toStringByteSize( client.settings.steamapps[ appid ].sizeToDownload )}` );
+
+    if( client.settings.steamapps[ appid ].sizeToDownload === "0" ) {
+      var dam = Measure.toStringBytesSize( client.settings.steamapps[ appid ].bytesDownloaded );
+      $( "#steamappsDownloadSize" ).html( `${ 0 } ${ dam.substring( dam.indexOf( " " ))}` );
+    }
+    else {
+      $( "#steamappsDownloadSize" ).html( `${ Measure.toStringByteSize( client.settings.steamapps[ appid ].bytesToDownload )}` );
+    }
     $( "#steamappsLastUpdated" ).html(
       ( client.settings.steamapps[ appid ].lastUpdated === "0" ?
         "Never" :
         `${ Measure.timeSince( client.settings.steamapps[ appid ].lastUpdated )}`
       )
     );
-    $( "#steamappsLastUpdated" ).html(  );
-    $( "#steamappsAUB" ).html( analyzeAUB( client.settings.steamapps[ appid ].aub ));
     $( "#steamappsCanDL" ).html( analyzeDLAndPlay( client.settings.steamapps[ appid ].dlAndPlay ));
     $( "#steamappsSavefiles" ).html((
         scAppKeys.includes( appid ) &&
@@ -954,6 +930,7 @@ function initEventHandlers() {
     storeLink.appendChild( document.createTextNode( appid ));
     appidNode.appendChild( storeLink );
 
+    $( "input[ name='appAOD' ][ value='" + !!+client.settings.steamapps[ appid ].allowDownloadsWhileRunning + "' ]" ).attr( "checked", true );
 
     var app = ( client.settings.sharedconfig.apps.hasOwnProperty( appid ) ?
                 client.settings.sharedconfig.apps[ appid ] : {}
@@ -969,24 +946,6 @@ function initEventHandlers() {
       $( "#appPublisher" ).html(( app.appinfo && app.appinfo.publisher && app.appinfo.publisher !== "" ? app.appinfo.publisher : "N/A" ));
     }
   });
-
-  $( "#btnManager" ).click( function() {
-    $( "#modalBackups" ).css( "display", "block" );
-  });
-
-  $( "#closemodalBackups" ).click( function() {
-    $( "#modalBackups" ).css( "display", "none" );
-  });
-
-  $( "#cancelmodalBackups" ).click( function() {
-    $( "#modalBackups" ).css( "display", "none" );
-  });
-
-  $( "#okaymodalBackups" ).click( function() {
-    $( "#modalBackups" ).css( "display", "none" );
-  });
-
-  $( "#pcgwLink" ).click( anchorHandler );
 
   $( "#clientSettings" ).click( function showClientSettings() {
     $( "#clientSettingsModal" ).css( "display", "block" );
@@ -1147,25 +1106,6 @@ function initEventHandlers() {
     $( "#modalAutoload" ).css( "display", "none" );
   });
 
-  $( "#saveAutoload" ).click( function saveAutoload() {
-    var alos = document.getElementById( "doAutoLoadOnStart" ),
-        ul = document.getElementById( "autoloadUserList" ),
-        autoConfig = {
-          user: ul.options[ ul.selectedIndex ].text,
-          steam: client.steamPath,
-          autoloadOnStart: alos.checked || false,
-        };
-
-    config.set( "autoload", autoConfig );
-
-    $( "#autoloadCurrent" ).html( ul.options[ ul.selectedIndex ].text );
-
-    $( "#modalAutoload" ).css( "display", "none" );
-
-    console.info( "Saved autoload settings." );
-    console.info( autoConfig );
-  });
-
   $( "#removeAutoload" ).click( function removeAutoloadSettings() {
     if( config.has( "autoload" )) {
       config.delete( "autoload" );
@@ -1209,18 +1149,41 @@ function initEventHandlers() {
   });
 
   $( "#setAppUser" ).click( async function setSelectedUser() {
+    var ul = document.getElementById( "userList" );
     if( client.steamPath === undefined ) {
       alert( "Set the path to Steam first." );
     }
+    else if( ul.selectedIndex === -1 ) {
+      alert( "Select a user first." );
+    }
     else {
-      var ul = document.getElementById( "userList" );
-      var user = client.settings.loginusers[ ul.selectedIndex ];
+      var alos = document.getElementById( "userAutoload" ),
+          un = ul.options[ ul.selectedIndex ].text,
+          autoConfig = {
+            user: "",
+            steam: "",
+            autoloadOnStart: false
+          };
+
+      if( alos.checked ) {
+        autoConfig.user = un;
+        autoConfig.steam = client.steamPath;
+        autoConfig.autoloadOnStart = true;
+      }
+
+      config.set( "autoload", autoConfig );
+      console.info( "Saved autoload settings." );
+      console.info( autoConfig );
+
+      $( "#autoloadUser" ).html( un );
+      $( "#currentUser" ).html( un );
+
       modal = document.getElementById( "modalProgress" );
 
       if( user !== -1 ) {
         modal.style.display = "block";
         $( "#loadingText" ).html( "Loading data; please wait." );
-        client.setUser( user.accountName );
+        client.setUser( un );
         await client.loadUserData( client.steamPath, proCallback, true );
         updateUserDataUI();
       }
@@ -1260,23 +1223,11 @@ function initEventHandlers() {
         event.preventDefault();
       }
       else if( event.key === "Escape" ) {
-        if( $( "#modalAutoload" ).css( "display" ) !== "none" ) {
-          $( "#modalAutoload" ).css( "display", "none" );
-        }
-        else if( $( "#modalBackups" ).css( "display" ) !== "none" ) {
-          $( "#modalBackups" ).css( "display", "none" );
-        }
-        else if( $( "#launchOptionsModal" ).css( "display" ) !== "none" ) {
+        if( $( "#launchOptionsModal" ).css( "display" ) !== "none" ) {
           $( "#launchOptionsModal" ).css( "display", "none" );
         }
         else if( $( "#clientSettingsModal" ).css( "display" ) !== "none" ) {
           $( "#clientSettingsModal" ).css( "display", "none" );
-        }
-        else if( $( "#modalAutoload" ).css( "display" ) !== "none" ) {
-          $( "#modalAutoload" ).css( "display", "none" );
-        }
-        else if( $( "#modalAppSettings" ).css( "display" ) !== "none" ) {
-          $( "#modalAppSettings" ).css( "display", "none" );
         }
       }
     }
@@ -1294,14 +1245,6 @@ function initEventHandlers() {
     }
     else if( event.target.id === "modalBackups" ) {
       $( "#modalBackups" ).css( "display", "none" );
-    }
-    else if( event.target.id === "modalAppSettings" || event.target.id === "modalAutoload" ) {
-      if( $( "#modalAutoload" ).css( "display" ) !== "none" ) {
-        $( "#modalAutoload" ).css( "display", "none" );
-      }
-      else {
-        $( "#modalAppSettings" ).css( "display", "none" );
-      }
     }
   });
 
@@ -1327,8 +1270,6 @@ function loadHelpData() {
 }
 
 function init() {
-  console.info( "@init -- Not loading Steam while testing UI." );
-
   var toWidth = 601;
   var toHeight = 780;
   if( window.outerWidth < toWidth ) {

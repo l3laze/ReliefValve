@@ -394,12 +394,6 @@ SteamConfig.prototype.loadSharedConfig = async function loadSharedConfig( steam 
 
   this.settings.sharedconfig = undefined;
 
-  console.info( steam );
-  console.info( this.steamPath );
-  console.info( this.currentUser );
-  console.info( this.settings.loginusers );
-  console.info( this.settings.loginusers[ this.currentUser ]);
-
   try {
     var scPath = path.join( steam, "userdata", this.settings.loginusers[ this.currentUser ].id3, "7", "remote", "sharedconfig.vdf" );
     orig = "" + await fs.readFileAsync( scPath );
@@ -469,7 +463,7 @@ SteamConfig.prototype.loadLocalConfig = async function loadLocalConfig( steam ) 
   var canContinue = true;
 
   try {
-    var lcPath = path.join( steam, "userdata", this.currentUser.id3, "config", "localconfig.vdf" );
+    var lcPath = path.join( steam, "userdata", this.settings.loginusers[ this.currentUser ].id3, "config", "localconfig.vdf" );
     orig = "" + await fs.readFileAsync( lcPath );
     data = await loadTextVDF( lcPath );
     this.settings.localconfig = {
