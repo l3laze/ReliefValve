@@ -130,7 +130,7 @@ select::-webkit-scrollbar {
 }
 
 .focus-outline:focus {
-  outline: #00BFFF solid 3px;
+  outline: #00BFFF solid 2px;
 }
 
 .top-marg {

@@ -35,7 +35,7 @@
   <br />
   <br />
 
-  <div id="containerData" class="w3-container w3-center aTab" style="display: none">
+  <div id="containerData" class="w3-container w3-center aTab" style="display:none">
     <ul id="otherMenu" class="w3-displaytop menu-items" style="display:inline-block;margin-top:-0.3em">
       <li>
         <button id="submenuUsers" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Users</button>
@@ -57,10 +57,6 @@
         <br />
         <input type="search" id="searchUsers" class="w3-card-4 full-width" placeholder="Search" />
         <select id="userList" class="w3-card-4 full-width" size="5">
-          <option>AThirtyOneCharacterUserNameHere</option>
-          <option>AMediumLengthUserName</option>
-          <option>ALilName</option>
-          <option>A</option>
         </select>
         <br />
         <br />
@@ -85,7 +81,7 @@
         </span>
         <br />
         <br />
-        <label id="userAutoloadLabel" for="userAutoload"><input type="checkbox" id="userAutoload" class="w3-check" />Autoload user</label>
+        <label for="userAutoload"><input type="checkbox" id="userAutoload" class="w3-check" />Autoload user</label>
         <br />
         <br />
         <button id="setAppUser" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Set User For RV</button>
@@ -134,7 +130,7 @@
           <br />
           <label>App ID: <span id="steamappsAppid">N/A</span></label>
           <br />
-          <label>State: <span id="steamappsState">&quest;&check;&cross;</span></label>
+          <label>State: <span id="steamappsState">N/A</span></label>
           <br />
           <label for="appFixState"><input type="checkbox" id="appFixState" class="w3-check" />Apply "offline fix"</label>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="$('#menuHelp').click();$('#helpList').prop('selectedIndex',5);$('#helpList').change()">?</a>
           <br />
@@ -211,7 +207,7 @@
 
   </div>
 
-  <div id="containerClient" class="w3-container w3-center aTab" style="display: none">
+  <div id="containerClient" class="w3-container w3-center aTab" style="display:none">
     <div class="w3-half w3-left">
       <b class="w3-large">Steam Client Path</b>
       <br />
@@ -332,40 +328,40 @@
     <span>&lt;&#47;&gt; with <i class="fa fa-heart w3-text-red"></i> by l3l_aze & <a href="javascript:void(0);">Contributors</a></span>
   </footer>
 
-  <div id="clientSettingsModal" class="w3-modal">
+  <div id="clientSettingsModal" class="w3-modal" style="display:none">
     <div class="w3-modal-content w3-center w3-card-4">
       <header class="w3-container w3-center w3-margin-bottom theme-secondary">
-        <button onclick='$( "#clientSettingsModal" ).css( "display", "none" )' class="w3-display-topright w3-button w3-ripple w3-transparent focus-outline">&times;</button>
+        <button id="closeCSM" onclick='$( "#clientSettingsModal" ).css( "display", "none" )' class="w3-display-topright w3-button w3-ripple w3-transparent focus-outline">&times;</button>
         <h4>Client Settings</h4>
       </header>
 
       <div class="w3-row w3-center theme-primary">
-        <div id="clientSettingsBar" class="w3-bar w3-round w3-border w3-center">
-          <a href="javascript:void(0);" id="userSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-gray w3-hover-black focus-outline theme-primary" title="User">
+        <div id="clientSettingsBar" class="w3-bar w3-round w3-center">
+          <button id="userSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-gray w3-hover-black focus-outline theme-primary" title="User">
             <i class="fa fa-address-card w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">User</span>
-          </a>
-          <a href="javascript:void(0);" id="dlSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Downloads">
+          </button>
+          <button id="dlSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Downloads">
             <i class="fa fa-download w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">DLs</span>
-          </a>
-          <a href="javascript:void(0);" id="friendsSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Friends">
+          </button>
+          <button id="friendsSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Friends">
             <i class="fa fa-users w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Friends</span>
-          </a>
-          <a href="javascript:void(0);" id="overlaySettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="In-Game (Overlay)">
+          </button>
+          <button id="overlaySettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="In-Game (Overlay)">
             <i class="fa fa-chrome w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Overlay</span>
-          </a>
-          <a href="javascript:void(0);" id="audioSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Music">
+          </button>
+          <button id="audioSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Music">
             <i class="fa fa-headphones w3-hide-medium w3-hide-large"></i>
             <i class="fa fa-microphone w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Audio</span>
-          </a>
-          <a href="javascript:void(0);" id="interfaceSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Interface">
+          </button>
+          <button id="interfaceSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Interface">
             <i class="fa fa-window-maximize w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Interface</span>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -832,16 +828,16 @@
       -->
 
       <footer class="w3-center w3-padding theme-secondary">
-        <button class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Reset to Steam's current settings">Reset</button>
-        <button class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Save selected settings">Save</button>
+        <button id="resetSteamSettings" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Reset to Steam's current settings">Reset</button>
+        <button id="saveSteamSettings" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary" title="Save selected settings">Save</button>
       </footer>
     </div>
   </div>
 
-  <div id="launchOptionsModal" class="w3-modal">
+  <div id="launchOptionsModal" class="w3-modal" style="display:none">
     <div class="w3-modal-content w3-center w3-card-4">
       <header class="w3-container w3-center w3-margin-bottom theme-secondary">
-        <button onclick='$( "#launchOptionsModal" ).css( "display", "none" )' class="w3-display-topright w3-button w3-ripple w3-black w3-hover-white focus-outline">&times;</button>
+        <button id="closeLOM" onclick='$( "#launchOptionsModal" ).css( "display", "none" )' class="w3-display-topright w3-button w3-ripple w3-black w3-hover-white focus-outline">&times;</button>
         <h4>Launch Options</h4>
       </header>
       <div class="w3-container w3-center theme-primary">

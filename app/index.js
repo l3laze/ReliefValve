@@ -394,6 +394,8 @@ SteamConfig.prototype.loadSharedConfig = async function loadSharedConfig( steam 
 
   this.settings.sharedconfig = undefined;
 
+  console.info( this.currentUser );
+
   try {
     var scPath = path.join( steam, "userdata", this.settings.loginusers[ this.currentUser ].id3, "7", "remote", "sharedconfig.vdf" );
     orig = "" + await fs.readFileAsync( scPath );

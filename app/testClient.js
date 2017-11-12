@@ -233,8 +233,11 @@ function handleKeyPress( event ) {
 }
 
 function analyzeState( state ) {
-  var maybe = "Maybe";
-  var ok = "Okay";
+  // &check;&cross;
+
+  var maybe = "Installed; has update";
+  var maybenot = "Updating - paused"
+  var ok = "Playable";
   var no = "Useless";
 
   if( state === "4" ) {
@@ -247,7 +250,7 @@ function analyzeState( state ) {
     return [ no, "Installing (hasn't been installed); download paused" ];
   }
   else if ( state === "1542" ) {
-    return [ maybe, "Installed; updating; download paused" ];
+    return [ maybenot, "Installed; updating; download paused" ];
   }
   else {
     return [ no, "Unknown state" ];
@@ -493,12 +496,6 @@ function initFiltering() {
   $( function() {
     $( '#libList' ).filterByText( $( '#searchLibs' ));
   });
-}
-
-function handleKeyForModal( ev ) {
-  if( ev.key === "Escape" ) {
-    $( "#modalBackups" ).css( "display", "none" );
-  }
 }
 
 function anchorHandler( event ) {
@@ -772,6 +769,36 @@ function handleResize() {
   }
 }
 
+function setupModalTabHandler( evType, firstElement, lastElement ) {
+  firstElement.addEventListener( evType, function( event ) {
+    if( event.key === "Tab" && event.shiftKey ) {
+      lastElement.focus();
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+
+  lastElement.addEventListener( evType, function( event ) {
+    if( event.key === "Tab" && ! event.shiftKey ) {
+      firstElement.focus();
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+}
+
+function setupModalTabHandling() {
+  var csm = document.getElementById( "clientSettingsModal" ),
+      lom = document.getElementById( "launchOptionsModal" ),
+      els;
+
+  els = csm.querySelectorAll( "button" );
+  setupModalTabHandler( "keydown", document.getElementById( els[ 0 ].id ), document.getElementById( els[ els.length - 1 ].id ));
+
+  els = lom.querySelectorAll( "button" );
+  setupModalTabHandler( "keydown", document.getElementById( els[ 0 ].id ), document.getElementById( els[ els.length - 1 ].id ));
+}
+
 function initEventHandlers() {
   $( "#choose" ).click( async function choosePath () {
 
@@ -920,6 +947,8 @@ function initEventHandlers() {
     );
     $( "#pcgwLink" ).attr( "href", `https://pcgamingwiki.com/api/appid.php?appid=${ appid }` );
 
+    $( "#setAUB" ).prop( "selectedIndex", client.settings.steamapps[ appid ].autoUpdate );
+
     var appidNode = document.getElementById( "steamappsAppid" );
     while( appidNode.firstChild ) {
       appidNode.removeChild( appidNode.firstChild );
@@ -949,6 +978,7 @@ function initEventHandlers() {
 
   $( "#clientSettings" ).click( function showClientSettings() {
     $( "#clientSettingsModal" ).css( "display", "block" );
+    $( "#closeCSM" ).focus();
   });
 
   $( "#userSettingsBtn" ).click( function( event ) {
@@ -1059,6 +1089,7 @@ function initEventHandlers() {
 
   $( "#launchOptions" ).click( function() {
     $( "#launchOptionsModal" ).css( "display", "block" );
+    $( "#closeLOM" ).focus();
   });
 
   $( "#bgSettingsList" ).change( function( event ) {
@@ -1180,7 +1211,7 @@ function initEventHandlers() {
 
       modal = document.getElementById( "modalProgress" );
 
-      if( user !== -1 ) {
+      if( client.currentUser !== -1 ) {
         modal.style.display = "block";
         $( "#loadingText" ).html( "Loading data; please wait." );
         client.setUser( un );
@@ -1283,6 +1314,8 @@ function init() {
 
   initEventHandlers();
 
+  setupModalTabHandling();
+
   loadAppConfig();
 
   if( config.has( "blacklist" )) {
@@ -1301,6 +1334,7 @@ function init() {
     client = new SteamConfig.SteamConfig();
   }
 
+  // console.info( "Skipping auto-loading..." );
   loadAutoConfig();
 }
 

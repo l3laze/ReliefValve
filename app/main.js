@@ -35,7 +35,7 @@ function createWindow () {
     // titleBarStyle: "customButtonsOnHover",
 		show: false,
 		width: 601,
-		height: 780,
+		height: 650,
 		"minWidth": 439,
 		"minHeight": 650
 	})
