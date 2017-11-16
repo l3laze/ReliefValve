@@ -16,6 +16,7 @@ const url = require('url')
 const ipcMain = require('electron').ipcMain
 
 const logger = require('electron-log')
+const util = require('util')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -26,6 +27,7 @@ logger.transports.file.level = 'info';
 logger.transports.file.file = logPath;
 logger.transports.file.size = 5 * 1024 * 1024; // 5MB.
 logger.transports.file.streamConfig = { flags: "a" };
+logger.transports.file.format = '{m}/{d}/{y} @ {h}:{i}:{s}:{ms}: {text}';
 
 function createWindow () {
 	// Create the browser window.
@@ -80,7 +82,7 @@ function createWindow () {
   mainWindow.webContents.on('will-navigate', handleRedirect)
   mainWindow.webContents.on('new-window', handleRedirect)
 
-  console.log( "Logging to:" + logPath );
+  logger.log( "Logging to:" + logPath );
 }
 
 // Make app single-instance.

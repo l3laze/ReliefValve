@@ -35,7 +35,7 @@ function SteamConfig( blacklisted ) {
 
     for( var i = 0; i < blKeys.length; i++ ) {
       if( baKeys.includes( blKeys[ i ]) === false ) {
-        console.info( `Adding app to blacklist: \"${ blKeys[ i ] }\":\"${ defaultBlacklist[ blKeys[ i ]] }\".` );
+        logger.info( `Adding app to blacklist: \"${ blKeys[ i ] }\":\"${ defaultBlacklist[ blKeys[ i ]] }\".` );
         blacklisted[ blKeys[ i ]] = JSON.parse( JSON.stringify( defaultBlacklist[ blKeys[ i ]] ));
       }
     }
@@ -206,6 +206,7 @@ async function loadTextVDF( file ) {
 
 SteamConfig.prototype.loadAppInfo = async function loadAppInfo() {
   var app_entries = {};
+  var missing = [];
   var appinfo;
   var data;
   var item;
@@ -227,8 +228,8 @@ SteamConfig.prototype.loadAppInfo = async function loadAppInfo() {
           publisher: item.entries.extended.publisher || "",
           languages: ( item.entries.extended.languages !== undefined ? item.entries.extended.languages : ( item.entries.common.languages !== undefined ? Object.keys( item.entries.common.languages ) : [] )),
           /*
-          dlc: ( item.entries.extended.listofdlc !== undefined ? getDLCList( data, item.entries.extended.listofdlc ) : [] ),
-          */
+           * dlc: ( item.entries.extended.listofdlc !== undefined ? getDLCList( data, item.entries.extended.listofdlc ) : [] ),
+           */
           homepage: item.entries.extended.homepage || "",
           saves: ( item.entries.ufs !== undefined && item.entries.ufs.savefiles !== undefined ? item.entries.ufs.savefiles : "" )
         };
@@ -236,11 +237,11 @@ SteamConfig.prototype.loadAppInfo = async function loadAppInfo() {
     }
   }
   catch( err ) {
-    console.error( err.stack );
+    logger.error( err.stack );
     alert( err );
   }
 
-  console.info( `Finished loading appinfo.vdf @ ${Object.keys( app_entries ).length} entries.` );
+  logger.info( `Got appinfo.vdf @ ${Object.keys( app_entries ).length} entries.` );
 
   return app_entries;
 }
@@ -264,7 +265,7 @@ SteamConfig.prototype.loadSteamApps = async function loadSteamApps( steam ) {
         libs.push( lfData.LibraryFolders[ lfKeys[ i ]]);
       }
       else {
-        console.info( `Skipping blacklisted library ${ lfData.LibraryFolders[ lfKeys[ i ]] }` );
+        logger.info( `Skipping blacklisted library ${ lfData.LibraryFolders[ lfKeys[ i ]] }` );
       }
     }
   }
@@ -281,7 +282,7 @@ SteamConfig.prototype.loadSteamApps = async function loadSteamApps( steam ) {
           apps[ steamApp.appid ] = steamApp;
         }
         else {
-          console.info( `Skipping blacklisted app ${ steamApp.appid } (${ steamApp.name }).` );
+          logger.info( `Skipping blacklisted app ${ steamApp.appid } (${ steamApp.name }).` );
         }
       }
     }
@@ -328,7 +329,7 @@ SteamConfig.prototype.loadLoginUsers = async function loadLoginUsers( steam ) {
   }
 
   for( var i = 0; i < userKeys.length; i++ ) {
-    //  console.info( `Found user: ${data.users[ userKeys[ i ]].AccountName} (${userKeys[ i ]}).` );
+    //  logger.info( `Found user: ${data.users[ userKeys[ i ]].AccountName} (${userKeys[ i ]}).` );
     if( this.blacklist.users.includes( data.users[ userKeys[ i ]].AccountName ) === false ) {
       users.push({
         accountName: data.users[ userKeys[ i ]].AccountName,
@@ -394,8 +395,6 @@ SteamConfig.prototype.loadSharedConfig = async function loadSharedConfig( steam 
 
   this.settings.sharedconfig = undefined;
 
-  console.info( this.currentUser );
-
   try {
     var scPath = path.join( steam, "userdata", this.settings.loginusers[ this.currentUser ].id3, "7", "remote", "sharedconfig.vdf" );
     orig = "" + await fs.readFileAsync( scPath );
@@ -431,18 +430,18 @@ SteamConfig.prototype.loadSharedConfig = async function loadSharedConfig( steam 
       }
     }
 
-    console.info( "Missing entries: " + missingAI.length );
+    logger.info( "Missing entries: " + missingAI.length );
     this.settings.sharedconfig.missing = missingAI;
   }
   catch( err ) {
     if( err.message.indexOf( "ENOENT" ) !== -1 ) {
-      console.info( "Missing sharedconfig.vdf, or error loading it...using defaults." );
+      logger.info( "Missing sharedconfig.vdf, or error loading it...using defaults." );
       alert( "Selected user doesn't have a sharedconfig.vdf, or there was an error loading it; using defaults.." );
       hadErr = true;
     }
     else {
       alert( "Error loading localconfig.vdf; please submit a bug report." );
-      console.info( err.stack );
+      logger.info( err.stack );
       hadErr = true;
       canContinue = false;
     }
@@ -503,13 +502,13 @@ SteamConfig.prototype.loadLocalConfig = async function loadLocalConfig( steam ) 
   }
   catch( err ) {
     if( err.message.indexOf( "ENOENT" ) !== -1 ) {
-      console.info( "Missing localconfig.vdf, or error loading it...using defaults." );
+      logger.info( "Missing localconfig.vdf, or error loading it...using defaults." );
       alert( "Selected user doesn't have a localconfig.vdf, or there was an error loading it; using defaults.." );
       hadErr = true;
     }
     else {
       alert( "Error loading localconfig.vdf; please submit a bug report." );
-      console.info( err );
+      logger.info( err );
       hadErr = true;
       canContinue = false;
     }
@@ -552,23 +551,23 @@ SteamConfig.prototype.loadLocalConfig = async function loadLocalConfig( steam ) 
 
 SteamConfig.prototype.loadCommonData = async function loadSteamCommonData( steam, progressCallback ) {
   await this.loadLoginUsers( steam );
-  console.info( "Got loginusers.vdf..." );
+  logger.info( "Got loginusers.vdf..." );
   progressCallback( 5 );
 
   await this.loadConfig( steam );
-  console.info( "Got config.vdf..." );
+  logger.info( "Got config.vdf..." );
   progressCallback( 5 );
 
   await this.loadRegistry( steam );
-  console.info( "Got registry.vdf..." );
+  logger.info( "Got registry.vdf..." );
   progressCallback( 5 );
 
   await this.loadSteamApps( steam );
-  console.info( "Got libraryfolders.vdf + steamapps..." );
+  logger.info( "Got libraryfolders.vdf + steamapps..." );
   progressCallback( 20 );
 
   await this.loadSkins( steam );
-  console.info( "Got skins..." );
+  logger.info( "Got skins..." );
   progressCallback( 5 );
 };
 
@@ -585,32 +584,27 @@ SteamConfig.prototype.loadUserData = async function loadUserData( steam, progres
   if( this.currentUser !== undefined && JSON.stringify( this.currentUser ) !== "{}" ) {
 
     await this.loadSharedConfig( steam );
-    console.info( "Got sharedconfig.vdf..." );
+    logger.info( "Got sharedconfig.vdf..." );
     progressCallback( half );
 
     await this.loadLocalConfig( steam );
-    console.info( "Got localconfig.vdf..." );
+    logger.info( "Got localconfig.vdf..." );
     progressCallback( half );
   }
   else {
-    console.info( "Multiple users, no user set; can't load private data" );
+    logger.info( "There are multiple users and no user is set; can't load private data" );
     progressCallback( half + half );
-    alert( "There are multiple users; set a user to load private user data." );
+    alert( "There are multiple users. You must set a user first." );
   }
 };
 
 SteamConfig.prototype.loadSteam = async function loadSteam( steamPath, progressCallback ) {
-  console.info( "Loading common data..." );
+  logger.info( "Loading common data..." );
   this.progress = 0;
   progressCallback( 0 );
-  try {
-    this.steamPath = "" + steamPath;
-    await this.loadCommonData( "" + steamPath, progressCallback );
-    await this.loadUserData( "" + steamPath, progressCallback, false );
-  }
-  catch( err ) {
-    alert( err );
-  }
+  this.steamPath = "" + steamPath;
+  await this.loadCommonData( "" + steamPath, progressCallback );
+  await this.loadUserData( "" + steamPath, progressCallback, false );
 };
 
 SteamConfig.prototype.setUser = function setUser( accountName ) {

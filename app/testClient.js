@@ -26,7 +26,7 @@ function proCallback( amount ) {
   $( "#progress" ).html( progress );
   if( progress === 100 ) {
     progress = 0;
-    console.info( "Finished loading." );
+    logger.info( "Finished loading." );
     window.setTimeout( `$( "#loadingText" ).html( "Finished; one moment." )`, 50 );
     window.setTimeout( `modal.style.display="none";$( "#progress" ).html( 0 )`, 1000 );
   }
@@ -34,7 +34,7 @@ function proCallback( amount ) {
 
 function initModalKeyHandling( modal ) {
   var controls = modal.querySelectorAll( "select, input, textarea, button, a" );
-  console.info( controls );
+  logger.info( controls );
   var first;
   var last;
 
@@ -234,20 +234,94 @@ function handleKeyPress( event ) {
 
 function analyzeState( state ) {
   // &check;&cross;
+  var maybe = "Update required",
+      maybenot = "Update paused",
+      ok = "Playable",
+      no = "Useless",
+      analysis = {
+        basic: no,
+        complex: []
+      },
+      APP_STATE = { // Max total = 16719871
+        "Invalid":               0,
+        "Uninstalled":           1,
+        "Has_Update":            2,
+        "Installed":             4,
+        "Encrypted":             8,
+        "Locked":               16,
+        "Missing_Files":        32,
+        "Running":              64,
+        "Corrupt_Files":       128,
+        "Update_Running":      256,
+        "Update_Paused":       512,
+        "Update_Started":     1024,
+        "Uninstalling":       2048,
+        "Backup_Running":     4096,
+        "Reconfiguring":     65536,
+        "Validating":       131072,
+        "Adding_Files":     262144,
+        "Preallocating":    524288,
+        "Downloading":     1048576,
+        "Staging":         2097152,
+        "Commiting":       4194304,
+        "Update_Stopping": 8388608
+      },
 
-  var maybe = "Installed; has update";
-  var maybenot = "Updating - paused"
-  var ok = "Playable";
-  var no = "Useless";
+      /*
+        MASK_USELESS =
+            APP_STATE.Invalid |
+            APP_STATE.Uninstalled |
+            APP_STATE.Encrypted |
+            APP_STATE.Locked |
+            APP_STATE.Missing_Files |
+            APP_STATE.Corrupt_Files |
+            APP_STATE.Uninstalling |
+            APP_STATE.Reconfiguring |
+            APP_STATE.Validating |
+            APP_STATE.Adding_Files |
+            APP_STATE.Preallocating |
+            APP_STATE.Downloading |
+            APP_STATE.Staging |
+            APP_STATE.Commiting |
+            APP_STATE.Update_Stopping |
+            APP_STATE.Update_Running |
+            APP_STATE.Update_Paused |
+            APP_STATE.Update_Started |
+            APP_STATE.Backup_Running,
+        MASK_MAYBE =
+            APP_STATE.Has_Update |
+            APP_STATE.Installed,
+        MASK_OK =
+            APP_STATE.Installed |
+            APP_STATE.Running,
+      */
+
+      stateKeys = Object.keys( APP_STATE ),
+      numState = parseInt( state ),
+      as;
+
+  if( state === "0" ) {
+    analysis.basic = no;
+    analysis.complex.push( "Invalid" );
+    console.info( analysis );
+    return [ no, "Invalid" ];
+  }
+
+  for( var i = 1; i < stateKeys.length; i++ ) { // Skip "Invalid"..
+    as = parseInt( APP_STATE[ stateKeys[ i ]]);
+    if(( numState & as ) === numState ) {
+      analysis.complex.push( stateKeys[ i ]);
+    }
+  }
 
   if( state === "4" ) {
-    return [ ok, "Installed; ready to play" ];
+    return [ ok, "Ready to play" ];
   }
   else if( state === "6" ) {
-    return [ maybe, "Installed; update available; may be playable without update" ];
+    return [ maybe, "Installed; has update." ];
   }
   else if( state === "1538" ) {
-    return [ no, "Installing (hasn't been installed); download paused" ];
+    return [ no, "Not installed; downloading; download paused." ];
   }
   else if ( state === "1542" ) {
     return [ maybenot, "Installed; updating; download paused" ];
@@ -258,7 +332,7 @@ function analyzeState( state ) {
 }
 
 function analyzeAUB( val ) {
-  console.info( val );
+  logger.info( val );
   if( val === "0" ) {
     return "Automatically";
   }
@@ -370,7 +444,7 @@ function updateCommonDataUI() {
         $( "#autoloadCurrent" ).html( al.user );
       }
       else {
-        console.info( `Can't find autoload user "${ al.user }" in users: ${ client.getUserNames()} to update UI.` );
+        logger.info( `Can't find autoload user "${ al.user }" in users: ${ client.getUserNames()} to update UI.` );
       }
     }
     if( al.steam ) {
@@ -475,11 +549,11 @@ function initFiltering() {
         if( textbox[ 0 ].id === "searchSteamapps" ) {
           $( "#numApps" ).text( $(select).children().length );
         }
-        else if( textbox[ 0 ].id === "searchCatApps" ) {
-          $( "#catApps" ).text( $( select ).children().length );
-        }
         else if( textbox[ 0 ].id === "searchLibs" ) {
           $( "#numLibs" ).text( $( select ).children().length );
+        }
+        else if( textbox[ 0 ].id === "searchUsers" ) {
+          $( "#numUsers" ).text( $( select ).children().length );
         }
       });
     });
@@ -490,17 +564,17 @@ function initFiltering() {
   });
 
   $( function() {
-    $( '#catAppsList' ).filterByText( $( '#searchCatApps' ));
+    $( '#libList' ).filterByText( $( '#searchLibs' ));
   });
 
   $( function() {
-    $( '#libList' ).filterByText( $( '#searchLibs' ));
-  });
+    $( '#userList' ).filterByText( $( '#searchUsers' ));
+  })
 }
 
 function anchorHandler( event ) {
   if( event.target.href.indexOf( "javascript:void" ) === -1 ) {
-    console.info( event.target.href );
+    logger.info( event.target.href );
     if( ! dialog.showMessageBox( null,
       { type: "question",
         title: "Open external link?",
@@ -526,7 +600,7 @@ async function loadAutoConfig() {
       modal = document.getElementById( "modalProgress" );
       modal.style.display = "block";
 
-      console.info( `Auto loading (with user) from ${ autoConfig.steam }` );
+      logger.info( `Auto loading (with user) from ${ autoConfig.steam }` );
 
       $( "#loadingText" ).html( "Auto-loading; please wait." );
 
@@ -647,24 +721,24 @@ function loadPersonalSettings() {
 }
 
 function applyPersonalSettings( bgOption, bgSolidVal, bgImageVal, textColorVal, startTab ) {
-  console.info( "Applying app settings..." );
+  logger.info( "Applying app settings..." );
   var bgImage = document.body;
 
-  // console.info( `Setting: ${ bgList.options[ bgOption ].text }\n\tSolid background: ${ bgSolidVal }\n\tBackground image: ${ bgImageVal || "N/A" }\n\tText color: ${ textColorVal }\n\tCurrent BG image: ${ bgImage.style.backgroundImage || "N/A" }` );
+  // logger.info( `Setting: ${ bgList.options[ bgOption ].text }\n\tSolid background: ${ bgSolidVal }\n\tBackground image: ${ bgImageVal || "N/A" }\n\tText color: ${ textColorVal }\n\tCurrent BG image: ${ bgImage.style.backgroundImage || "N/A" }` );
 
   switch( bgOption ) {
     case 0:
-      console.info( "Changing to default background..." );
+      logger.info( "Changing to default background..." );
       document.body.style[ "background-color" ] = "";
       bgImage.style.backgroundImage = "";
     break;
     case 1:
-      console.info( `Changing to solid color background... ${ bgSolidVal }` );
+      logger.info( `Changing to solid color background... ${ bgSolidVal }` );
       document.body.style[ "background-color" ] = bgSolidVal;
       bgImage.style.backgroundImage = undefined;
     break;
     case 2:
-      console.info( "Changing to image background..." );
+      logger.info( "Changing to image background..." );
       document.body.style[ "background-color" ] = undefined;
       if( os.platform === "win32" ) {
         bgImage.style.backgroundImage = JSON.stringify( bgImageVal.substring( value.indexOf( "file:///" )));
@@ -835,7 +909,7 @@ function initEventHandlers() {
       modal = document.getElementById( "modalProgress" );
       modal.style.display = "block";
 
-      console.info( "Loading Steam..." );
+      logger.info( "Loading Steam..." );
 
       $( "#loadingText" ).html( "Loading; please wait." );
 
@@ -945,19 +1019,13 @@ function initEventHandlers() {
         "No"
       )
     );
+
     $( "#pcgwLink" ).attr( "href", `https://pcgamingwiki.com/api/appid.php?appid=${ appid }` );
+    $( "#steamStoreLink" ).attr( "href", `http://store.steampowered.com/app/${ appid }/` );
+    $( "#steamappsAppid" ).text( appid );
+    $( "#steamDBLink" ).attr( "href", `https://steamdb.info/app/${ appid }/` );
 
     $( "#setAUB" ).prop( "selectedIndex", client.settings.steamapps[ appid ].autoUpdate );
-
-    var appidNode = document.getElementById( "steamappsAppid" );
-    while( appidNode.firstChild ) {
-      appidNode.removeChild( appidNode.firstChild );
-    }
-    var storeLink = document.createElement( "a" );
-    storeLink.href = `http://store.steampowered.com/app/${appid}/`;
-    storeLink.onclick = anchorHandler;
-    storeLink.appendChild( document.createTextNode( appid ));
-    appidNode.appendChild( storeLink );
 
     $( "input[ name='appAOD' ][ value='" + !!+client.settings.steamapps[ appid ].allowDownloadsWhileRunning + "' ]" ).attr( "checked", true );
 
@@ -1170,7 +1238,7 @@ function initEventHandlers() {
       startTab: startupTab.selectedIndex || 0
     };
 
-    console.info( appSettings );
+    logger.info( appSettings );
 
     applyPersonalSettings( bgOption, bgSolidVal, bgImageVal, textColorVal, startupTab );
 
@@ -1203,8 +1271,8 @@ function initEventHandlers() {
       }
 
       config.set( "autoload", autoConfig );
-      console.info( "Saved autoload settings." );
-      console.info( autoConfig );
+      logger.info( "Saved autoload settings." );
+      logger.info( autoConfig );
 
       $( "#autoloadUser" ).html( un );
       $( "#currentUser" ).html( un );
@@ -1260,6 +1328,12 @@ function initEventHandlers() {
         else if( $( "#clientSettingsModal" ).css( "display" ) !== "none" ) {
           $( "#clientSettingsModal" ).css( "display", "none" );
         }
+      }
+      else if( event.key === "Tab" && event.target === document.body ) {
+        var press = jQuery.Event( "keypress" );
+        press.shiftKey = event.shiftKey;
+        press.which = 9;
+        $( window ).trigger( press );
       }
     }
   });
@@ -1319,7 +1393,7 @@ function init() {
   loadAppConfig();
 
   if( config.has( "blacklist" )) {
-    console.info( "Have blacklist..." );
+    logger.info( "Have blacklist..." );
     var bl = config.get( "blacklist" );
     if( Object.keys( bl ).includes( "apps" ) === false ) {
       client = new SteamConfig.SteamConfig({
@@ -1330,11 +1404,11 @@ function init() {
     }
   }
   else {
-    console.info( "Using default blacklist..." );
+    logger.info( "Using default blacklist..." );
     client = new SteamConfig.SteamConfig();
   }
 
-  // console.info( "Skipping auto-loading..." );
+  // logger.info( "Skipping auto-loading..." );
   loadAutoConfig();
 }
 
