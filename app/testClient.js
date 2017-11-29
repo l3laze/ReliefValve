@@ -19,14 +19,14 @@ logger.transports.file.file = logPath;
 logger.transports.file.size = 5 * 1024 * 1024; // 5MB.
 logger.transports.file.streamConfig = { flags: "a" };
 
-var client, modal, progress = 0;
+var client, modal, progress = 0, oldBackground = "";
 
 function proCallback( amount ) {
   progress += parseInt( amount );
   $( "#progress" ).html( progress );
   if( progress === 100 ) {
     progress = 0;
-    logger.info( "Finished loading." );
+    console.info( "Finished loading." );
     window.setTimeout( `$( "#loadingText" ).html( "Finished; one moment." )`, 50 );
     window.setTimeout( `modal.style.display="none";$( "#progress" ).html( 0 )`, 1000 );
   }
@@ -34,7 +34,7 @@ function proCallback( amount ) {
 
 function initModalKeyHandling( modal ) {
   var controls = modal.querySelectorAll( "select, input, textarea, button, a" );
-  logger.info( controls );
+  console.info( controls );
   var first;
   var last;
 
@@ -332,7 +332,7 @@ function analyzeState( state ) {
 }
 
 function analyzeAUB( val ) {
-  logger.info( val );
+  console.info( val );
   if( val === "0" ) {
     return "Automatically";
   }
@@ -444,7 +444,7 @@ function updateCommonDataUI() {
         $( "#autoloadCurrent" ).html( al.user );
       }
       else {
-        logger.info( `Can't find autoload user "${ al.user }" in users: ${ client.getUserNames()} to update UI.` );
+        console.info( `Can't find autoload user "${ al.user }" in users: ${ client.getUserNames()} to update UI.` );
       }
     }
     if( al.steam ) {
@@ -574,7 +574,7 @@ function initFiltering() {
 
 function anchorHandler( event ) {
   if( event.target.href.indexOf( "javascript:void" ) === -1 ) {
-    logger.info( event.target.href );
+    console.info( event.target.href );
     if( ! dialog.showMessageBox( null,
       { type: "question",
         title: "Open external link?",
@@ -600,7 +600,7 @@ async function loadAutoConfig() {
       modal = document.getElementById( "modalProgress" );
       modal.style.display = "block";
 
-      logger.info( `Auto loading (with user) from ${ autoConfig.steam }` );
+      console.info( `Auto loading (with user) from ${ autoConfig.steam }` );
 
       $( "#loadingText" ).html( "Auto-loading; please wait." );
 
@@ -721,24 +721,24 @@ function loadPersonalSettings() {
 }
 
 function applyPersonalSettings( bgOption, bgSolidVal, bgImageVal, textColorVal, startTab ) {
-  logger.info( "Applying app settings..." );
+  console.info( "Applying app settings..." );
   var bgImage = document.body;
 
-  // logger.info( `Setting: ${ bgList.options[ bgOption ].text }\n\tSolid background: ${ bgSolidVal }\n\tBackground image: ${ bgImageVal || "N/A" }\n\tText color: ${ textColorVal }\n\tCurrent BG image: ${ bgImage.style.backgroundImage || "N/A" }` );
+  // console.info( `Setting: ${ bgList.options[ bgOption ].text }\n\tSolid background: ${ bgSolidVal }\n\tBackground image: ${ bgImageVal || "N/A" }\n\tText color: ${ textColorVal }\n\tCurrent BG image: ${ bgImage.style.backgroundImage || "N/A" }` );
 
   switch( bgOption ) {
     case 0:
-      logger.info( "Changing to default background..." );
+      console.info( "Changing to default background..." );
       document.body.style[ "background-color" ] = "";
       bgImage.style.backgroundImage = "";
     break;
     case 1:
-      logger.info( `Changing to solid color background... ${ bgSolidVal }` );
+      console.info( `Changing to solid color background... ${ bgSolidVal }` );
       document.body.style[ "background-color" ] = bgSolidVal;
       bgImage.style.backgroundImage = undefined;
     break;
     case 2:
-      logger.info( "Changing to image background..." );
+      console.info( "Changing to image background..." );
       document.body.style[ "background-color" ] = undefined;
       if( os.platform === "win32" ) {
         bgImage.style.backgroundImage = JSON.stringify( bgImageVal.substring( value.indexOf( "file:///" )));
@@ -832,12 +832,18 @@ function handleResize() {
   if( window.innerWidth < 601 ) {
     $( "#userList" ).attr( "size", "3" );
     $( "#appList" ).attr( "size", "3" );
+    $( "#ownedAppList" ).attr( "size", "3" );
+    $( "#appCats" ).attr( "size", "2" );
+    $( "#allCats" ).attr( "size", "4" );
     $( "#appBlacklist" ).attr( "size", "4" );
     $( "#helpList" ).attr( "size", "4" );
   }
   else if( window.innerWidth > 600 ) {
     $( "#userList" ).attr( "size", "5" );
     $( "#appList" ).attr( "size", "20" );
+    $( "#ownedAppList" ).attr( "size", "20" );
+    $( "#appCats" ).attr( "size", "5" );
+    $( "#allCats" ).attr( "size", "9" );
     $( "#appBlacklist" ).attr( "size", "20" );
     $( "#helpList" ).attr( "size", "25" );
   }
@@ -909,7 +915,7 @@ function initEventHandlers() {
       modal = document.getElementById( "modalProgress" );
       modal.style.display = "block";
 
-      logger.info( "Loading Steam..." );
+      console.info( "Loading Steam..." );
 
       $( "#loadingText" ).html( "Loading; please wait." );
 
@@ -1146,13 +1152,33 @@ function initEventHandlers() {
   });
 
   $( "#switchToPublicAppControls" ).click( function() {
-    $( "#displayPublicAppControls" ).css( "display", "block" );
-    $( "#displayPrivateAppControls" ).css( "display", "none" );
+    $( "#installedApps" ).css( "display", "block" );
+    $( "#ownedApps" ).css( "display", "none" );
   });
 
   $( "#switchToPrivateAppControls" ).click( function() {
-    $( "#displayPublicAppControls" ).css( "display", "none" );
-    $( "#displayPrivateAppControls" ).css( "display", "block" );
+    $( "#installedApps" ).css( "display", "none" );
+    $( "#ownedApps" ).css( "display", "block" );
+  });
+
+  $( "#switchToAppInfo" ).click( function() {
+    $( "#displayAppControls" ).css( "display", "none" );
+    $( "#displayAppInfo" ).css( "display", "block" );
+  });
+
+  $( "#switchToAppControls" ).click( function() {
+    $( "#displayAppControls" ).css( "display", "block" );
+    $( "#displayAppInfo" ).css( "display", "none" );
+  });
+
+  $( "#switchToOwnedInfo" ).click( function() {
+    $( "#ownedAppControls" ).css( "display", "none" );
+    $( "#ownedAppInfo" ).css( "display", "block" );
+  });
+
+  $( "#switchToOwnedControls" ).click( function() {
+    $( "#ownedAppControls" ).css( "display", "block" );
+    $( "#ownedAppInfo" ).css( "display", "none" );
   });
 
   $( "#launchOptions" ).click( function() {
@@ -1192,7 +1218,34 @@ function initEventHandlers() {
         chosen = chosen[ 0 ];
       }
 
+      oldBackground = $( "#bgSettingsImageCurrent" ).text();
       $( "#bgSettingsImageCurrent" ).text( chosen );
+  });
+
+  $( "#bgImageTest" ).click( function() {
+    var bgImage = document.body;
+    var bgImageVal = $( "#bgSettingsImageCurrent" ).text();
+
+    bgImage.style[ "background-color" ] = undefined;
+    if( os.platform === "win32" ) {
+      bgImage.style.backgroundImage = JSON.stringify( bgImageVal.substring( value.indexOf( "file:///" )));
+    }
+    else {
+      bgImage.style.backgroundImage = "url( " + bgImageVal + " )";
+    }
+  });
+
+  $( "#bgImageReset" ).click( function() {
+    var bgImage = document.body;
+    var bgImageVal = oldBackground;
+
+    bgImage.style[ "background-color" ] = undefined;
+    if( os.platform === "win32" ) {
+      bgImage.style.backgroundImage = JSON.stringify( bgImageVal.substring( value.indexOf( "file:///" )));
+    }
+    else {
+      bgImage.style.backgroundImage = "url( " + bgImageVal + " )";
+    }
   });
 
   $( "#showLibs" ).click( showSelectedLibs );
@@ -1238,13 +1291,86 @@ function initEventHandlers() {
       startTab: startupTab.selectedIndex || 0
     };
 
-    logger.info( appSettings );
-
     applyPersonalSettings( bgOption, bgSolidVal, bgImageVal, textColorVal, startupTab );
 
     config.set( "personal", appSettings );
 
     $( "#modalAppSettings" ).css( "display", "none" );
+  });
+
+  $( "#showSkinManager" ).click( function showSkinManager() {
+    $( "#skinManagerModal" ).css( "display", "block" );
+
+  });
+
+  $( "#skinManagerList" ).change( function updateSkinManagerUI() {
+    var list = event.target;
+    var el, status;
+    var data = {
+      active: -1,
+      installed: 0,
+      outdated: 0,
+      total: 0
+    };
+
+    for( var i = 0; i < list.options.length; i++ ) {
+      el = list.options[ i ];
+      if( el.selected ) {
+        status = $( el ).attr( "data-status" );
+
+        if( status.indexOf( "installed" ) !== -1 ) {
+          data.installed += 1;
+        }
+
+        if( status.indexOf( "update" ) !== -1 ) {
+          data.outdated += 1;
+        }
+
+        if( status.indexOf( "active" ) !== -1 ) {
+          data.active = i;
+        }
+
+        data.total += 1;
+      }
+    }
+
+    if( data.installed !== data.total ) {
+      $( "#installSkin" ).css( "display", "block" );
+    }
+    else {
+      $( "#installSkin" ).css( "display", "none" );
+    }
+
+    if( data.installed > 0 ) {
+      $( "#removeSkin" ).css( "display", "block" );
+    }
+    else {
+      $( "#removeSkin" ).css( "display", "none" );
+    }
+
+    if( data.outdated > 0 ) {
+      $( "#updateSkin" ).css( "display", "block" );
+    }
+    else {
+      $( "#updateSkin" ).css( "display", "none" );
+    }
+
+    if( data.total === 1 &&
+        data.active === -1 &&
+        data.installed === 1 &&
+        data.outdated === 0 )
+    {
+      $( "#activateSkin" ).css( "display", "block" );
+    }
+    else {
+      $( "#activateSkin" ).css( "display", "none" );
+    }
+
+    $( "#skinStatusInstalled" ).text( data.installed );
+    $( "#skinStatusUpdate" ).text( data.outdated );
+    $( "#skinStatusTotal" ).text( data.total );
+
+    console.info( data );
   });
 
   $( "#setAppUser" ).click( async function setSelectedUser() {
@@ -1271,8 +1397,8 @@ function initEventHandlers() {
       }
 
       config.set( "autoload", autoConfig );
-      logger.info( "Saved autoload settings." );
-      logger.info( autoConfig );
+      console.info( "Saved autoload settings." );
+      console.info( autoConfig );
 
       $( "#autoloadUser" ).html( un );
       $( "#currentUser" ).html( un );
@@ -1328,6 +1454,9 @@ function initEventHandlers() {
         else if( $( "#clientSettingsModal" ).css( "display" ) !== "none" ) {
           $( "#clientSettingsModal" ).css( "display", "none" );
         }
+        else if( $( "#skinManagerModal" ).css( "display" ) !== "none" ) {
+          $( "#skinManagerModal" ).css( "display", "none" );
+        }
       }
       else if( event.key === "Tab" && event.target === document.body ) {
         var press = jQuery.Event( "keypress" );
@@ -1350,6 +1479,9 @@ function initEventHandlers() {
     }
     else if( event.target.id === "modalBackups" ) {
       $( "#modalBackups" ).css( "display", "none" );
+    }
+    else if( event.target.id === "skinManagerModal" ) {
+      $( "#skinManagerModal" ).css( "display", "none" );
     }
   });
 
@@ -1393,7 +1525,7 @@ function init() {
   loadAppConfig();
 
   if( config.has( "blacklist" )) {
-    logger.info( "Have blacklist..." );
+    console.info( "Have blacklist..." );
     var bl = config.get( "blacklist" );
     if( Object.keys( bl ).includes( "apps" ) === false ) {
       client = new SteamConfig.SteamConfig({
@@ -1404,12 +1536,12 @@ function init() {
     }
   }
   else {
-    logger.info( "Using default blacklist..." );
+    console.info( "Using default blacklist..." );
     client = new SteamConfig.SteamConfig();
   }
 
-  // logger.info( "Skipping auto-loading..." );
-  loadAutoConfig();
+  console.info( "Skipping auto-loading..." );
+  // loadAutoConfig();
 }
 
 window.addEventListener( "DOMContentLoaded", function() {

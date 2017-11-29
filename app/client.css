@@ -103,6 +103,22 @@ select::-webkit-scrollbar {
   width: 17em;
 }
 
+#skinManagerList > option[data-status*="installed"]::before {
+  content: "\02713\20\20";
+}
+
+#skinManagerList > option[data-status*="available"]::before {
+  content: "\02717\20\20";
+}
+
+#skinManagerList > option[data-status*="update"]::before {
+  content: "\00021\20\20\20";
+}
+
+#skinManagerList > option[data-status*="active"]::before {
+  content: "\02605\20";
+}
+
 .bgImage {
   background-position: center;
   background-repeat: no-repeat;
