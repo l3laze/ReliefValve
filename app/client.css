@@ -28,7 +28,7 @@ body {
   overflow-y: scroll;
 }
 
-label[for], input, select, option, a, button, button i {
+label[for], input, select, option, a, button, button i, button > i > span {
   cursor: pointer;
 }
 

@@ -12,22 +12,22 @@
   <header id="menu" class="w3-top w3-center">
     <ul class="menu-items" style="display:inline-block">
       <li>
-        <button id="menuData" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Data</button>
+        <button id="menuData" class="w3-button w3-ripple w3-border-left w3-border-bottom w3-hover-black focus-outline theme-primary">Data</button>
       </li>
       <li>
-        <button id="menuClient" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Client</button>
+        <button id="menuClient" class="w3-button w3-ripple w3-border-bottom w3-hover-black focus-outline theme-primary">Client</button>
       </li>
       <li>
-        <button id="menuSettings" class="w3-button w3-ripple w3-gray w3-hover-gray focus-outline borderless-sides theme-primary">Settings</button>
+        <button id="menuSettings" class="w3-button w3-ripple w3-border-bottom w3-gray w3-hover-black focus-outline theme-primary">Settings</button>
       </li>
       <li>
-        <button id="menuHelp" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Help</button>
+        <button id="menuHelp" class="w3-button w3-ripple w3-border-bottom w3-hover-black focus-outline theme-primary">Help</button>
       </li>
       <li>
-        <button id="menuAbout" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">About</button>
+        <button id="menuAbout" class="w3-button w3-ripple w3-border-bottom w3-hover-black focus-outline theme-primary">About</button>
       </li>
       <li>
-        <button id="menuExit" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Exit</button>
+        <button id="menuExit" class="w3-button w3-ripple w3-border-bottom w3-border-right w3-hover-black focus-outline theme-primary">Exit</button>
       </li>
     </ul>
   </header>
@@ -35,19 +35,22 @@
   <br />
   <br />
 
-  <div id="containerData" class="w3-container w3-center aTab" style="display:none">
-    <ul id="otherMenu" class="w3-displaytop menu-items" style="display:inline-block;margin-top:-0.3em">
+  <div id="containerData" class="w3-center aTab" style="display:none;margin-left:0.2em">
+    <ul id="otherMenu" class="w3-displaytop menu-items" style="display:inline-block;margin-top:-0.4em">
       <li>
-        <button id="submenuUsers" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Users</button>
+        <button id="submenuUsers" class="w3-button w3-ripple w3-border-left w3-border-bottom w3-hover-black focus-outline theme-primary">Users</button>
       </li>
       <li>
-        <button id="submenuLibraries" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Libraries</button>
+        <button id="submenuLibraries" class="w3-button w3-ripple w3-border-bottom w3-hover-black focus-outline theme-primary">Libraries</button>
       </li>
       <li>
-        <button id="submenuApps" class="w3-button w3-ripple w3-gray w3-hover-gray focus-outline borderless-sides theme-primary">Apps</button>
+        <button id="submenuApps" class="w3-button w3-ripple w3-border-bottom w3-gray w3-hover-black focus-outline theme-primary">Apps</button>
       </li>
       <li>
-        <button id="submenuBlacklist" class="w3-button w3-ripple w3-hover-gray focus-outline borderless-sides theme-primary">Blacklist</button>
+        <button id="submenuBlacklist" class="w3-button w3-ripple w3-border-bottom w3-hover-black focus-outline theme-primary">Blacklist</button>
+      </li>
+      <li>
+        <button id="submenuBackups" class="w3-button w3-ripple w3-border-bottom w3-border-right w3-hover-black focus-outline theme-primary">Backups</button>
       </li>
     </ul>
 
@@ -67,7 +70,7 @@
         <span id="autologinUser">N/A</span>
         <br />
         <br />
-        <button id="setAutologinUser" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Set Steam User</button>
+        <button id="setAutologinUser" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Set Steam User</button>
         <br class="w3-hide-medium w3-hide-large" />
         <br class="w3-hide-medium w3-hide-large" />
       </div>
@@ -84,10 +87,10 @@
         <label for="userAutoload"><input type="checkbox" id="userAutoload" class="w3-check" />Autoload user</label>
         <br />
         <br />
-        <button id="setAppUser" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Set User For RV</button>
+        <button id="setAppUser" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Set User For RV</button>
         <br />
         <br />
-        <button id="addUserToBlacklist" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Add User To Blacklist</button>
+        <button id="addUserToBlacklist" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Add User To Blacklist</button>
       </div>
     </div>
 
@@ -111,7 +114,7 @@
     <div id="dataApps" class="w3-container w3-center dTab">
       <div id="installedApps" class="w3-center">
         <button id="switchToPrivateAppControls" class="w3-button w3-small w3-ripple w3-border focus-outline theme-primary"><i class="fa fa-exchange"></i></button>
-        <b class="w3-large">Installed Apps</b>
+        <b class="w3-large">Installed</b>
         <br />
         <div class="w3-half w3-left">
           <b>Apps - <span id="numApps">0</span></b>
@@ -146,6 +149,13 @@
           <label for="appFixState"><input type="checkbox" id="appFixState" class="w3-check" />Apply "offline fix"</label>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="$('#menuHelp').click();$('#helpList').prop('selectedIndex',5);$('#helpList').change()">?</a>
           <br />
           <label for="appAllowOtherDownloads"><input type="checkbox" id="appAllowOtherDownloads" class="w3-check" />Allow other downloads</label>
+          <br />
+          <label for="appDisableLaunchInSteamVR"><input type="checkbox" id="appDisableLaunchInSteamVR" class="w3-check" />Disable Launch in SteamVR</label>
+          <br />
+          <label for="appSteamCloud"><input type="checkbox" id="appSteamCloud" class="w3-check" />Steam Cloud</label>
+          <br />
+          <br />
+          <button id="appAddInstalledToBlacklist" class="w3-button w3-ripple w3-border focus-outline theme-primary">Add App To Blacklist</button>
         </div>
 
         <div id="displayAppInfo" class="w3-half w3-right" style="display:none">
@@ -180,10 +190,10 @@
 
       <div id="ownedApps" class="w3-center" style="display:none">
         <button id="switchToPublicAppControls" class="w3-button w3-small w3-ripple w3-border focus-outline theme-primary"><i class="fa fa-exchange"></i></button>
-        <b class="w3-large">All Owned Apps</b>
+        <b class="w3-large">Owned&nbsp;&nbsp;&nbsp;</b>
         <br />
         <div class="w3-half w3-left">
-          <b>Owned Apps - <span id="numOwnedApps">0</span></b>
+          <b>Apps - <span id="numOwnedApps">0</span></b>
           <br />
           <input type="search" id="searchOwnedApps" class="w3-card-4 full-width" placeholder="Search" />
           <br />
@@ -200,6 +210,8 @@
         <div id="ownedAppControls" class="w3-half w3-right">
           <button id="switchToOwnedInfo" class="w3-button w3-small w3-ripple w3-border focus-outline theme-primary"><i class="fa fa-exchange"></i></button>
           <b>App Controls</b>
+          <br />
+          <button id="appAddInstalledToBlacklist" class="w3-button w3-ripple w3-border focus-outline theme-primary">Add App To Blacklist</button>
           <br />
           <b>App Categories - <span id="appCatsNum" title="Total categories for selected app">0</span></b>
           <select id="appCats" type="text" class="w3-card-4 full-width" title="Categories for selected app">
@@ -230,13 +242,6 @@
           <br />
           <label>App ID: <span id="steamappsAppid">N/A</span></label>
           <br />
-          <label class="full-width t-o-e">Install Location: <span id="steamappsInstallDir" class="">N/A</span></label>
-          <label>Last Updated: <span id="steamappsLastUpdated">N/A</span></label>
-          <br />
-          <label>Size: ~<span id="steamappsSize">N/A</span></label>
-          <br />
-          <label>Downloaded: ~<span id="steamappsDownloadedAmount">N/A</span>/<span id="steamappsDownloadSize">N/A</span></label>
-          <br />
           <label>Has Cloud Save files: </label>
           <span id="steamappsSavefiles">N/A</span>
           <br />
@@ -258,14 +263,14 @@
         <select id="userBlacklist" class="w3-card-4 full-width" size="3">
         </select>
         <br />
-        <button id="userBlacklistRemove" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Remove Selected</button>
+        <button id="userBlacklistRemove" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Remove Selected</button>
         <hr />
         <b>Library Blacklist - <span id="numLibrariesBlacklisted">0</span></b>
         <br />
         <select id="libraryBlacklist" class="w3-card-4 full-width" size="3">
         </select>
         <br />
-        <button id="libraryBlacklistRemove" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Remove Selected</button>
+        <button id="libraryBlacklistRemove" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Remove Selected</button>
       </div>
       <div class="w3-half w3-right">
         <hr class="w3-hide-medium w3-hide-large" />
@@ -274,7 +279,38 @@
         <select id="appBlacklist" class="w3-card-4 full-width" size="20">
         </select>
         <br />
-        <button id="appBlacklistRemove" class="w3-button w3-ripple w3-hover-gray focus-outline theme-primary">Remove Selected</button>
+        <button id="appBlacklistRemove" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Remove Selected</button>
+      </div>
+    </div>
+
+    <div id="dataBackups" class="w3-container w3-center dTab" style="display:none">
+      <div class="w3-half w3-left">
+        <b>Backups - <span id="numBackups">0</span></b>
+        <br />
+        <input type="search" id="searchBackups" class="w3-card-4 full-width" placeholder="Search" />
+        <select id="backupList" class="w3-card-4 full-width" size="12">
+        </select>
+        <br />
+        <label id="backupNumPartial" class="w3-tag w3-green">0</label>
+        <label id="backupNumComplete" class="w3-tag w3-yellow">0</label>
+        <label id="backupNumTotal" class="w3-tag w3-blue">0</label>
+        <br class="w3-hide-medium w3-hide-large" />
+        <br class="w3-hide-medium w3-hide-large" />
+      </div>
+      <div class="w3-half w3-right">
+        <b>Information</b>
+        <br />
+        <label>Name: </label><span id="backupName">N/A</span>
+        <br />
+        <label>Created: </label><span id="backupTime">N/A</span>
+        <br />
+        <label>Type: </label><span id="backupType">N/A</span>
+        <br />
+        <br />
+        <button id="newBackup" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Create</button>
+        <button id="restoreBackup" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Restore</button>
+        <button id="updateBackup" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Update</button>
+        <button id="deleteBackup" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Delete</button>
       </div>
     </div>
 
@@ -282,7 +318,7 @@
 
   <div id="containerClient" class="w3-container w3-center aTab" style="display:none">
     <div class="w3-half w3-left">
-      <b class="w3-large">Steam Client Path</b>
+      <b>Steam Client Path</b>
       <br />
       <label id="chosenPath">N/A</label>
       <br />
@@ -290,25 +326,28 @@
       <button id="choose" class="w3-button w3-ripple w3-border focus-outline theme-primary">Set Path</button>
       <br />
       <br />
-      <button id="load" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Load Steam</button>
+      <button id="load" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Load Steam</button>
       <br />
       <label id="loaded">Not loaded</label>
-      <br class="w3-hide-medium w3-hide-large" />
-      <br class="w3-hide-medium w3-hide-large" />
+      <br />
+      <br />
+      <button id="clientSettings" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Settings</button>
+      <br />
+      <br />
+      <button id="launchOptions" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Launch Options</button>
+      <br />
+      <br />
+      <button id="showSkinManager" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Skin Manager</button>
     </div>
     <div class="w3-half w3-right">
-      <button id="clientSettings" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Settings</button>
-      <br />
-      <br />
-      <button id="launchOptions" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Launch Options</button>
-      <br />
-      <br />
-      <button id="showSkinManager" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Skin Manager</button>
     </div>
   </div>
 
   <div id="containerSettings" class="w3-container w3-center aTab">
     <div class="w3-half w3-left">
+      <b>UI Settings</b>
+      <br />
+      <br />
       <label>Background &nbsp;</label>
       <select id="bgSettingsList" class="w3-white">
         <option>Default</option>
@@ -336,25 +375,31 @@
       </div>
       <label>Text Color&nbsp;</label>
       <input id="textSettingsColor" type="color" value="#FFFFFF" />
+      <br />
+      <br />
     </div>
     <div class="w3-half w3-right">
-      <label title="Tab to show when app starts">Startup Tab</label>
+      <b title="Tab to show when app starts">Startup Tab</b>
       <br />
-      <select id="startupTab" title="Tab to show when app starts">
+      <select id="startupTab" class="full-width t-o-e" title="Tab to show when app starts" size="4">
         <option>Data</option>
         <option>Data/Users</option>
         <option>Data/Libraries</option>
-        <option>Data/Apps</option>
+        <option>Data/Apps/Installed - Controls</option>
+        <option>Data/Apps/Installed - Information</option>
+        <option>Data/Apps/Owned - Controls</option>
+        <option>Data/Apps/Owned - Information</option>
         <option>Data/Blacklist</option>
+        <option>Data/Backups</option>
         <option>Client</option>
         <option>Settings</option>
       </select>
       <br />
       <br />
-      <button id="applyAppSettings" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Save Settings</button>
+      <button id="applyAppSettings" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Save Settings</button>
       <br />
       <br />
-      <button id="removeAutoload" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Remove Autoload Settings</button>
+      <button id="removeAutoload" class="w3-button w3-ripple w3-border w3-hover-gray focus-outline theme-primary">Remove Autoload Settings</button>
     </div>
   </div>
 
@@ -399,6 +444,9 @@
   </div>
 
   <div id="containerAbout" class="w3-container w3-center aTab" style="display: none">
+    <div class="w3-half w3-left">
+      <p class="w3-display-top">A program to help manage the Steam client, and apps installed through Steam.</p>
+    </div>
   </div>
 
   <footer class="w3-bottom w3-center w3-margin-bottom">
@@ -414,28 +462,28 @@
 
       <div class="w3-row w3-center theme-primary">
         <div id="clientSettingsBar" class="w3-bar w3-round w3-center">
-          <button id="userSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-gray w3-hover-black focus-outline theme-primary" title="User">
+          <button id="userSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-border-left w3-border-top w3-border-bottom w3-gray w3-hover-black focus-outline theme-primary" title="User">
             <i class="fa fa-address-card w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">User</span>
           </button>
-          <button id="dlSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Downloads">
+          <button id="dlSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-border-top w3-border-bottom w3-hover-black focus-outline theme-primary" title="Downloads">
             <i class="fa fa-download w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">DLs</span>
           </button>
-          <button id="friendsSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Friends">
+          <button id="friendsSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-border-top w3-border-bottom w3-hover-black focus-outline theme-primary" title="Friends">
             <i class="fa fa-users w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Friends</span>
           </button>
-          <button id="overlaySettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="In-Game (Overlay)">
+          <button id="overlaySettingsBtn" class="w3-bar-item w3-button w3-ripple w3-border-top w3-border-bottom w3-hover-black focus-outline theme-primary" title="In-Game (Overlay)">
             <i class="fa fa-chrome w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Overlay</span>
           </button>
-          <button id="audioSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Music">
+          <button id="audioSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-border-top w3-border-bottom w3-hover-black focus-outline theme-primary" title="Music">
             <i class="fa fa-headphones w3-hide-medium w3-hide-large"></i>
             <i class="fa fa-microphone w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Audio</span>
           </button>
-          <button id="interfaceSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-hover-black focus-outline theme-primary" title="Interface">
+          <button id="interfaceSettingsBtn" class="w3-bar-item w3-button w3-ripple w3-border-right w3-border-top w3-border-bottom w3-hover-black focus-outline theme-primary" title="Interface">
             <i class="fa fa-window-maximize w3-hide-medium w3-hide-large"></i>
             <span class="w3-hide-small">Interface</span>
           </button>
@@ -980,16 +1028,17 @@
           <a id="skinHomepage" href="javascript:void(0)">Homepage</a>
           <hr class="w3-margin-top w3-margin-bottom full-width" />
           <span id="installSkin">
-            <button class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Install</button>
+            <button id="skinManagerInstall"  class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Install</button>
             <br />
           </span>
           <span id="removeSkin">
-            <button class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Remove</button>
+            <button id="skinManagerRemove" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Remove</button>
             <br />
           </span>
           <span id="updateSkin">
-            <button class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Update</button>
+            <button id="skinManagerUpdate" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Update</button>
             <br />
+            <button id="skinManagerLatest" class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Skip Update</button>
           </span>
           <span id="activateSkin">
             <button  class="w3-button w3-ripple w3-border w3-hover-black focus-outline theme-primary">Set As Active</button>

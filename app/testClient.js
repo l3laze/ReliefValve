@@ -834,17 +834,19 @@ function handleResize() {
     $( "#appList" ).attr( "size", "3" );
     $( "#ownedAppList" ).attr( "size", "3" );
     $( "#appCats" ).attr( "size", "2" );
-    $( "#allCats" ).attr( "size", "4" );
+    $( "#allCats" ).attr( "size", "2" );
     $( "#appBlacklist" ).attr( "size", "4" );
+    $( "#backupList" ).attr( "size", "8" );
     $( "#helpList" ).attr( "size", "4" );
   }
   else if( window.innerWidth > 600 ) {
     $( "#userList" ).attr( "size", "5" );
     $( "#appList" ).attr( "size", "20" );
     $( "#ownedAppList" ).attr( "size", "20" );
-    $( "#appCats" ).attr( "size", "5" );
-    $( "#allCats" ).attr( "size", "9" );
+    $( "#appCats" ).attr( "size", "4" );
+    $( "#allCats" ).attr( "size", "8" );
     $( "#appBlacklist" ).attr( "size", "20" );
+    $( "#backupList" ).attr( "size", "20" );
     $( "#helpList" ).attr( "size", "25" );
   }
 }
@@ -1369,8 +1371,6 @@ function initEventHandlers() {
     $( "#skinStatusInstalled" ).text( data.installed );
     $( "#skinStatusUpdate" ).text( data.outdated );
     $( "#skinStatusTotal" ).text( data.total );
-
-    console.info( data );
   });
 
   $( "#setAppUser" ).click( async function setSelectedUser() {
@@ -1436,6 +1436,10 @@ function initEventHandlers() {
 
     $( "#helpTitle" ).html( help[ keys[ index ]].title );
     $( "#helpText" ).html( help[ keys[ index ]].text );
+  });
+
+  $( "#submenuBackups" ).click( function( event ) {
+    showDataTab( event.currentTarget );
   });
 
   window.addEventListener( "keydown", function( event ) {

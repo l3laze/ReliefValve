@@ -38,7 +38,7 @@ function createWindow () {
 		show: false,
 		width: 601,
 		height: 650,
-		"minWidth": 439,
+		"minWidth": 441,
 		"minHeight": 650
 	})
 
