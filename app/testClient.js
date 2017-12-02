@@ -881,6 +881,37 @@ function setupModalTabHandling() {
   setupModalTabHandler( "keydown", document.getElementById( els[ 0 ].id ), document.getElementById( els[ els.length - 1 ].id ));
 }
 
+function changeExplanation( to ) {
+  var def  = $( "#explainTheDefault" ),
+      what = $( "#explainTheWhat" ),
+      how  = $( "#explainTheHow" );
+
+  if( to === "theWhat" ) {
+    if( what.css( "display" ) === "none" ) {
+      def.css( "display", "none" );
+      what.css( "display", "block" );
+      how.css( "display", "none" );
+    }
+    else {
+      what.css( "display", "none" );
+      how.css( "display", "none" );
+      def.css( "display", "block" );
+    }
+  }
+  else if( to === "theHow" ) {
+    if( how.css( "display" ) === "none" ) {
+      what.css( "display", "none" );
+      how.css( "display", "block" );
+      def.css( "display", "none" );
+    }
+    else {
+      what.css( "display", "none" );
+      how.css( "display", "none" );
+      def.css( "display", "block" );
+    }
+  }
+}
+
 function initEventHandlers() {
   $( "#choose" ).click( async function choosePath () {
 
@@ -1440,6 +1471,14 @@ function initEventHandlers() {
 
   $( "#submenuBackups" ).click( function( event ) {
     showDataTab( event.currentTarget );
+  });
+
+  $( "#theWhat" ).click( function( event ) {
+    changeExplanation( event.currentTarget.id );
+  });
+
+  $( "#theHow" ).click( function( event ) {
+    changeExplanation( event.currentTarget.id );
   });
 
   window.addEventListener( "keydown", function( event ) {

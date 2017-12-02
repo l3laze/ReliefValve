@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
   <link rel="stylesheet" href="client.css" />
   <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="node_modules/badger.js/badger.css" />
   <title>SteamConfig - Testing</title>
 </head>
 <body class="bgImage">
@@ -444,8 +445,60 @@
   </div>
 
   <div id="containerAbout" class="w3-container w3-center aTab" style="display: none">
-    <div class="w3-half w3-left">
-      <p class="w3-display-top">A program to help manage the Steam client, and apps installed through Steam.</p>
+    <ul id="aboutMenu" class="w3-displaytop menu-items" style="display:inline-block;margin-top:-0.4em">
+      <li>
+        <button id="theWhat" class="w3-button w3-ripple w3-border-left w3-border-bottom w3-hover-black focus-outline theme-primary">What</button>
+      </li>
+      <li>
+        <button id="theHow" class="w3-button w3-ripple w3-border-bottom w3-hover-black focus-outline theme-primary">How</button>
+      </li>
+      <li>
+        <button id="theWhy" class="w3-button w3-ripple w3-border-right w3-border-bottom w3-gray w3-hover-black focus-outline theme-primary">Why</button>
+      </li>
+    </ul>
+    <div class="w3-container w3-margin-bottom centered">
+      <button id="theWhat" class="w3-btn w3-border w3-hover-white w3-hover-text-black w3-round">"What!?"</button>
+      <button id="theHow" class="w3-btn w3-border w3-hover-white w3-hover-text-black w3-round">"How?!"</button>
+    </div>
+    <div id="aboutContent" class="w3-container centered">
+      <div id="explainTheDefault" class="w3-container w3-margin-top">
+        <p>ReliefValve is in no way affiliated with, authorized, maintained, sponsored or endorsed by Valve or any employees of Valve.</p>
+        <p>ReliefValve is distributed under the <a href="https://github.com/l3laze/ReliefValve/blob/master/LICENSE.md">MIT License</a></p>
+      </div>
+      <div id="explainTheWhat" class="w3-container w3-margin-top" style="display:none">
+        <span>A tool to help manage the Steam client, and apps installed via Steam. Features are based on tricks which can be done manually, or are well-hidden options within the Steam client.</span>
+        <br />
+        <ul id="featureList">
+          <li>
+            Manage auto-update settings for apps you've installed via the Steam client.
+          </li>
+          <li>
+            Apply an offline fix to make some games playable in offline mode.
+          </li>
+          <li>
+            Help force start a download for a game that's not compatible with your system.
+          </li>
+          <li>
+            Change the selected Steam skin to one you have installed; can also change to a random skin.
+          </li>
+        </ul>
+      </div>
+      <div id="explainTheHow" class="w3-container" style="display:none">
+        <div id="poweredBy" class="w3-container">
+          This app is <a href="javascript:void(0)" onclick="changeHowTab(event);this.blur()" class="poweredBy">powered by &gt;</a> the following:
+          <br />
+          <div class="w3-container badger-container w3-margin-top">
+            <!-- This will be generated -->
+          </div>
+        </div>
+        <div id="builtWith" class="w3-container">
+          This app is <a href="javascript:void(0)" onclick="changeHowTab(event);this.blur()" class="builtWith">&lt; built with</a> the following:
+          <br />
+          <div class="w3-container badger-container w3-margin-top">
+            <!-- This will be generated -->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1103,6 +1156,7 @@
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     <script src="./testClient.js"></script>
     <script src="./help.json"></script>
+    <script src="node_modules/badger.js/badger.js"></script>
 
   <!-- Insert this line after script imports -->
   <script>if (window.module) module = window.module;</script>
