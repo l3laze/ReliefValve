@@ -897,6 +897,8 @@ function changeExplanation( to ) {
       how.css( "display", "none" );
       def.css( "display", "block" );
     }
+
+    $( "#theWhat" ).blur();
   }
   else if( to === "theHow" ) {
     if( how.css( "display" ) === "none" ) {
@@ -909,55 +911,129 @@ function changeExplanation( to ) {
       how.css( "display", "none" );
       def.css( "display", "block" );
     }
+
+    $( "#theHow" ).blur();
+  }
+  else if( to === "theWhy" ) {
+    if( why.css( "display" ) === "none" ) {
+      what.css( "display", "none" );
+      how.css( "display", "none" );
+      why.css( "display", "block" );
+      def.css( "display", "none" );
+    }
+    else {
+      what.css( "display", "none" );
+      how.css( "display", "none" );
+      why.css( "display", "none" );
+      def.css( "display", "block" );
+    }
+
+    $( "#theHow" ).blur();
   }
 }
 
 function initEventHandlers() {
-  $( "#choose" ).click( async function choosePath () {
+  /*
+    $( "#choose" ).click( async function choosePath () {
 
-    var chosen = await dialog.showOpenDialog({
-      title: "Select your Steam installation folder",
-      properties: [ 'openDirectory' ],
-      defaultPath: client.getDefaultLocation()
+      var chosen = await dialog.showOpenDialog({
+        title: "Select your Steam installation folder",
+        properties: [ 'openDirectory' ],
+        defaultPath: client.getDefaultLocation()
+      });
+
+      if( chosen[ 0 ] === undefined ) {
+        alert( "You must choose a Steam location before you can continue." );
+      }
+      else {
+        chosen = chosen[ 0 ];
+      }
+
+      if( os.platform().indexOf( "linux" ) === -1 && nfs.existsSync( path.join( chosen, "config", "loginusers.vdf" )) === false ) {
+        alert( "Invalid path, or Steam may not be properly installed to the chosen path." );
+      }
+      else if( os.platform().indexOf( "linux" ) !== -1 && nfs.existsSync( path.join( chosen, "steam", "config", "loginusers.vdf" )) === false ) {
+        alert( "Invalid path, or Steam may not be properly installed to the chosen path." );
+      }
+      else {
+        client.steamPath = chosen;
+        $( "#chosenPath" ).html( chosen );
+      }
     });
 
-    if( chosen[ 0 ] === undefined ) {
-      alert( "You must choose a Steam location before you can continue." );
-    }
-    else {
-      chosen = chosen[ 0 ];
-    }
+    $( "#load" ).click( async function doLoading() {
+      if( client.steamPath === "" ) {
+        alert( "Set the path to Steam first." );
+      }
+      else {
+        modal = document.getElementById( "modalProgress" );
+        modal.style.display = "block";
 
-    if( os.platform().indexOf( "linux" ) === -1 && nfs.existsSync( path.join( chosen, "config", "loginusers.vdf" )) === false ) {
-      alert( "Invalid path, or Steam may not be properly installed to the chosen path." );
-    }
-    else if( os.platform().indexOf( "linux" ) !== -1 && nfs.existsSync( path.join( chosen, "steam", "config", "loginusers.vdf" )) === false ) {
-      alert( "Invalid path, or Steam may not be properly installed to the chosen path." );
-    }
-    else {
-      client.steamPath = chosen;
-      $( "#chosenPath" ).html( chosen );
-    }
-  });
+        console.info( "Loading Steam..." );
 
-  $( "#load" ).click( async function doLoading() {
-    if( client.steamPath === "" ) {
-      alert( "Set the path to Steam first." );
-    }
-    else {
-      modal = document.getElementById( "modalProgress" );
-      modal.style.display = "block";
+        $( "#loadingText" ).html( "Loading; please wait." );
 
-      console.info( "Loading Steam..." );
+        client.currentUser = undefined;
 
-      $( "#loadingText" ).html( "Loading; please wait." );
+        await client.loadSteam( client.steamPath, proCallback );
+      }
+      updateUI();
+    });
 
-      client.currentUser = undefined;
+    $( "#setAppUser" ).click( async function setSelectedUser() {
+      var ul = document.getElementById( "userList" );
+      if( client.steamPath === undefined ) {
+        alert( "Set the path to Steam first." );
+      }
+      else if( ul.selectedIndex === -1 ) {
+        alert( "Select a user first." );
+      }
+      else {
+        var alos = document.getElementById( "userAutoload" ),
+            un = ul.options[ ul.selectedIndex ].text,
+            autoConfig = {
+              user: "",
+              steam: "",
+              autoloadOnStart: false
+            };
 
-      await client.loadSteam( client.steamPath, proCallback );
-    }
-    updateUI();
-  });
+        if( alos.checked ) {
+          autoConfig.user = un;
+          autoConfig.steam = client.steamPath;
+          autoConfig.autoloadOnStart = true;
+        }
+
+        config.set( "autoload", autoConfig );
+        console.info( "Saved autoload settings." );
+        console.info( autoConfig );
+
+        $( "#autoloadUser" ).html( un );
+        $( "#currentUser" ).html( un );
+
+        modal = document.getElementById( "modalProgress" );
+
+        if( client.currentUser !== -1 ) {
+          modal.style.display = "block";
+          $( "#loadingText" ).html( "Loading data; please wait." );
+          client.setUser( un );
+          await client.loadUserData( client.steamPath, proCallback, true );
+          updateUserDataUI();
+        }
+      }
+    });
+
+    $( "#setAutologinUser" ).click( function setAutologinUser() {
+      var ul = document.getElementById( "userList" );
+
+      if( ul.selectedIndex !== -1 ) {
+        $( "#autologinUser" ).html( ul.options[ ul.selectedIndex ].text );
+      }
+      else {
+        alert( "Select a user first." );
+      }
+    });
+
+  */
 
   $( "#btnMain" ).click( function() {
     changeSettingsTab( "Main" );
@@ -1283,10 +1359,6 @@ function initEventHandlers() {
 
   $( "#showLibs" ).click( showSelectedLibs );
 
-  $( "#showAutoload" ).click( function() {
-    $( "#modalAutoload" ).css( "display", "block" );
-  });
-
   $( "#cancelAutoload" ).click( function() {
     $( "#modalAutoload" ).css( "display", "none" );
   });
@@ -1333,7 +1405,10 @@ function initEventHandlers() {
 
   $( "#showSkinManager" ).click( function showSkinManager() {
     $( "#skinManagerModal" ).css( "display", "block" );
+  });
 
+  $( "#closeSkinManager" ).click( function closeSkinManager() {
+    $( "#skinManagerModal" ).css( "display", "none" );
   });
 
   $( "#skinManagerList" ).change( function updateSkinManagerUI() {
@@ -1404,69 +1479,11 @@ function initEventHandlers() {
     $( "#skinStatusTotal" ).text( data.total );
   });
 
-  $( "#setAppUser" ).click( async function setSelectedUser() {
-    var ul = document.getElementById( "userList" );
-    if( client.steamPath === undefined ) {
-      alert( "Set the path to Steam first." );
-    }
-    else if( ul.selectedIndex === -1 ) {
-      alert( "Select a user first." );
-    }
-    else {
-      var alos = document.getElementById( "userAutoload" ),
-          un = ul.options[ ul.selectedIndex ].text,
-          autoConfig = {
-            user: "",
-            steam: "",
-            autoloadOnStart: false
-          };
-
-      if( alos.checked ) {
-        autoConfig.user = un;
-        autoConfig.steam = client.steamPath;
-        autoConfig.autoloadOnStart = true;
-      }
-
-      config.set( "autoload", autoConfig );
-      console.info( "Saved autoload settings." );
-      console.info( autoConfig );
-
-      $( "#autoloadUser" ).html( un );
-      $( "#currentUser" ).html( un );
-
-      modal = document.getElementById( "modalProgress" );
-
-      if( client.currentUser !== -1 ) {
-        modal.style.display = "block";
-        $( "#loadingText" ).html( "Loading data; please wait." );
-        client.setUser( un );
-        await client.loadUserData( client.steamPath, proCallback, true );
-        updateUserDataUI();
-      }
-    }
-  });
-
-  $( "#setAutologinUser" ).click( function setAutologinUser() {
-    var ul = document.getElementById( "userList" );
-
-    if( ul.selectedIndex !== -1 ) {
-      $( "#autologinUser" ).html( ul.options[ ul.selectedIndex ].text );
-    }
-    else {
-      alert( "Select a user first." );
-    }
-  });
-
   $( "#helpList" ).change( function( event ) {
     var index = event.currentTarget.selectedIndex;
-    var keys = Object.keys( help );
 
-    if( index > 1 ) {
-      index %= 2;
-    }
-
-    $( "#helpTitle" ).html( help[ keys[ index ]].title );
-    $( "#helpText" ).html( help[ keys[ index ]].text );
+    $( "#helpTitle" ).html( help[ index ].title );
+    $( "#helpText" ).html( help[ index ].text );
   });
 
   $( "#submenuBackups" ).click( function( event ) {
@@ -1479,6 +1496,10 @@ function initEventHandlers() {
 
   $( "#theHow" ).click( function( event ) {
     changeExplanation( event.currentTarget.id );
+  });
+
+  $( "#contributorsLink" ).click( function showContributors() {
+    $( "#contributorsModal" ).css( "display", "block" );
   });
 
   window.addEventListener( "keydown", function( event ) {
@@ -1499,6 +1520,9 @@ function initEventHandlers() {
         }
         else if( $( "#skinManagerModal" ).css( "display" ) !== "none" ) {
           $( "#skinManagerModal" ).css( "display", "none" );
+        }
+        else if( $( "#contributorsModal" ).css( "display" ) !== "none" ) {
+          $( "#contributorsModal" ).css( "display", "none" );
         }
       }
       else if( event.key === "Tab" && event.target === document.body ) {
@@ -1526,26 +1550,134 @@ function initEventHandlers() {
     else if( event.target.id === "skinManagerModal" ) {
       $( "#skinManagerModal" ).css( "display", "none" );
     }
+    else if( event.target.id === "contributorsModal" ) {
+      $( "#contributorsModal" ).css( "display", "none" );
+    }
   });
 
   window.addEventListener( "resize", handleResize );
 }
 
 function loadHelpData() {
-  var helpKeys = Object.keys( help );
-  var sel = document.getElementById( "helpList" );
-  var helpPages, og, o;
+  var titles = [];
+  help.forEach( function( item ) {
+    titles.push( item.title );
+  });
 
-  for( var x = 0; x < helpKeys.length; x++ ) {
-    og = document.createElement( "optgroup" );
-    og.label = helpKeys[ x ];
-    sel.appendChild( og );
+  console.info( titles );
 
-    for( var y = 0; y < help[ helpKeys[ x ]].length; y++ ) {
-      o = document.createElement( "option" );
-      o.appendChild( document.createTextNode( help[ helpKeys[ x ]][ y ].title ));
-      og.appendChild( o );
+  genList( document.getElementById( "helpList" ), titles );
+}
+
+function initBadges() {
+  var builtWithBadges = [
+    {
+      name: "GitHub",
+      home: "https://github.com/",
+      license: ""
+    },
+    {
+      name: "GitKraken",
+      home: "https://www.gitkraken.com/",
+      license: ""
+    },
+    {
+      name: "Atom",
+      home: "https://atom.io/",
+      license: ""
+    },
+    {
+      name: "Appveyor",
+      home: "https://www.appveyor.com/",
+      license: ""
+    },
+    {
+      name: "Travis-CI",
+      home: "https://travis-ci.org/",
+      license: ""
+    },
+    {
+      name: "electron-builder",
+      home: "https://github.com/electron-userland/electron-builder",
+      license: "https://github.com/electron-userland/electron-builder/blob/master/LICENSE"
     }
+  ],
+  poweredByBadges = [
+    {
+      name: "Electron",
+      home: "http://electron.atom.io/",
+      license: "https://github.com/electron/electron/blob/master/LICENSE"
+    },
+    {
+      name: "electron-config",
+      home: "https://github.com/sindresorhus/electron-config",
+      license: "https://github.com/sindresorhus/electron-config/blob/master/license"
+    },
+    {
+      name: "electron-log",
+      home: "https://github.com/megahertz/electron-log",
+      license: "https://github.com/megahertz/electron-log/blob/master/LICENSE"
+    },
+    {
+      name: "simple-vdf2",
+      home: "https://github.com/l3laze/vdf-parser",
+      license: "https://github.com/rossengeorgiev/vdf-parser/blob/master/LICENSE"
+    },
+    {
+      name: "Font-Awesome",
+      home: "http://fontawesome.io/",
+      license: "http://fontawesome.io/license/"
+    },
+    {
+      name: "jQuery",
+      home: "http://jquery.com/",
+      license: "https://github.com/jquery/jquery/blob/master/LICENSE.txt"
+    },
+    {
+      name: "Badger.JS",
+      home: "https://github.com/l3laze/Badger.js",
+      license: "https://github.com/l3laze/Badger.js/blob/master/LICENSE"
+    },
+    {
+      name: "W3.CSS",
+      home: "http://www.w3schools.com/w3css/",
+      license: ""
+    },
+    {
+      name: "node-winreg",
+      home: "https://github.com/CharlieHess/node-winreg",
+      license: ""
+    }
+  ],
+  elBuilt = document.getElementById( "builtWith" ).getElementsByClassName( "badger-container" )[ 0 ],
+  elPowered = document.getElementById( "poweredBy" ).getElementsByClassName( "badger-container" )[ 0 ],
+  i;
+
+  for( i = 0; i < builtWithBadges.length; i++ ) {
+    elBuilt.appendChild( craftBadge( builtWithBadges[ i ]));
+  }
+
+  for( i = 0; i < poweredByBadges.length; i++ ) {
+    elPowered.appendChild( craftBadge( poweredByBadges[ i ]));
+  }
+}
+
+function initContributors() {
+  var list, item, link, i;
+
+  list = document.getElementById( "contributorsList" );
+
+  for( i = 0; i < contributors.length; i++ ) {
+    link = document.createElement( "a" );
+    link.href = contributors[ i ].link;
+    link.title = contributors[ i ].link;
+    link.appendChild( document.createTextNode( contributors[ i ].name ));
+
+    item = document.createElement( "li" );
+    item.appendChild( link );
+    item.appendChild( document.createTextNode( ` - ${ contributors[ i ].why }` ));
+
+    list.appendChild( item );
   }
 }
 
@@ -1562,6 +1694,12 @@ function init() {
   handleResize();
 
   initEventHandlers();
+
+  initBadges();
+
+  initContributors();
+
+  loadHelpData();
 
   setupModalTabHandling();
 

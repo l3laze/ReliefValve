@@ -1,0 +1,7 @@
+contributors = [
+  {
+    "name": "probonopd",
+    "link": "https://github.com/probonopd",
+    "why": "Bug reports, enhancement suggestions."
+  }
+];

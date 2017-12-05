@@ -1,10 +1,32 @@
 help = [
   {
-    title: "Section Title 1",
-    text: "Help Text 1." ,
+    title: "The Menu",
+    text: "Data, Client, Settings, Help, and About are all tabs, and you can press their button to switch to them.<br /><br />" +
+          "If you switch between tabs after making changes on one of them, the application will keep the state <i>until it is closed</i>.<br /><br />" +
+          "Exit is a button which will close the application if you press it. Not as useful now that the window has a title bar, but I haven't removed it yet."
   },
   {
-    title: "Section Title 2",
-    text: "Help text 2."
+    title: "Setup",
+    text: "Go to the \"Client\" tab, set the path to the Steam client, and press Load Steam. " +
+          "If there is only a single user their data will be automagically loaded. " +
+          "If there are multiple users associated with the Steam installation you will need to select a user on the Data/Users tab:" +
+          "<ul>" +
+          "<li>Select a user in the list</li>" +
+          "<li>Check &quot;Autoload&quot; user if you want to automatically load the selected user (and Steam installation) when RV starts.</li>" +
+          "<li>Press &quot;Set User For RV&quot;</li>" +
+          "</ul>" +
+          "If you want to remove the autoload settings you can do on the Settings tab with the &quot;Remove Autoload Settings&quot; button.",
+  },
+  {
+    title: "Managing Installed Apps",
+    text: "..."
+  },
+  {
+    title: "Managing Owned Apps",
+    text: "..."
+  },
+  {
+    title: "Offline Fix?",
+    text: "Words."
   }
 ];
